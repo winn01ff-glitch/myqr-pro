@@ -11680,11 +11680,17 @@ $('btn-ai-align').addEventListener('click', autoAlignAI);
 
 // Initialize Main Tabs and Custom Frame System
 initMainTabsSwitching();
+
+// IMPORTANT: Initialize tab and preset icons BEFORE initFrameSystem()
+// so that icons render immediately without showing emoji placeholders first.
+// initFrameSystem() is heavy (generates HTML for 122 SVG templates)
+// and would otherwise delay icon replacement, causing a visible emoji flash.
+initTabIcons();
+initPresetIcons();
+
 initFrameSystem();
 
 initClearInputWraps();
-initTabIcons();
-initPresetIcons();
 initAutoExpandTextarea();
 initBottomSheet();
 initClipboardPasteSupport();
