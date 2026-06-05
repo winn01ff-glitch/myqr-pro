@@ -11066,9 +11066,11 @@ function initFrameSystem() {
       const details = SVG_GROUP_DETAILS[g.group] || { emoji: "📁", name: g.group };
       
       html += `
-        <div class="preset-btn svg-group-tab-btn ${activeClass}" data-group-index="${gIdx}" style="font-size: 10px; height: 32px; padding: 0 2px; display: flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-          <span style="font-size: 11px; flex-shrink: 0; position: relative; top: -1.5px;">${details.emoji}</span>
-          <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${details.name}</span>
+        <div class="preset-btn svg-group-tab-btn ${activeClass}" data-group-index="${gIdx}" style="font-size: 11px; height: 32px; padding: 0 2px; display: flex; align-items: center; justify-content: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">
+          <span style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; position: relative; top: 1px; width: 100%; overflow: hidden;">
+            <span style="font-size: 11px; flex-shrink: 0; position: relative; top: -1.5px;">${details.emoji}</span>
+            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${details.name}</span>
+          </span>
         </div>
       `;
     });
