@@ -7100,14 +7100,22 @@ SVG_GROUPS.forEach(g => {
       qrX: tpl.qrX,
       qrY: tpl.qrY,
       qrSize: tpl.qrSize,
-      image: new Image()
+      image: null  // Deferred: only load when selected
     };
-    SVG_TEMPLATES[tpl.id].image.onload = () => {
-      if (activeFrame === tpl.id) render();
-    };
-    SVG_TEMPLATES[tpl.id].image.src = encodeURI(tpl.path);
   });
 });
+
+// Lazy-load SVG template image on demand (instead of preloading all 122 at startup)
+function ensureSvgImageLoaded(frameId) {
+  const tpl = SVG_TEMPLATES[frameId];
+  if (!tpl) return;
+  if (tpl.image) return; // Already loaded or loading
+  tpl.image = new Image();
+  tpl.image.onload = () => {
+    if (activeFrame === frameId) render();
+  };
+  tpl.image.src = encodeURI(tpl.path);
+}
 
 let currentPreset = 'none'; // The currently active preset logo type
 let historySaveTimeout = null;
@@ -9586,6 +9594,7 @@ function drawFrameBackground(ctx, S) {
 
   const isSvgTemplate = SVG_TEMPLATES[activeFrame];
   if (isSvgTemplate) {
+    ensureSvgImageLoaded(activeFrame);
     const isGrad = document.getElementById('frame-grad-enable')?.checked || false;
     const cacheHit = (
       svgColorCache.frameId === activeFrame &&
@@ -11223,6 +11232,7 @@ function initFrameSystem() {
       frameOpts.forEach(o => o.classList.remove('active'));
       opt.classList.add('active');
       activeFrame = opt.dataset.frame;
+      ensureSvgImageLoaded(activeFrame);
       
       // Bỏ viền xanh của upload logo row
       logoRow.classList.remove('active');
