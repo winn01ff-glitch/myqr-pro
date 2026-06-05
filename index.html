@@ -19,8 +19,7 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%232563eb'/><stop offset='100%25' stop-color='%2306b6d4'/></linearGradient></defs><circle cx='16' cy='16' r='16' fill='url(%23g)'/><g transform='translate(4, 4)'><path fill='white' d='M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-3 3h3v3h-3v-3zm3 3h3v2h-3v-2zm-3-6h3v3h-3v-3zm6 3h3v5h-3v-5zm-3-3h3v3h-3v-3z'/></g></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@400;700&family=Pacifico&family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -425,29 +424,40 @@
     .opt-tabs {
       position: relative;
       display: flex;
-      gap: 0;
-      background: rgba(15, 23, 42, 0.04);
-      padding: 4px;
-      border-radius: 99px;
+      gap: 2px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.08) 51%, rgba(255, 255, 255, 0.25) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 14px;
+      padding: 2px;
       margin-bottom: 10px;
-      height: 36px;
+      height: 28px;
       box-sizing: border-box;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    [data-theme="dark"] .opt-tabs {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: none;
     }
     .opt-tabs-indicator {
       position: absolute;
-      top: 4px;
-      bottom: 4px;
-      left: 4px;
-      width: calc(33.333% - 8px);
-      border-radius: 99px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.45) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03), 0 1px 2px rgba(15, 23, 42, 0.02), inset 0 1.5px 0 rgba(255, 255, 255, 0.95);
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      top: 1px;
+      left: 2px;
+      height: 24px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+      border: 0.5px solid rgba(0, 0, 0, 0.02);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       pointer-events: none;
       z-index: 1;
+    }
+    [data-theme="dark"] .opt-tabs-indicator {
+      background: rgba(255, 255, 255, 0.12);
+      border: 0.5px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     .opt-tab-btn {
       flex: 1;
@@ -459,7 +469,7 @@
       font-size: 11px;
       font-weight: 600;
       color: var(--dim);
-      border-radius: 99px;
+      border-radius: 12px;
       cursor: pointer;
       transition: color 0.3s ease;
       display: flex;
@@ -472,8 +482,28 @@
       color: var(--accent);
     }
     .opt-tab-btn.active {
-      color: var(--accent);
+      color: #4f46e5;
       font-weight: 700;
+    }
+    [data-theme="dark"] .opt-tab-btn.active {
+      color: #818cf8;
+    }
+    .opt-tabs:has(.opt-tabs-indicator) .opt-tab-btn:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: 6px;
+      height: 12px;
+      width: 1px;
+      background: rgba(15, 23, 42, 0.08);
+      transition: opacity 0.22s;
+    }
+    [data-theme="dark"] .opt-tabs:has(.opt-tabs-indicator) .opt-tab-btn:not(:last-child)::after {
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .opt-tabs:has(.opt-tabs-indicator) .opt-tab-btn.active::after,
+    .opt-tabs:has(.opt-tabs-indicator) .opt-tab-btn:has(+ .active)::after {
+      opacity: 0;
     }
     .opt-content {
       display: none;
@@ -761,11 +791,30 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .logo-row:hover {
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.45);
+    }
+    .logo-row.active {
+      border-color: var(--accent) !important;
+      background: rgba(255, 255, 255, 0.35) !important;
+      box-shadow: 0 0 0 1px var(--accent) !important;
     }
     [data-theme="dark"] .logo-row {
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
       border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: none;
+    }
+    [data-theme="dark"] .logo-row:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent);
+    }
+    [data-theme="dark"] .logo-row.active {
+      background: rgba(255, 255, 255, 0.04) !important;
+      border-color: var(--accent) !important;
     }
     .logo-row.show { display: flex; }
     .logo-row img {
@@ -888,6 +937,9 @@
       border: 1px solid var(--border);
       transition: transform .3s ease, box-shadow .3s ease;
       position: relative;
+    }
+    .qr-card.no-border {
+      border: none;
     }
     .qr-laser {
       position: absolute;
@@ -2531,7 +2583,7 @@
     /* ─── PREMIUM CANVAS FRAMES GRID ─── */
     .frame-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
       margin-bottom: 8px;
     }
@@ -2539,31 +2591,47 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
-      padding: 8px 4px;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      background: var(--surface2);
+      gap: 4px;
+      padding: 6px 4px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.35);
       cursor: pointer;
       transition: all 0.18s;
       font-size: 10px;
       font-weight: 600;
       color: var(--dim);
       text-align: center;
+      box-shadow: none;
     }
     .frame-opt:hover {
       border-color: var(--accent);
       color: var(--accent);
-      background: var(--accent-l);
+      background: rgba(255, 255, 255, 0.55);
     }
     .frame-opt.active {
       border-color: var(--accent);
-      background: var(--accent-l);
+      background: rgba(255, 255, 255, 0.35);
+      color: var(--accent);
+      box-shadow: none;
+    }
+    [data-theme="dark"] .frame-opt {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.6);
+    }
+    [data-theme="dark"] .frame-opt:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent);
+    }
+    [data-theme="dark"] .frame-opt.active {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--accent);
       color: var(--accent);
     }
     .frame-preview-svg {
-      width: 32px;
-      height: 32px;
+      width: 24px;
+      height: 24px;
       color: currentColor;
       display: flex;
       align-items: center;
@@ -4788,10 +4856,13 @@
       <div class="upload-zone" id="upload-zone" tabindex="0" style="padding: 12px 16px;">
         <input type="file" id="logo-input" accept="image/*">
         <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 4px; font-size: 13px;">
-          <span style="font-size: 16px;">🖼️</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent); flex-shrink: 0;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           <span><b>Chọn logo</b> hoặc kéo thả ảnh vào đây <span style="font-size: 11px; color: var(--muted); font-weight: normal; margin-left: 4px;">(PNG · JPG · SVG · WebP)</span></span>
         </div>
-        <button type="button" class="btn-paste-shortcut" id="btn-paste-logo" style="margin-top: 4px;">📋 Dán ảnh từ Clipboard</button>
+        <button type="button" class="btn-paste-shortcut" id="btn-paste-logo" style="margin-top: 4px; display: inline-flex; align-items: center; gap: 5px; justify-content: center;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+          <span>Dán ảnh từ Clipboard</span>
+        </button>
       </div>
 
       <div class="logo-row" id="logo-row">
@@ -5217,7 +5288,11 @@
       <!-- Tab 4: Khung viền -->
       <div class="main-tab-panel" id="panel-frames">
         <div class="sec">
-          <div class="sec-title">🖼️ Khung viền QR (Templates)</div>
+          <div class="sec-title" style="display: flex; align-items: center; gap: 8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent); flex-shrink: 0;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><rect x="7" y="7" width="10" height="10" rx="1" ry="1"/></svg>
+            KHUNG VIỀN QR (TEMPLATES)
+          </div>
+          <div class="form-lbl" style="margin-bottom:6px">Khung viền mẫu có sẵn</div>
           <div class="frame-grid">
             <!-- 1. Không dùng -->
             <div class="frame-opt active" data-frame="none">
@@ -5276,33 +5351,33 @@
             </div>
           </div>
         </div>
-
-        <div class="divider"></div>
-
-        <div class="sec">
-          <div class="sec-title">📤 Khung viền tự tải lên</div>
-          <div class="upload-zone" id="frame-upload-zone" tabindex="0" style="padding: 12px 16px;">
-            <input type="file" id="frame-file-input" accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 4px; font-size: 13px;">
-              <span style="font-size: 16px;">🖼️</span>
-              <span><b>Chọn khung viền</b> hoặc kéo thả ảnh vào đây <span style="font-size: 11px; color: var(--muted); font-weight: normal; margin-left: 4px;">(PNG · JPG · WEBP · SVG)</span></span>
-            </div>
-            <button type="button" class="btn-paste-shortcut" id="btn-paste-frame" style="margin-top: 4px;">📋 Dán ảnh từ Clipboard</button>
+        <div class="upload-zone" id="frame-upload-zone" tabindex="0" style="padding: 12px 16px;">
+          <input type="file" id="frame-file-input" accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 4px; font-size: 13px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent); flex-shrink: 0;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span><b>Chọn khung viền</b> hoặc kéo thả ảnh vào đây <span style="font-size: 11px; color: var(--muted); font-weight: normal; margin-left: 4px;">(PNG · JPG · WEBP · SVG)</span></span>
           </div>
-          <div class="logo-row" id="frame-logo-row" style="display:none;">
-            <img id="frame-thumb" src="" alt="">
-            <div class="info">
-              <p id="frame-name">frame.png</p>
-              <span>✓ Đã tải lên</span>
-            </div>
-            <button class="btn-rm" id="btn-remove-frame" type="button">Xoá</button>
+          <button type="button" class="btn-paste-shortcut" id="btn-paste-frame" style="margin-top: 4px; display: inline-flex; align-items: center; gap: 5px; justify-content: center;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+            <span>Dán ảnh từ Clipboard</span>
+          </button>
+        </div>
+        <div class="logo-row" id="frame-logo-row" style="display:none;">
+          <img id="frame-thumb" src="" alt="">
+          <div class="info">
+            <p id="frame-name">frame.png</p>
+            <span>✓ Đã tải lên</span>
           </div>
+          <button class="btn-rm" id="btn-remove-frame" type="button">Xoá</button>
         </div>
 
         <div class="divider"></div>
 
         <div class="sec" id="frame-customization-sec" style="display:none; flex-direction:column; gap:10px;">
-          <div class="sec-title">✏️ Tùy chỉnh khung viền</div>
+          <div class="sec-title" style="display: flex; align-items: center; gap: 8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="sec-title-svg" style="color: var(--accent); flex-shrink: 0;"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/></svg>
+            TÙY CHỈNH KHUNG VIỀN
+          </div>
           
           <div class="form-group" id="row-frame-text">
             <label class="form-lbl">Chữ trên khung</label>
@@ -5319,118 +5394,137 @@
               <option value="Montserrat">Montserrat (Cá tính)</option>
               <option value="Playfair Display">Playfair Display (Nghệ thuật)</option>
               <option value="Oswald">Oswald (Mạnh mẽ)</option>
+              <option value="Dancing Script">Dancing Script (Uốn lượn)</option>
+              <option value="Pacifico">Pacifico (Phá cách)</option>
+              <option value="Great Vibes">Great Vibes (Quý phái)</option>
             </select>
           </div>
 
           <div class="style-group" id="row-frame-color" style="margin-top: 4px;">
-            <div class="style-group-title">Màu khung viền</div>
-            <div class="color-type-toggle">
-              <input type="radio" name="frame-color-type" id="frame-type-solid" checked>
-              <label for="frame-type-solid">Đơn sắc</label>
-              <input type="radio" name="frame-color-type" id="frame-type-grad">
-              <label for="frame-type-grad">Gradient</label>
-            </div>
-            <input type="checkbox" id="frame-grad-enable" style="display:none">
-            
-            <div class="color-pickers-container">
-              <div class="color-picker-wrap">
-                <input type="color" id="frame-color-1" value="#4f46e5">
-                <input type="text" class="color-hex" id="frame-color-1-hex" value="#4F46E5" maxlength="7">
-                <span class="color-reset" title="Đặt lại mặc định">✕</span>
+            <div class="style-group-inner-card">
+              <div class="style-group-title" style="margin-bottom: 0; display: flex; align-items: center; gap: 8px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent); flex-shrink: 0;"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.7255 3.09032 17.1962 4.85857 19C5.03345 19.1749 5.0999 19.4262 5.02724 19.6644C4.85857 20.2173 4.90807 20.8252 5.22857 21.3286C5.54907 21.832 6.08253 22 6.64303 22H12Z"/></svg>
+                MÀU KHUNG VIỀN
               </div>
-              <div class="color-picker-wrap grad-only" id="frame-color-2-wrap" style="display:none">
-                <input type="color" id="frame-color-2" value="#0f172a">
-                <input type="text" class="color-hex" id="frame-color-2-hex" value="#0F172A" maxlength="7">
-                <span class="color-reset" title="Đặt lại mặc định">✕</span>
+              <div class="style-row">
+                <div class="color-type-toggle" style="width: calc((100% - 16px) / 3); flex-shrink: 0;">
+                  <div class="segmented-indicator"></div>
+                  <input type="radio" name="frame-color-type" id="frame-type-solid" checked>
+                  <label for="frame-type-solid" class="active">Đơn sắc</label>
+                  <input type="radio" name="frame-color-type" id="frame-type-grad">
+                  <label for="frame-type-grad">Gradient</label>
+                </div>
+                <input type="checkbox" id="frame-grad-enable" style="display:none">
+                
+                <div class="color-pickers-container">
+                  <div class="color-picker-wrap">
+                    <input type="color" id="frame-color-1" value="#4f46e5">
+                    <input type="text" class="color-hex" id="frame-color-1-hex" value="#4F46E5" maxlength="7">
+                    <span class="color-reset" title="Đặt lại mặc định">✕</span>
+                  </div>
+                  <div class="color-picker-wrap grad-only" id="frame-color-2-wrap" style="display:none">
+                    <input type="color" id="frame-color-2" value="#0f172a">
+                    <input type="text" class="color-hex" id="frame-color-2-hex" value="#0F172A" maxlength="7">
+                    <span class="color-reset" title="Đặt lại mặc định">✕</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-            <div class="style-group-title" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-              <span>Căn chỉnh Khung Tự chọn</span>
-              <button class="btn btn-primary" id="btn-ai-align" type="button" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); color:#fff; border:none; box-shadow: 0 2px 6px rgba(124, 58, 237, 0.2); padding: 4px 10px; font-size: 11px; border-radius: 6px; display: flex; align-items: center; gap: 4px; cursor: pointer; white-space: nowrap; margin-left: auto;">
-                ✨ Quét AI
-              </button>
-            </div>
-            
-            <div class="seg-wrap">
-              <div class="seg-label">Chế độ khung</div>
-              <div class="shape-selectors" id="custom-qr-mode-selectors">
-                <div class="shape-sel active" data-type="mode" data-val="background">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                  Khung làm nền
+          <div class="style-group" id="row-frame-align" style="margin-top: 4px;">
+            <div class="style-group-inner-card">
+              <div class="style-group-title" style="margin-bottom: 0; display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent); flex-shrink: 0;"><line x1="18" y1="21" x2="6" y2="21"/><line x1="18" y1="3" x2="6" y2="3"/><rect x="8" y="6" width="8" height="12" rx="1"/></svg>
+                  CĂN CHỈNH KHUNG TỰ CHỌN
                 </div>
-                <div class="shape-sel" data-type="mode" data-val="foreground">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                  Khung đè lên QR
-                </div>
+                <button class="btn btn-primary" id="btn-ai-align" type="button" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); color:#fff; border:none; box-shadow: 0 2px 6px rgba(124, 58, 237, 0.2); padding: 4px 10px; font-size: 11px; border-radius: 6px; display: flex; align-items: center; gap: 4px; cursor: pointer; white-space: nowrap; margin-left: auto;">
+                  ✨ Quét AI
+                </button>
               </div>
-              <select id="custom-qr-mode" style="display:none">
-                <option value="background">background</option>
-                <option value="foreground">foreground</option>
-              </select>
-            </div>
+              
+              <div class="seg-wrap" style="margin-top: 10px;">
+                <div class="seg-label" style="font-size: 11px; font-weight: 700; color: var(--dim); margin-bottom: 6px;">Chế độ khung</div>
+                <div class="shape-selectors" id="custom-qr-mode-selectors">
+                  <div class="segmented-indicator"></div>
+                  <div class="shape-sel active" data-type="mode" data-val="background">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; flex-shrink: 0;"><rect x="3" y="9" width="12" height="12" rx="2" opacity="0.5"/><rect x="9" y="3" width="12" height="12" rx="2"/></svg>
+                    Khung làm nền
+                  </div>
+                  <div class="shape-sel" data-type="mode" data-val="foreground">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; flex-shrink: 0;"><rect x="3" y="9" width="12" height="12" rx="2"/><rect x="9" y="3" width="12" height="12" rx="2" opacity="0.5"/></svg>
+                    Khung đè lên QR
+                  </div>
+                </div>
+                <select id="custom-qr-mode" style="display:none">
+                  <option value="background">background</option>
+                  <option value="foreground">foreground</option>
+                </select>
+              </div>
 
-            <!-- Position & scale sync sliders -->
-            <div class="sl-row" style="margin-top:6px">
-              <div class="sl-label">Vị trí X (%) <span class="val" id="s-custom-x-val">38%</span></div>
-              <div class="slider-input-sync">
-                <input type="range" id="s-custom-x" min="-100" max="200" value="38" step="0.5">
-                <div class="custom-sync-wrap">
-                  <button type="button" class="custom-sync-btn btn-minus">−</button>
-                  <input type="text" class="custom-sync-input" id="s-custom-x-num" value="38" readonly>
-                  <button type="button" class="custom-sync-btn btn-plus">+</button>
+              <!-- Position & scale sync sliders -->
+              <div class="sl-row" style="margin-top:12px">
+                <div class="sl-label">Vị trí X (%) <span class="val" id="s-custom-x-val" style="display:none;">38%</span></div>
+                <div class="slider-input-sync">
+                  <input type="range" id="s-custom-x" min="0" max="10" value="4.6" step="0.1">
+                  <div class="sync-input-wrap">
+                    <button class="btn-step btn-minus" type="button">−</button>
+                    <input type="text" id="s-custom-x-num" readonly value="4.6">
+                    <button class="btn-step btn-plus" type="button">+</button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="sl-row">
-              <div class="sl-label">Vị trí Y (%) <span class="val" id="s-custom-y-val">35%</span></div>
-              <div class="slider-input-sync">
-                <input type="range" id="s-custom-y" min="-100" max="200" value="35" step="0.5">
-                <div class="custom-sync-wrap">
-                  <button type="button" class="custom-sync-btn btn-minus">−</button>
-                  <input type="text" class="custom-sync-input" id="s-custom-y-num" value="35" readonly>
-                  <button type="button" class="custom-sync-btn btn-plus">+</button>
+              <div class="sl-row">
+                <div class="sl-label">Vị trí Y (%) <span class="val" id="s-custom-y-val" style="display:none;">35%</span></div>
+                <div class="slider-input-sync">
+                  <input type="range" id="s-custom-y" min="0" max="10" value="4.5" step="0.1">
+                  <div class="sync-input-wrap">
+                    <button class="btn-step btn-minus" type="button">−</button>
+                    <input type="text" id="s-custom-y-num" readonly value="4.5">
+                    <button class="btn-step btn-plus" type="button">+</button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="sl-row">
-              <div class="sl-label">Tỷ lệ QR (%) <span class="val" id="s-custom-size-val">52%</span></div>
-              <div class="slider-input-sync">
-                <input type="range" id="s-custom-size" min="5" max="200" value="52" step="0.5">
-                <div class="custom-sync-wrap">
-                  <button type="button" class="custom-sync-btn btn-minus">−</button>
-                  <input type="text" class="custom-sync-input" id="s-custom-size-num" value="52" readonly>
-                  <button type="button" class="custom-sync-btn btn-plus">+</button>
+              <div class="sl-row">
+                <div class="sl-label">Tỷ lệ QR (%) <span class="val" id="s-custom-size-val" style="display:none;">52%</span></div>
+                <div class="slider-input-sync">
+                  <input type="range" id="s-custom-size" min="0.1" max="10" value="2.6" step="0.1">
+                  <div class="sync-input-wrap">
+                    <button class="btn-step btn-minus" type="button">−</button>
+                    <input type="text" id="s-custom-size-num" readonly value="2.6">
+                    <button class="btn-step btn-plus" type="button">+</button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="sl-row">
-              <div class="sl-label">Bo góc viền ngoài (Bo góc khung / px) <span class="val" id="s-custom-radius-val">20px</span></div>
-              <div class="slider-input-sync">
-                <input type="range" id="s-custom-radius" min="0" max="100" value="20" step="1">
-                <div class="custom-sync-wrap">
-                  <button type="button" class="custom-sync-btn btn-minus">−</button>
-                  <input type="text" class="custom-sync-input" id="s-custom-radius-num" value="20" readonly>
-                  <button type="button" class="custom-sync-btn btn-plus">+</button>
+              <div class="sl-row">
+                <div class="sl-label">Bo góc viền ngoài (Bo góc khung / px) <span class="val" id="s-custom-radius-val" style="display:none;">20px</span></div>
+                <div class="slider-input-sync">
+                  <input type="range" id="s-custom-radius" min="0" max="10" value="2.0" step="0.1">
+                  <div class="sync-input-wrap">
+                    <button class="btn-step btn-minus" type="button">−</button>
+                    <input type="text" id="s-custom-radius-num" readonly value="2.0">
+                    <button class="btn-step btn-plus" type="button">+</button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="sl-row">
-              <div class="sl-label">Góc xoay mã QR (°) <span class="val" id="s-custom-rotate-val">0°</span></div>
-              <div class="slider-input-sync">
-                <input type="range" id="s-custom-rotate" min="-180" max="180" value="0" step="1">
-                <div class="custom-sync-wrap">
-                  <button type="button" class="custom-sync-btn btn-minus">−</button>
-                  <input type="text" class="custom-sync-input" id="s-custom-rotate-num" value="0" readonly>
-                  <button type="button" class="custom-sync-btn btn-plus">+</button>
+              <div class="sl-row">
+                <div class="sl-label">Góc xoay mã QR (°) <span class="val" id="s-custom-rotate-val" style="display:none;">0°</span></div>
+                <div class="slider-input-sync">
+                  <input type="range" id="s-custom-rotate" min="0" max="10" value="5.0" step="0.1">
+                  <div class="sync-input-wrap">
+                    <button class="btn-step btn-minus" type="button">−</button>
+                    <input type="text" id="s-custom-rotate-num" readonly value="0°">
+                    <button class="btn-step btn-plus" type="button">+</button>
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
 
           </div>
         </div>
@@ -5604,6 +5698,7 @@ const PRESETS = {
 // ══════════════════════════════════
 let originalLogo  = null; // The loaded raw image
 let logo          = null; // The processed image (might be transparent-filtered)
+let customLogoImg = null; // The uploaded custom logo image
 let hasQR         = false;
 let currentURL    = '';
 let debounce      = null;
@@ -5758,7 +5853,12 @@ function initSliderSync(sliderId, textId, minusId, plusId, onChange) {
     val = Math.round(val * 10) / 10;
     s.value = val;
     if (t) {
-      t.value = s.id.includes('custom') ? Math.round(val) : val;
+      if (s.id === 's-custom-rotate') {
+        const deg = Math.round(-180 + val * 36);
+        t.value = deg + '°';
+      } else {
+        t.value = val;
+      }
     }
     if (callback) callback(val);
   };
@@ -6484,16 +6584,24 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
           if (matchingPreset === 'none') {
             originalLogo = null;
             logo = null;
-            logoRow.classList.remove('show');
+            logoRow.classList.remove('active');
+            if (customLogoImg) {
+              logoRow.classList.add('show');
+            } else {
+              logoRow.classList.remove('show');
+            }
             logoSettings.style.display = 'none';
           } else {
             const img = new Image();
             img.onload = () => {
               if (currentPreset !== matchingPreset) return;
               originalLogo = img;
-              logoNameEl.textContent = `Preset: ${presetBtn.textContent.trim()}`;
-              logoThumb.src = src;
-              logoRow.classList.remove('show');
+              logoRow.classList.remove('active');
+              if (customLogoImg) {
+                logoRow.classList.add('show');
+              } else {
+                logoRow.classList.remove('show');
+              }
               logoSettings.style.display = 'flex';
               
               applyLogoBackgroundRemoval();
@@ -7164,7 +7272,12 @@ document.querySelectorAll('.preset-logos-wrap .preset-btn').forEach(btn => {
     if (preset === 'none') {
       originalLogo = null;
       logo = null;
-      logoRow.classList.remove('show');
+      logoRow.classList.remove('active');
+      if (customLogoImg) {
+        logoRow.classList.add('show');
+      } else {
+        logoRow.classList.remove('show');
+      }
       logoSettings.style.display = 'none';
       if (hasQR) {
         render();
@@ -7177,9 +7290,12 @@ document.querySelectorAll('.preset-logos-wrap .preset-btn').forEach(btn => {
       img.onload = () => {
         if (currentPreset !== preset) return;
         originalLogo = img;
-        logoNameEl.textContent = `Preset: ${btn.textContent.trim()}`;
-        logoThumb.src = src;
-        logoRow.classList.remove('show');
+        logoRow.classList.remove('active');
+        if (customLogoImg) {
+          logoRow.classList.add('show');
+        } else {
+          logoRow.classList.remove('show');
+        }
         logoSettings.style.display = 'flex';
         
         // Mặc định hình dạng logo là hình tròn theo yêu cầu người dùng
@@ -7354,7 +7470,9 @@ const COLOR_DEFAULTS = {
   'eye-in-color-1': '#1a1130',
   'eye-in-color-2': '#4f46e5',
   'border-color-1': '#1a1130',
-  'border-color-2': '#4f46e5'
+  'border-color-2': '#4f46e5',
+  'frame-color-1': '#4f46e5',
+  'frame-color-2': '#0f172a'
 };
 
 function bindColorSync(pickerId, hexId, callback) {
@@ -7416,6 +7534,15 @@ bindColorSync('eye-in-color-2', 'eye-in-color-2-hex', render);
 bindColorSync('border-color-1', 'border-color-1-hex', render);
 bindColorSync('border-color-2', 'border-color-2-hex', render);
 
+bindColorSync('frame-color-1', 'frame-color-1-hex', () => {
+  frameColor1 = $('frame-color-1').value;
+  render();
+});
+bindColorSync('frame-color-2', 'frame-color-2-hex', () => {
+  frameColor2 = $('frame-color-2').value;
+  render();
+});
+
 function toggleGradientWrap(checkId, wrapId) {
   $(checkId).addEventListener('change', e => {
     $(wrapId).style.display = e.target.checked ? 'flex' : 'none';
@@ -7427,6 +7554,7 @@ toggleGradientWrap('dot-grad-enable', 'dot-color-2-wrap');
 toggleGradientWrap('eye-out-grad-enable', 'eye-out-color-2-wrap');
 toggleGradientWrap('eye-in-grad-enable', 'eye-in-color-2-wrap');
 toggleGradientWrap('border-grad-enable', 'border-color-2-wrap');
+toggleGradientWrap('frame-grad-enable', 'frame-color-2-wrap');
 
 // Đồng bộ nút chọn Đơn sắc / Gradient kiểu Figma với checkbox ẩn
 function syncColorTypeToggles(prefix) {
@@ -7456,6 +7584,7 @@ syncColorTypeToggles('dot');
 syncColorTypeToggles('eye-out');
 syncColorTypeToggles('eye-in');
 syncColorTypeToggles('border');
+syncColorTypeToggles('frame');
 
 // ══════════════════════════════════
 //  Two-way Binding initialization
@@ -7490,7 +7619,7 @@ initSliderSync('s-border-radius', 's-border-radius-num', render);
     const activeBtn = optPanel.querySelector('.opt-tab-btn.active');
     if (activeBtn && indicator) {
       indicator.style.width = `${activeBtn.offsetWidth}px`;
-      indicator.style.transform = `translateX(${activeBtn.offsetLeft - 4}px)`;
+      indicator.style.transform = `translateX(${activeBtn.offsetLeft - 2}px)`;
     }
   }
 
@@ -7648,9 +7777,12 @@ function loadLogo(file) {
       const croppedImg = new Image();
       croppedImg.onload = () => {
         originalLogo = croppedImg;
+        customLogoImg = croppedImg;
         logoThumb.src = canvas.toDataURL();
         logoNameEl.textContent = file.name;
         logoRow.classList.add('show');
+        logoRow.classList.add('active');
+        uploadZone.style.display = 'none';
         logoSettings.style.display = 'flex';
         
         applyLogoBackgroundRemoval();
@@ -7662,11 +7794,29 @@ function loadLogo(file) {
   reader.readAsDataURL(file);
 }
 
-removeLogo.addEventListener('click', () => {
+// Khi click vào dòng thông tin logo tự tải lên để chọn lại logo đó
+logoRow.addEventListener('click', (e) => {
+  if (e.target.classList.contains('btn-rm')) return;
+  if (!customLogoImg) return;
+  
+  document.querySelectorAll('.preset-logos-wrap .preset-btn').forEach(b => b.classList.remove('active'));
+  logoRow.classList.add('active');
+  currentPreset = 'custom';
+  originalLogo = customLogoImg;
+  logoSettings.style.display = 'flex';
+  
+  applyLogoBackgroundRemoval();
+});
+
+removeLogo.addEventListener('click', (e) => {
+  e.stopPropagation();
   originalLogo = null;
+  customLogoImg = null;
   logo = null;
   logoInput.value = '';
   logoRow.classList.remove('show');
+  logoRow.classList.remove('active');
+  uploadZone.style.display = 'block';
   logoSettings.style.display = 'none';
   
   currentPreset = 'none';
@@ -8111,11 +8261,15 @@ function drawFrameForeground(ctx, S) {
     rrPath(ctx, pX, pY, pW, pH, 18 * scale);
     ctx.fill();
     
+    const isScriptFontBottom = ['Dancing Script', 'Pacifico', 'Great Vibes'].includes(frameFontFamily);
+    const textToDrawBottom = isScriptFontBottom ? frameText : frameText.toUpperCase();
+    const isBoldBottom = isScriptFontBottom ? '' : 'bold ';
+    
     ctx.fillStyle = '#ffffff';
-    ctx.font = `bold ${Math.round(22 * scale)}px "${frameFontFamily}", sans-serif`;
+    ctx.font = `${isBoldBottom}${Math.round(22 * scale)}px "${frameFontFamily}", sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(frameText.toUpperCase(), S / 2, pY + pH / 2);
+    ctx.fillText(textToDrawBottom, S / 2, pY + pH / 2);
     
   } else if (activeFrame === 'scan-me-top') {
     const pW = S * 0.72;
@@ -8128,11 +8282,15 @@ function drawFrameForeground(ctx, S) {
     rrPath(ctx, pX, pY, pW, pH, 18 * scale);
     ctx.fill();
     
+    const isScriptFontTop = ['Dancing Script', 'Pacifico', 'Great Vibes'].includes(frameFontFamily);
+    const textToDrawTop = isScriptFontTop ? frameText : frameText.toUpperCase();
+    const isBoldTop = isScriptFontTop ? '' : 'bold ';
+    
     ctx.fillStyle = '#ffffff';
-    ctx.font = `bold ${Math.round(22 * scale)}px "${frameFontFamily}", sans-serif`;
+    ctx.font = `${isBoldTop}${Math.round(22 * scale)}px "${frameFontFamily}", sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(frameText.toUpperCase(), S / 2, pY + pH / 2);
+    ctx.fillText(textToDrawTop, S / 2, pY + pH / 2);
     
   } else if (activeFrame === 'heart-love') {
     ctx.strokeStyle = color1;
@@ -8280,12 +8438,35 @@ function render() {
 
   // Card border-radius sync
   const card = document.querySelector('.qr-card');
-  if (card) {
-    card.style.borderRadius = overallShape === 'circle' ? '50%' : (activeFrame === 'custom' ? customQrRadius : (activeFrame === 'none' ? cr : 0)) + 'px';
-  }
   const modalPreview = document.getElementById('modal-preview-area');
+  
+  let cardRadius = 0;
+  let isCircle = overallShape === 'circle';
+  
+  if (!isCircle) {
+    if (activeFrame === 'none') {
+      cardRadius = cr;
+    } else if (activeFrame === 'custom') {
+      cardRadius = customQrRadius;
+    } else if (activeFrame === 'scan-me-bottom' || activeFrame === 'scan-me-top') {
+      cardRadius = 24 * (340 / 600); // 13.6px
+    } else if (activeFrame === 'heart-love') {
+      cardRadius = 30 * (340 / 600); // 17px
+    } else if (activeFrame === 'floral') {
+      cardRadius = 16 * (340 / 600); // 9px
+    }
+  }
+  
+  if (card) {
+    card.style.borderRadius = isCircle ? '50%' : cardRadius + 'px';
+    if (activeFrame !== 'none') {
+      card.classList.add('no-border');
+    } else {
+      card.classList.remove('no-border');
+    }
+  }
   if (modalPreview) {
-    modalPreview.style.borderRadius = overallShape === 'circle' ? '50%' : (activeFrame === 'custom' ? customQrRadius : (activeFrame === 'none' ? cr : 0)) + 'px';
+    modalPreview.style.borderRadius = isCircle ? '50%' : cardRadius + 'px';
   }
 
   // Update modal QR image in real-time if open
@@ -9289,7 +9470,7 @@ function initMainTabsSwitching() {
       if (targetPanel) targetPanel.classList.add('active');
       
       updateIndicator();
-      if (targetTab === 'design') {
+      if (targetTab === 'design' || targetTab === 'frames') {
         setTimeout(initAllSegmentedIndicators, 50);
       } else if (targetTab === 'logo') {
         setTimeout(updateResponsivePresetsVisibility, 50);
@@ -9324,25 +9505,64 @@ function initFrameSystem() {
   const textInput = $('frame-text-input');
   const fontSelect = $('frame-font-family');
 
+  function updateFrameCustomizationUI() {
+    const rowText = $('row-frame-text');
+    const rowFont = $('row-frame-font');
+    const rowColor = $('row-frame-color');
+    const rowAlign = $('row-frame-align');
+    
+    if (activeFrame === 'none') {
+      customSec.style.display = 'none';
+      return;
+    }
+    
+    customSec.style.display = 'flex';
+    
+    if (activeFrame === 'custom') {
+      if (rowText) rowText.style.display = 'none';
+      if (rowFont) rowFont.style.display = 'none';
+      if (rowColor) rowColor.style.display = 'none';
+      if (rowAlign) rowAlign.style.display = 'flex';
+    } else if (activeFrame === 'scan-me-bottom' || activeFrame === 'scan-me-top') {
+      if (rowText) rowText.style.display = 'block';
+      if (rowFont) rowFont.style.display = 'block';
+      if (rowColor) rowColor.style.display = 'block';
+      if (rowAlign) rowAlign.style.display = 'none';
+    } else {
+      // Các khung hoa văn, hình tim, hình tròn chỉ đổi màu, không có chữ
+      if (rowText) rowText.style.display = 'none';
+      if (rowFont) rowFont.style.display = 'none';
+      if (rowColor) rowColor.style.display = 'block';
+      if (rowAlign) rowAlign.style.display = 'none';
+    }
+    
+    setTimeout(initAllSegmentedIndicators, 50);
+  }
+
   frameOpts.forEach(opt => {
     opt.addEventListener('click', () => {
       frameOpts.forEach(o => o.classList.remove('active'));
       opt.classList.add('active');
       activeFrame = opt.dataset.frame;
       
-      if (activeFrame === 'custom') {
-        customSec.style.display = 'flex';
-        const rowText = $('row-frame-text');
-        const rowColor2 = $('frame-color-2-wrap');
-        const rowFont = $('row-frame-font');
-        if (rowText) rowText.style.display = 'none';
-        if (rowColor2) rowColor2.style.display = 'none';
-        if (rowFont) rowFont.style.display = 'none';
-      } else {
-        customSec.style.display = 'none';
-      }
+      // Bỏ viền xanh của upload logo row
+      logoRow.classList.remove('active');
+
+      updateFrameCustomizationUI();
       render();
     });
+  });
+
+  // Chọn khung viền tự tải lên bằng cách click vào dòng thông tin file
+  logoRow.addEventListener('click', (e) => {
+    if (e.target.classList.contains('btn-rm')) return;
+    
+    frameOpts.forEach(o => o.classList.remove('active'));
+    logoRow.classList.add('active');
+    activeFrame = 'custom';
+    
+    updateFrameCustomizationUI();
+    render();
   });
 
   const handleUploadedFile = (file) => {
@@ -9389,14 +9609,12 @@ function initFrameSystem() {
           
           logoThumb.src = croppedImg.src;
           logoRow.style.display = 'flex';
+          frameOpts.forEach(o => o.classList.remove('active'));
+          logoRow.classList.add('active');
           uploadZone.style.display = 'none';
           
-          const customOpt = document.querySelector('.frame-opt[data-frame="custom"]');
-          if (customOpt) {
-            customOpt.style.display = 'flex';
-            customOpt.click();
-          }
-          
+          activeFrame = 'custom';
+          updateFrameCustomizationUI();
           render();
         };
       };
@@ -9410,16 +9628,13 @@ function initFrameSystem() {
     }
   });
 
-  removeBtn.addEventListener('click', () => {
+  removeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
     customFrameImg = null;
     logoRow.style.display = 'none';
+    logoRow.classList.remove('active');
     uploadZone.style.display = 'block';
     fileInput.value = '';
-    
-    const customOpt = document.querySelector('.frame-opt[data-frame="custom"]');
-    if (customOpt) {
-      customOpt.style.display = 'none';
-    }
     
     const noneOpt = document.querySelector('.frame-opt[data-frame="none"]');
     if (noneOpt) noneOpt.click();
@@ -9734,9 +9949,9 @@ function executeActualAIAlign() {
     
     console.log('Updating custom sliders to target values:', targetX, targetY, targetSize);
     
-    $('s-custom-x').value = targetX;
-    $('s-custom-y').value = targetY;
-    $('s-custom-size').value = targetSize;
+    $('s-custom-x').value = Math.max(0, Math.min(10, Math.round(((targetX + 100) / 30) * 10) / 10));
+    $('s-custom-y').value = Math.max(0, Math.min(10, Math.round(((targetY + 100) / 30) * 10) / 10));
+    $('s-custom-size').value = Math.max(0.1, Math.min(10, Math.round((targetSize / 20) * 10) / 10));
     
     $('s-custom-x').dispatchEvent(new Event('input'));
     $('s-custom-y').dispatchEvent(new Event('input'));
@@ -9752,28 +9967,28 @@ function executeActualAIAlign() {
 
 // Sync custom co-scale sliders
 initSliderSync('s-custom-x', 's-custom-x-num', 's-custom-x-minus', 's-custom-x-plus', (val) => {
-  customQrX = val;
-  $('s-custom-x-val').textContent = Math.round(val) + '%';
+  customQrX = -100 + val * 30;
+  $('s-custom-x-val').textContent = Math.round(customQrX) + '%';
   render();
 });
 initSliderSync('s-custom-y', 's-custom-y-num', 's-custom-y-minus', 's-custom-y-plus', (val) => {
-  customQrY = val;
-  $('s-custom-y-val').textContent = Math.round(val) + '%';
+  customQrY = -100 + val * 30;
+  $('s-custom-y-val').textContent = Math.round(customQrY) + '%';
   render();
 });
 initSliderSync('s-custom-size', 's-custom-size-num', 's-custom-size-minus', 's-custom-size-plus', (val) => {
-  customQrSize = val;
-  $('s-custom-size-val').textContent = Math.round(val) + '%';
+  customQrSize = val * 20;
+  $('s-custom-size-val').textContent = Math.round(customQrSize) + '%';
   render();
 });
 initSliderSync('s-custom-radius', 's-custom-radius-num', 's-custom-radius-minus', 's-custom-radius-plus', (val) => {
-  customQrRadius = val;
-  $('s-custom-radius-val').textContent = Math.round(val) + 'px';
+  customQrRadius = val * 10;
+  $('s-custom-radius-val').textContent = Math.round(customQrRadius) + 'px';
   render();
 });
 initSliderSync('s-custom-rotate', 's-custom-rotate-num', 's-custom-rotate-minus', 's-custom-rotate-plus', (val) => {
-  customQrRotate = val;
-  $('s-custom-rotate-val').textContent = Math.round(val) + '°';
+  customQrRotate = -180 + val * 36;
+  $('s-custom-rotate-val').textContent = Math.round(customQrRotate) + '°';
   render();
 });
 
