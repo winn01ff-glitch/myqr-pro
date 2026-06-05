@@ -1338,11 +1338,6 @@
       column-gap: 8px; /* Tăng khoảng cách cột một chút cho hở ra thêm 1 tý */
       margin-bottom: 8px;
       flex-shrink: 0;
-      opacity: 0;
-      transition: opacity 0.15s ease;
-    }
-    .tabs-grid.icons-ready {
-      opacity: 1;
     }
     .tab-btn {
       font-size: 12.5px;
@@ -1972,11 +1967,6 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
-      opacity: 0;
-      transition: opacity 0.15s ease;
-    }
-    .presets-grid.icons-ready {
-      opacity: 1;
     }
     .preset-btn {
       display: flex;
@@ -4018,37 +4008,37 @@
     <!-- Tabs header -->
     <div class="tabs-grid">
       <!-- ─── NHÓM 1: CƠ BẢN & PHỔ BIẾN NHẤT (LUÔN HIỂN THỊ - 9 TABS) ─── -->
-      <button class="tab-btn active" data-tab="url">🔗 Liên kết</button>
-      <button class="tab-btn" data-tab="facebook">🔵 Facebook</button>
-      <button class="tab-btn" data-tab="youtube">🔴 YouTube</button>
-      <button class="tab-btn" data-tab="tiktok">🖤 TikTok</button>
-      <button class="tab-btn" data-tab="zalo">🔹 Zalo</button>
-      <button class="tab-btn" data-tab="messenger">💬 Messenger</button>
-      <button class="tab-btn" data-tab="instagram">📷 Instagram</button>
-      <button class="tab-btn" data-tab="whatsapp">🟢 WhatsApp</button>
-      <button class="tab-btn" data-tab="telegram">✈️ Telegram</button>
+      <button class="tab-btn active" data-tab="url">Liên kết</button>
+      <button class="tab-btn" data-tab="facebook">Facebook</button>
+      <button class="tab-btn" data-tab="youtube">YouTube</button>
+      <button class="tab-btn" data-tab="tiktok">TikTok</button>
+      <button class="tab-btn" data-tab="zalo">Zalo</button>
+      <button class="tab-btn" data-tab="messenger">Messenger</button>
+      <button class="tab-btn" data-tab="instagram">Instagram</button>
+      <button class="tab-btn" data-tab="whatsapp">WhatsApp</button>
+      <button class="tab-btn" data-tab="telegram">Telegram</button>
       
       <!-- ─── NHÓM 2: MẠNG XÃ HỘI & LIÊN LẠC KHÁC (ẨN KHI THU GỌN) ─── -->
-      <button class="tab-btn tab-more" data-tab="wechat">🟢 WeChat</button>
-      <button class="tab-btn tab-more" data-tab="twitter">🐦 X/Twitter</button>
-      <button class="tab-btn tab-more" data-tab="threads">🧵 Threads</button>
-      <button class="tab-btn tab-more" data-tab="line">💬 LINE</button>
-      <button class="tab-btn tab-more" data-tab="kakaotalk">🟡 KakaoTalk</button>
-      <button class="tab-btn tab-more" data-tab="snapchat">👻 Snapchat</button>
-      <button class="tab-btn tab-more" data-tab="wifi">📶 WiFi</button>
-      <button class="tab-btn tab-more" data-tab="sms">💬 SMS / ĐT</button>
-      <button class="tab-btn tab-more" data-tab="email">✉️ Email</button>
-      <button class="tab-btn tab-more" data-tab="vietqr">🏦 VietQR</button>
-      <button class="tab-btn tab-more" data-tab="vcard">📇 vCard</button>
-      <button class="tab-btn tab-more" data-tab="paypal">💳 PayPal</button>
-      <button class="tab-btn tab-more" data-tab="text">📝 Văn bản</button>
-      <button class="tab-btn tab-more" data-tab="pdf">📄 PDF</button>
-      <button class="tab-btn tab-more" data-tab="image">🖼️ Ảnh / PNG</button>
-      <button class="tab-btn tab-more" data-tab="google-maps">📍 G. Maps</button>
-      <button class="tab-btn tab-more" data-tab="google-forms">📋 G. Forms</button>
-      <button class="tab-btn tab-more" data-tab="calendar">📅 Lịch</button>
-      <button class="tab-btn tab-more" data-tab="spotify">🟢 Spotify</button>
-      <button class="tab-btn tab-more" data-tab="amazon">🛒 Amazon</button>
+      <button class="tab-btn tab-more" data-tab="wechat">WeChat</button>
+      <button class="tab-btn tab-more" data-tab="twitter">X/Twitter</button>
+      <button class="tab-btn tab-more" data-tab="threads">Threads</button>
+      <button class="tab-btn tab-more" data-tab="line">LINE</button>
+      <button class="tab-btn tab-more" data-tab="kakaotalk">KakaoTalk</button>
+      <button class="tab-btn tab-more" data-tab="snapchat">Snapchat</button>
+      <button class="tab-btn tab-more" data-tab="wifi">WiFi</button>
+      <button class="tab-btn tab-more" data-tab="sms">SMS / ĐT</button>
+      <button class="tab-btn tab-more" data-tab="email">Email</button>
+      <button class="tab-btn tab-more" data-tab="vietqr">VietQR</button>
+      <button class="tab-btn tab-more" data-tab="vcard">vCard</button>
+      <button class="tab-btn tab-more" data-tab="paypal">PayPal</button>
+      <button class="tab-btn tab-more" data-tab="text">Văn bản</button>
+      <button class="tab-btn tab-more" data-tab="pdf">PDF</button>
+      <button class="tab-btn tab-more" data-tab="image">Ảnh / PNG</button>
+      <button class="tab-btn tab-more" data-tab="google-maps">G. Maps</button>
+      <button class="tab-btn tab-more" data-tab="google-forms">G. Forms</button>
+      <button class="tab-btn tab-more" data-tab="calendar">Lịch</button>
+      <button class="tab-btn tab-more" data-tab="spotify">Spotify</button>
+      <button class="tab-btn tab-more" data-tab="amazon">Amazon</button>
       
       <!-- Nút mở rộng/thu gọn -->
       <button type="button" class="tab-toggle-btn" id="btn-toggle-tabs">
@@ -10674,18 +10664,11 @@ function initTabIcons() {
     const presetName = TAB_TO_PRESET[tabName] || tabName;
     const logoData = PRESETS[presetName];
     if (logoData) {
-      let text = btn.textContent.trim();
-      const firstSpaceIndex = text.indexOf(' ');
-      if (firstSpaceIndex !== -1) {
-        text = text.substring(firstSpaceIndex + 1);
-      }
+      const text = btn.textContent.trim();
       const safeLogoData = logoData.replace(/"/g, "'");
       btn.innerHTML = `<img src="${safeLogoData}" class="tab-icon" alt="${text}"><span>${text}</span>`;
     }
   });
-  // Reveal tabs grid after icons are loaded (prevents emoji flash)
-  const tg = document.querySelector('.tabs-grid');
-  if (tg) tg.classList.add('icons-ready');
 }
 
 function initPresetIcons() {
@@ -10702,9 +10685,6 @@ function initPresetIcons() {
       }
     }
   });
-  // Reveal presets grid after icons are loaded (prevents placeholder flash)
-  const pg = $('presets-grid');
-  if (pg) pg.classList.add('icons-ready');
 }
 
 function initAutoExpandTextarea() {
