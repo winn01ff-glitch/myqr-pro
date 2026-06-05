@@ -1338,6 +1338,11 @@
       column-gap: 8px; /* Tăng khoảng cách cột một chút cho hở ra thêm 1 tý */
       margin-bottom: 8px;
       flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+    .tabs-grid.icons-ready {
+      opacity: 1;
     }
     .tab-btn {
       font-size: 12.5px;
@@ -1967,6 +1972,11 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+    .presets-grid.icons-ready {
+      opacity: 1;
     }
     .preset-btn {
       display: flex;
@@ -10673,6 +10683,9 @@ function initTabIcons() {
       btn.innerHTML = `<img src="${safeLogoData}" class="tab-icon" alt="${text}"><span>${text}</span>`;
     }
   });
+  // Reveal tabs grid after icons are loaded (prevents emoji flash)
+  const tg = document.querySelector('.tabs-grid');
+  if (tg) tg.classList.add('icons-ready');
 }
 
 function initPresetIcons() {
@@ -10689,6 +10702,9 @@ function initPresetIcons() {
       }
     }
   });
+  // Reveal presets grid after icons are loaded (prevents placeholder flash)
+  const pg = $('presets-grid');
+  if (pg) pg.classList.add('icons-ready');
 }
 
 function initAutoExpandTextarea() {
