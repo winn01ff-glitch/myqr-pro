@@ -398,6 +398,38 @@
     }
     .btn-primary:active:not(:disabled) { transform: translateY(0); }
 
+    .btn:focus, button:focus {
+      outline: none !important;
+    }
+
+    #btn-remove-frame-inner-white {
+      transition: all 0.2s ease-in-out;
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border) !important;
+    }
+    #btn-remove-frame-inner-white:not(.active):hover:not(:disabled) {
+      transform: translateY(-1px) scale(1.02);
+      filter: brightness(1.08);
+      border-color: var(--accent) !important;
+      background: var(--accent-l) !important;
+      color: var(--accent) !important;
+    }
+    #btn-remove-frame-inner-white.active {
+      background: var(--accent) !important;
+      color: #ffffff !important;
+      border-color: var(--accent) !important;
+    }
+    #btn-remove-frame-inner-white.active:hover:not(:disabled) {
+      transform: translateY(-1px) scale(1.02);
+      filter: brightness(1.08);
+      background: var(--accent-h) !important;
+      border-color: var(--accent-h) !important;
+    }
+    #btn-remove-frame-inner-white:active:not(:disabled) {
+      transform: translateY(0) scale(1);
+    }
+
     /* ─── URL OPTIMIZATION PANEL ─── */
     .url-opt-panel {
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.08) 51%, rgba(255, 255, 255, 0.25) 100%);
@@ -453,14 +485,14 @@
       margin-top: 0;
       margin-bottom: 0;
       padding: 0 2px;
-      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: max-height 0.23s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.23s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.23s cubic-bezier(0.4, 0, 0.2, 1), margin-bottom 0.23s cubic-bezier(0.4, 0, 0.2, 1), padding 0.23s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .svg-groups-tab-grid.open {
       max-height: 220px;
       opacity: 1;
-      margin-top: 10px;
-      margin-bottom: 12px;
-      padding: 8px 4px;
+      margin-top: 2px;
+      margin-bottom: 10px;
+      padding: 4px 4px 8px 4px;
     }
     .opt-panel-title {
       font-size: 11px;
@@ -2667,6 +2699,28 @@
       color: var(--accent);
       box-shadow: none;
     }
+    .frame-opt-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 4px;
+      border: 1px dashed var(--border2);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.35);
+      cursor: pointer;
+      transition: all 0.18s;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--dim);
+      text-align: center;
+      text-decoration: none;
+    }
+    .frame-opt-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(255, 255, 255, 0.55);
+    }
     [data-theme="dark"] .frame-opt {
       background: rgba(255, 255, 255, 0.04);
       border-color: rgba(255, 255, 255, 0.06);
@@ -2678,6 +2732,16 @@
     }
     [data-theme="dark"] .frame-opt.active {
       background: rgba(255, 255, 255, 0.04);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    [data-theme="dark"] .frame-opt-link {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.6);
+    }
+    [data-theme="dark"] .frame-opt-link:hover {
+      background: rgba(255, 255, 255, 0.08);
       border-color: var(--accent);
       color: var(--accent);
     }
@@ -5153,9 +5217,15 @@
         <!-- Background Color -->
         <div class="style-group">
           <div class="style-group-inner-card">
-            <div class="style-group-title" style="margin-bottom: 0; display: flex; align-items: center; gap: 8px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent); flex-shrink: 0;"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.7255 3.09032 17.1962 4.85857 19C5.03345 19.1749 5.0999 19.4262 5.02724 19.6644C4.85857 20.2173 4.90807 20.8252 5.22857 21.3286C5.54907 21.832 6.08253 22 6.64303 22H12Z"/></svg>
-              MÀU NỀN QR (BACKGROUND)
+            <div class="style-group-title" style="margin-bottom: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent); flex-shrink: 0;"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.7255 3.09032 17.1962 4.85857 19C5.03345 19.1749 5.0999 19.4262 5.02724 19.6644C4.85857 20.2173 4.90807 20.8252 5.22857 21.3286C5.54907 21.832 6.08253 22 6.64303 22H12Z"/></svg>
+                MÀU NỀN QR (BACKGROUND)
+              </div>
+              <label class="grad-check" style="flex-shrink: 0; font-size: 11px; margin-bottom: 0; text-transform: none;">
+                <input type="checkbox" id="bg-transparent-enable">
+                <span>Trong suốt</span>
+              </label>
             </div>
             <div class="style-row">
               <div class="color-type-toggle" style="width: calc((100% - 16px) / 3); flex-shrink: 0;">
@@ -5459,16 +5529,16 @@
               <span>Scan Me Trên</span>
             </div>
 
-            <!-- 4. Vòng tròn cổ điển -->
-            <div class="frame-opt" data-frame="ring">
+            <!-- Tìm khung viền (Pinterest) -->
+            <a href="https://jp.pinterest.com/search/pins/?q=qr%20frame&rs=rs&source_id=rs_LSJAZtJg&top_pin_ids=1109785533196242305&eq=&etslf=3871" target="_blank" class="frame-opt-link">
               <div class="frame-preview-svg">
-                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <circle cx="24" cy="24" r="18" stroke-width="2"/>
-                  <circle cx="24" cy="24" r="15" stroke-dasharray="2 2" opacity="0.7"/>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px; margin-bottom: 2px;">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
                 </svg>
               </div>
-              <span>Vòng tròn cổ điển</span>
-            </div>
+              <span>Tìm khung viền</span>
+            </a>
 
             <!-- 5. Khung tự chọn -->
             <div class="frame-opt" data-frame="custom" style="display: none;">
@@ -5535,9 +5605,14 @@
 
           <div class="style-group" id="row-frame-color" style="margin-top: 4px;">
             <div class="style-group-inner-card">
-              <div class="style-group-title" style="margin-bottom: 0; display: flex; align-items: center; gap: 8px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent); flex-shrink: 0;"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.7255 3.09032 17.1962 4.85857 19C5.03345 19.1749 5.0999 19.4262 5.02724 19.6644C4.85857 20.2173 4.90807 20.8252 5.22857 21.3286C5.54907 21.832 6.08253 22 6.64303 22H12Z"/></svg>
-                MÀU KHUNG VIỀN
+              <div class="style-group-title" style="margin-bottom: 0; display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent); flex-shrink: 0;"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 14.7255 3.09032 17.1962 4.85857 19C5.03345 19.1749 5.0999 19.4262 5.02724 19.6644C4.85857 20.2173 4.90807 20.8252 5.22857 21.3286C5.54907 21.832 6.08253 22 6.64303 22H12Z"/></svg>
+                  MÀU KHUNG VIỀN
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-remove-frame-inner-white" style="font-size: 11px; padding: 4px 10px; height: auto; display: none; align-items: center; gap: 4px; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+                  🪄 Xóa nền trắng
+                </button>
               </div>
               <div class="style-row">
                 <div class="color-type-toggle" style="width: calc((100% - 16px) / 3); flex-shrink: 0;">
@@ -5572,11 +5647,32 @@
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent); flex-shrink: 0;"><line x1="18" y1="21" x2="6" y2="21"/><line x1="18" y1="3" x2="6" y2="3"/><rect x="8" y="6" width="8" height="12" rx="1"/></svg>
                   CĂN CHỈNH KHUNG TỰ CHỌN
                 </div>
-                <button class="btn btn-primary" id="btn-ai-align" type="button" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); color:#fff; border:none; box-shadow: 0 2px 6px rgba(124, 58, 237, 0.2); padding: 4px 10px; font-size: 11px; border-radius: 6px; display: flex; align-items: center; gap: 4px; cursor: pointer; white-space: nowrap; margin-left: auto;">
-                  ✨ Quét AI
-                </button>
+                <div style="display: flex; align-items: center; gap: 6px; margin-left: auto;">
+                  <button class="btn btn-secondary" id="btn-remove-white-bg" type="button" style="background: linear-gradient(135deg, #ec4899, #f43f5e); color:#fff; border:none; box-shadow: 0 2px 6px rgba(236, 72, 153, 0.2); padding: 4px 10px; font-size: 11px; border-radius: 6px; display: flex; align-items: center; gap: 4px; cursor: pointer; white-space: nowrap;">
+                    🪄 Xóa nền
+                  </button>
+                  <button class="btn btn-primary" id="btn-ai-align" type="button" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); color:#fff; border:none; box-shadow: 0 2px 6px rgba(124, 58, 237, 0.2); padding: 4px 10px; font-size: 11px; border-radius: 6px; display: flex; align-items: center; gap: 4px; cursor: pointer; white-space: nowrap;">
+                    ✨ Quét AI
+                  </button>
+                </div>
               </div>
               
+              <div class="seg-wrap" style="margin-top: 10px;">
+                <div class="seg-label" style="font-size: 11px; font-weight: 700; color: var(--dim); margin-bottom: 6px;">Chế độ xóa nền</div>
+                <div class="shape-selectors" id="custom-remove-bg-mode-selectors">
+                  <div class="segmented-indicator"></div>
+                  <div class="shape-sel active" data-type="remove-bg-mode" data-val="none">
+                    Không xóa
+                  </div>
+                  <div class="shape-sel" data-type="remove-bg-mode" data-val="all">
+                    Xóa toàn bộ
+                  </div>
+                  <div class="shape-sel" data-type="remove-bg-mode" data-val="outside">
+                    Chỉ xóa ngoài
+                  </div>
+                </div>
+              </div>
+
               <div class="seg-wrap" style="margin-top: 10px;">
                 <div class="seg-label" style="font-size: 11px; font-weight: 700; color: var(--dim); margin-bottom: 6px;">Chế độ khung</div>
                 <div class="shape-selectors" id="custom-qr-mode-selectors">
@@ -5600,10 +5696,10 @@
               <div class="sl-row" style="margin-top:12px">
                 <div class="sl-label">Vị trí X (%) <span class="val" id="s-custom-x-val" style="display:none;">38%</span></div>
                 <div class="slider-input-sync">
-                  <input type="range" id="s-custom-x" min="0" max="10" value="4.6" step="0.1">
+                  <input type="range" id="s-custom-x" min="0" max="10" value="4.25" step="0.01">
                   <div class="sync-input-wrap">
                     <button class="btn-step btn-minus" type="button">−</button>
-                    <input type="text" id="s-custom-x-num" readonly value="4.6">
+                    <input type="text" id="s-custom-x-num" readonly value="4.25">
                     <button class="btn-step btn-plus" type="button">+</button>
                   </div>
                 </div>
@@ -5612,10 +5708,10 @@
               <div class="sl-row">
                 <div class="sl-label">Vị trí Y (%) <span class="val" id="s-custom-y-val" style="display:none;">35%</span></div>
                 <div class="slider-input-sync">
-                  <input type="range" id="s-custom-y" min="0" max="10" value="4.5" step="0.1">
+                  <input type="range" id="s-custom-y" min="0" max="10" value="4.06" step="0.01">
                   <div class="sync-input-wrap">
                     <button class="btn-step btn-minus" type="button">−</button>
-                    <input type="text" id="s-custom-y-num" readonly value="4.5">
+                    <input type="text" id="s-custom-y-num" readonly value="4.06">
                     <button class="btn-step btn-plus" type="button">+</button>
                   </div>
                 </div>
@@ -5648,7 +5744,7 @@
               <div class="sl-row">
                 <div class="sl-label">Góc xoay mã QR (°) <span class="val" id="s-custom-rotate-val" style="display:none;">0°</span></div>
                 <div class="slider-input-sync">
-                  <input type="range" id="s-custom-rotate" min="0" max="10" value="5.0" step="0.1">
+                  <input type="range" id="s-custom-rotate" min="0" max="10" value="5.0" step="0.01">
                   <div class="sync-input-wrap">
                     <button class="btn-step btn-minus" type="button">−</button>
                     <input type="text" id="s-custom-rotate-num" readonly value="0°">
@@ -5854,7 +5950,10 @@ let customQrY      = 35.0;
 let customQrSize   = 52.0;
 let customQrRadius = 20.0;
 let customQrRotate = 0.0;
+let removeBgMode   = 'none'; // 'none', 'all' or 'outside'
+let originalCustomFrameImg = null;
 let globalHandleFrameUpload = null;
+let removeFrameInnerWhite = false;
 
 const SVG_GROUPS = [
   {
@@ -7347,10 +7446,12 @@ function initSliderSync(sliderId, textId, minusId, plusId, onChange) {
   }
 
   const step = parseFloat(s.step) || 1;
+  const decimals = step < 0.1 ? 2 : (step < 1 ? 1 : 0);
 
   const update = () => {
     let val = parseFloat(s.value);
-    val = Math.round(val * 10) / 10;
+    const factor = Math.pow(10, decimals);
+    val = Math.round(val * factor) / factor;
     s.value = val;
     if (t) {
       if (s.id === 's-custom-rotate') {
@@ -8950,6 +9051,18 @@ document.querySelectorAll('.shape-sel').forEach(sel => {
       if (select) {
         select.value = val;
       }
+    } else if (type === 'remove-bg-mode') {
+      removeBgMode = val;
+      if (originalCustomFrameImg) {
+        if (removeBgMode === 'none') {
+          customFrameImg = originalCustomFrameImg;
+          logoThumb.src = originalCustomFrameImg.src;
+          render();
+        } else {
+          removeWhiteBackground();
+        }
+        return;
+      }
     }
     render();
   });
@@ -9085,6 +9198,25 @@ syncColorTypeToggles('eye-out');
 syncColorTypeToggles('eye-in');
 syncColorTypeToggles('border');
 syncColorTypeToggles('frame');
+
+// Bind transparent checkbox
+const bgTransparentEnable = $('bg-transparent-enable');
+if (bgTransparentEnable) {
+  bgTransparentEnable.addEventListener('change', e => {
+    const isTransparent = e.target.checked;
+    const container = $('bg-color-1')?.closest('.color-pickers-container');
+    const toggle = $('bg-type-solid')?.closest('.color-type-toggle');
+    if (container) {
+      container.style.opacity = isTransparent ? '0.3' : '1';
+      container.style.pointerEvents = isTransparent ? 'none' : 'auto';
+    }
+    if (toggle) {
+      toggle.style.opacity = isTransparent ? '0.3' : '1';
+      toggle.style.pointerEvents = isTransparent ? 'none' : 'auto';
+    }
+    render();
+  });
+}
 
 // ══════════════════════════════════
 //  Two-way Binding initialization
@@ -9388,20 +9520,23 @@ function drawCustomQR(ctx, size, rawQR) {
   }
 
   // 1. Draw Background (Màu nền)
-  const isBgGrad = $('bg-grad-enable').checked;
-  const bgColor1 = $('bg-color-1').value;
-  const bgColor2 = $('bg-color-2').value;
-  ctx.save();
-  if (isBgGrad) {
-    const g = ctx.createLinearGradient(0, 0, size, size);
-    g.addColorStop(0, bgColor1);
-    g.addColorStop(1, bgColor2);
-    ctx.fillStyle = g;
-  } else {
-    ctx.fillStyle = bgColor1;
+  const isBgTransparent = $('bg-transparent-enable')?.checked || false;
+  if (!isBgTransparent) {
+    const isBgGrad = $('bg-grad-enable').checked;
+    const bgColor1 = $('bg-color-1').value;
+    const bgColor2 = $('bg-color-2').value;
+    ctx.save();
+    if (isBgGrad) {
+      const g = ctx.createLinearGradient(0, 0, size, size);
+      g.addColorStop(0, bgColor1);
+      g.addColorStop(1, bgColor2);
+      ctx.fillStyle = g;
+    } else {
+      ctx.fillStyle = bgColor1;
+    }
+    ctx.fillRect(0, 0, size, size);
+    ctx.restore();
   }
-  ctx.fillRect(0, 0, size, size);
-  ctx.restore();
 
   // 2. Draw Outer Border (Viền bao ngoài)
   if (borderStyle !== 'none') {
@@ -9686,8 +9821,108 @@ let svgColorCache = {
   color1: null,
   color2: null,
   isGrad: null,
+  removeFrameInnerWhite: null,
   image: null
 };
+
+function isQrContainerElement(el, qrX, qrY, qrSize) {
+  let fill = (el.getAttribute('fill') || '').trim().toLowerCase();
+  let isWhite = fill === 'white' || fill === '#ffffff' || fill === '#fff' || fill.replace(/\s+/g, '') === 'rgb(255,255,255)';
+  
+  if (!isWhite) {
+    const styleStr = el.getAttribute('style') || '';
+    const match = styleStr.match(/fill\s*:\s*([^;]+)/i);
+    if (match) {
+      const val = match[1].trim().toLowerCase();
+      isWhite = val === 'white' || val === '#ffffff' || val === '#fff' || val.replace(/\s+/g, '') === 'rgb(255,255,255)';
+    }
+  }
+  
+  if (!isWhite) return false;
+  
+  const tag = el.tagName.toLowerCase();
+  const qcX = qrX + qrSize / 2;
+  const qcY = qrY + qrSize / 2;
+  
+  if (tag === 'rect') {
+    const w = parseFloat(el.getAttribute('width') || 0);
+    const h = parseFloat(el.getAttribute('height') || 0);
+    const x = parseFloat(el.getAttribute('x') || 0);
+    const y = parseFloat(el.getAttribute('y') || 0);
+    const elCx = x + w / 2;
+    const elCy = y + h / 2;
+    const dist = Math.sqrt((elCx - qcX)**2 + (elCy - qcY)**2);
+    if (dist < qrSize * 0.5 && w > qrSize * 0.6 && h > qrSize * 0.6) {
+      return true;
+    }
+  } else if (tag === 'circle') {
+    const r = parseFloat(el.getAttribute('r') || 0);
+    const cx = parseFloat(el.getAttribute('cx') || 0);
+    const cy = parseFloat(el.getAttribute('cy') || 0);
+    const dist = Math.sqrt((cx - qcX)**2 + (cy - qcY)**2);
+    if (dist < qrSize * 0.5 && r > qrSize * 0.3) {
+      return true;
+    }
+  } else if (tag === 'ellipse') {
+    const rx = parseFloat(el.getAttribute('rx') || 0);
+    const ry = parseFloat(el.getAttribute('ry') || 0);
+    const cx = parseFloat(el.getAttribute('cx') || 0);
+    const cy = parseFloat(el.getAttribute('cy') || 0);
+    const dist = Math.sqrt((cx - qcX)**2 + (cy - qcY)**2);
+    if (dist < qrSize * 0.5 && rx > qrSize * 0.3 && ry > qrSize * 0.3) {
+      return true;
+    }
+  } else if (tag === 'polygon') {
+    const pointsStr = el.getAttribute('points') || '';
+    const coords = pointsStr.match(/[-+]?[0-9]*\.?[0-9]+/g);
+    if (coords && coords.length > 4) {
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      for (let i = 0; i < coords.length - 1; i += 2) {
+        const px = parseFloat(coords[i]);
+        const py = parseFloat(coords[i+1]);
+        if (!isNaN(px) && !isNaN(py)) {
+          if (px < minX) minX = px;
+          if (px > maxX) maxX = px;
+          if (py < minY) minY = py;
+          if (py > maxY) maxY = py;
+        }
+      }
+      const w = maxX - minX;
+      const h = maxY - minY;
+      const elCx = minX + w / 2;
+      const elCy = minY + h / 2;
+      const dist = Math.sqrt((elCx - qcX)**2 + (elCy - qcY)**2);
+      if (dist < qrSize * 0.5 && w > qrSize * 0.6 && h > qrSize * 0.6) {
+        return true;
+      }
+    }
+  } else if (tag === 'path') {
+    const d = el.getAttribute('d') || '';
+    const coords = d.match(/[-+]?[0-9]*\.?[0-9]+/g);
+    if (coords && coords.length > 4) {
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      for (let i = 0; i < coords.length - 1; i += 2) {
+        const px = parseFloat(coords[i]);
+        const py = parseFloat(coords[i+1]);
+        if (!isNaN(px) && !isNaN(py)) {
+          if (px < minX) minX = px;
+          if (px > maxX) maxX = px;
+          if (py < minY) minY = py;
+          if (py > maxY) maxY = py;
+        }
+      }
+      const w = maxX - minX;
+      const h = maxY - minY;
+      const elCx = minX + w / 2;
+      const elCy = minY + h / 2;
+      const dist = Math.sqrt((elCx - qcX)**2 + (elCy - qcY)**2);
+      if (dist < qrSize * 0.5 && w > qrSize * 0.6 && h > qrSize * 0.6) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
 
 function drawFrameBackground(ctx, S) {
   if (activeFrame === 'none') return;
@@ -9704,6 +9939,7 @@ function drawFrameBackground(ctx, S) {
       svgColorCache.color1 === frameColor1 &&
       svgColorCache.color2 === frameColor2 &&
       svgColorCache.isGrad === isGrad &&
+      svgColorCache.removeFrameInnerWhite === removeFrameInnerWhite &&
       svgColorCache.image &&
       svgColorCache.image.complete
     );
@@ -9720,8 +9956,27 @@ function drawFrameBackground(ctx, S) {
       if (SVG_TEXTS[activeFrame]) {
         const text = SVG_TEXTS[activeFrame];
         let modified = text;
-        let replacement = frameColor1;
         
+        // Remove frame inner white container if requested
+        if (removeFrameInnerWhite) {
+          try {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(modified, 'image/svg+xml');
+            const shapes = doc.querySelectorAll('rect, circle, path, ellipse, polygon');
+            shapes.forEach(el => {
+              if (isQrContainerElement(el, isSvgTemplate.qrX, isSvgTemplate.qrY, isSvgTemplate.qrSize)) {
+                el.setAttribute('fill', 'none');
+                if (el.style) el.style.fill = 'none';
+              }
+            });
+            const serializer = new XMLSerializer();
+            modified = serializer.serializeToString(doc);
+          } catch (err) {
+            console.error("Error removing inner white container from SVG:", err);
+          }
+        }
+
+        let replacement = frameColor1;
         if (isGrad) {
           const gradDef = `
             <defs>
@@ -9759,6 +10014,7 @@ function drawFrameBackground(ctx, S) {
             color1: frameColor1,
             color2: frameColor2,
             isGrad: isGrad,
+            removeFrameInnerWhite: removeFrameInnerWhite,
             image: img
           };
           render();
@@ -9793,13 +10049,15 @@ function drawFrameBackground(ctx, S) {
       ctx.drawImage(customFrameImg, 0, 0, S, S);
     }
   } else if (activeFrame === 'scan-me-bottom' || activeFrame === 'scan-me-top') {
-    ctx.fillStyle = '#ffffff';
-    ctx.strokeStyle = '#e2e8f0';
-    ctx.lineWidth = 2 * scale;
-    ctx.beginPath();
-    rrPath(ctx, 4 * scale, 4 * scale, S - 8 * scale, S - 8 * scale, 24 * scale);
-    ctx.fill();
-    ctx.stroke();
+    if (!removeFrameInnerWhite) {
+      const qrSize = S * 0.72;
+      const qrX = (S - qrSize) / 2;
+      const qrY = (activeFrame === 'scan-me-bottom') ? S * 0.08 : S * 0.20;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      rrPath(ctx, qrX, qrY, qrSize, qrSize, 16 * scale);
+      ctx.fill();
+    }
   } else if (activeFrame === 'heart-love') {
     ctx.fillStyle = '#fff5f5';
     ctx.strokeStyle = color1;
@@ -9814,12 +10072,6 @@ function drawFrameBackground(ctx, S) {
     ctx.lineWidth = 2 * scale;
     ctx.beginPath();
     rrPath(ctx, 4 * scale, 4 * scale, S - 8 * scale, S - 8 * scale, 16 * scale);
-    ctx.fill();
-    ctx.stroke();
-  } else if (activeFrame === 'ring') {
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.arc(S / 2, S / 2, S / 2 - 4 * scale, 0, Math.PI * 2);
     ctx.fill();
   }
   ctx.restore();
@@ -9916,31 +10168,6 @@ function drawFrameForeground(ctx, S) {
     drawLeafSprig(ctx, S - 20 * scale, 20 * scale, 30 * scale, -Math.PI / 4, color1, color2);
     drawLeafSprig(ctx, 20 * scale, S - 20 * scale, 30 * scale, 3 * Math.PI / 4, color1, color2);
     
-  } else if (activeFrame === 'ring') {
-    ctx.strokeStyle = color1;
-    ctx.lineWidth = 6 * scale;
-    ctx.beginPath();
-    ctx.arc(S / 2, S / 2, S * 0.44, 0, Math.PI * 2);
-    ctx.stroke();
-    
-    ctx.strokeStyle = color2;
-    ctx.lineWidth = 2.5 * scale;
-    ctx.save();
-    ctx.setLineDash([12 * scale, 8 * scale]);
-    ctx.beginPath();
-    ctx.arc(S / 2, S / 2, S * 0.40, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
-    
-    const radius = S * 0.44;
-    const angles = [0, 45, 90, 135, 180, 225, 270, 315];
-    angles.forEach(a => {
-      const rad = (a * Math.PI) / 180;
-      const sx = S / 2 + Math.cos(rad) * radius;
-      const sy = S / 2 + Math.sin(rad) * radius;
-      drawStar(ctx, sx, sy, 8, 8 * scale, 4 * scale, color1);
-    });
-    
   } else if (activeFrame === 'custom') {
     if (customFrameImg && customQrMode === 'foreground') {
       ctx.drawImage(customFrameImg, 0, 0, S, S);
@@ -9952,6 +10179,7 @@ function drawFrameForeground(ctx, S) {
 function render() {
   if (!hasQR) return;
   
+  const isBgTransparent = $('bg-transparent-enable')?.checked || false;
   const dpr = window.devicePixelRatio || 1;
   const isSvgTemplate = SVG_TEMPLATES[activeFrame];
   const S = isSvgTemplate ? isSvgTemplate.width : 600;
@@ -10016,10 +10244,6 @@ function render() {
         qrSize = S * 0.72;
         qrX = (S - qrSize) / 2;
         qrY = S * 0.20;
-      } else if (activeFrame === 'ring') {
-        qrSize = S * 0.62;
-        qrX = (S - qrSize) / 2;
-        qrY = (S - qrSize) / 2;
       }
     }
   }
@@ -10043,6 +10267,43 @@ function render() {
   drawFrameForeground(ctx, S);
 
   ctx.restore(); // Restore outer context
+
+  if (activeFrame === 'custom' && isQrFocused) {
+    ctx.save();
+    ctx.strokeStyle = '#2563eb';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5, 3]);
+    
+    ctx.translate(qrX + qrSize / 2, qrY + qrSize / 2);
+    ctx.rotate(customQrRotate * Math.PI / 180);
+    ctx.translate(-qrSize / 2, -qrSize / 2);
+    
+    ctx.strokeRect(0, 0, qrSize, qrSize);
+    
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#ffffff';
+    ctx.strokeStyle = '#2563eb';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(qrSize, qrSize, 8, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.strokeStyle = '#2563eb';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(qrSize - 3, qrSize - 3);
+    ctx.lineTo(qrSize + 3, qrSize + 3);
+    ctx.moveTo(qrSize + 1, qrSize + 3);
+    ctx.lineTo(qrSize + 3, qrSize + 3);
+    ctx.lineTo(qrSize + 3, qrSize + 1);
+    ctx.moveTo(qrSize - 1, qrSize - 3);
+    ctx.lineTo(qrSize - 3, qrSize - 3);
+    ctx.lineTo(qrSize - 3, qrSize - 1);
+    ctx.stroke();
+    
+    ctx.restore();
+  }
 
   // Card border-radius sync
   const card = document.querySelector('.qr-card');
@@ -10074,7 +10335,7 @@ function render() {
     } else {
       card.classList.remove('no-border');
     }
-    if (isSvgTemplate) {
+    if (isSvgTemplate || activeFrame === 'custom' || isBgTransparent || removeFrameInnerWhite) {
       card.style.background = 'transparent';
       card.style.boxShadow = 'none';
     } else {
@@ -10084,7 +10345,7 @@ function render() {
   }
   if (modalPreview) {
     modalPreview.style.borderRadius = isCircle ? '50%' : cardRadius + 'px';
-    if (isSvgTemplate) {
+    if (isSvgTemplate || activeFrame === 'custom' || isBgTransparent || removeFrameInnerWhite) {
       modalPreview.style.background = 'transparent';
       modalPreview.style.boxShadow = 'none';
       modalPreview.style.border = 'none';
@@ -10174,6 +10435,7 @@ function rrPath(ctx, x, y, w, h, r) {
 // ══════════════════════════════════
 async function renderAtSize(size) {
   return new Promise((resolve, reject) => {
+    const isBgTransparent = $('bg-transparent-enable')?.checked || false;
     const tmp = document.createElement('canvas');
     const isSvgTemplate = SVG_TEMPLATES[activeFrame];
     let exportWidth = size;
@@ -10236,10 +10498,6 @@ async function renderAtSize(size) {
           qrSize = exportWidth * 0.72;
           qrX = (exportWidth - qrSize) / 2;
           qrY = exportWidth * 0.20;
-        } else if (activeFrame === 'ring') {
-          qrSize = exportWidth * 0.62;
-          qrX = (exportWidth - qrSize) / 2;
-          qrY = (exportWidth - qrSize) / 2;
         }
       }
     }
@@ -10543,6 +10801,13 @@ function resetDesign() {
     const grad = $(p + '-type-grad');
     if (grad) grad.checked = false;
   });
+
+  // Reset transparent checkbox
+  const bgTrans = $('bg-transparent-enable');
+  if (bgTrans) {
+    bgTrans.checked = false;
+    bgTrans.dispatchEvent(new Event('change'));
+  }
 
   // 3. Reset shape states
   dotStyle = 'rounded';
@@ -11329,6 +11594,17 @@ function initFrameSystem() {
       if (rowAlign) rowAlign.style.display = 'none';
     }
     
+    const btnInnerWhite = $('btn-remove-frame-inner-white');
+    if (btnInnerWhite) {
+      if (activeFrame !== 'none' && activeFrame !== 'custom') {
+        btnInnerWhite.style.display = 'flex';
+      } else {
+        btnInnerWhite.style.display = 'none';
+        removeFrameInnerWhite = false;
+        btnInnerWhite.classList.remove('active');
+      }
+    }
+    
     setTimeout(initAllSegmentedIndicators, 50);
   }
 
@@ -11393,6 +11669,7 @@ function initFrameSystem() {
         croppedImg.src = cropCanvas.toDataURL('image/png');
         croppedImg.onload = () => {
           customFrameImg = croppedImg;
+          originalCustomFrameImg = croppedImg;
           
           // Hiển thị tên file kèm nhãn đã sửa đổi
           if (iw !== ih) {
@@ -11409,7 +11686,11 @@ function initFrameSystem() {
           
           activeFrame = 'custom';
           updateFrameCustomizationUI();
-          render();
+          if (removeBgMode !== 'none') {
+            removeWhiteBackground();
+          } else {
+            render();
+          }
         };
       };
     };
@@ -11425,6 +11706,7 @@ function initFrameSystem() {
   removeBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     customFrameImg = null;
+    originalCustomFrameImg = null;
     logoRow.style.display = 'none';
     logoRow.classList.remove('active');
     uploadZone.style.display = 'block';
@@ -11505,15 +11787,18 @@ function executeActualAIAlign() {
     return;
   }
   
+  // Downsample to 200x200 for extremely fast, noise-free, and border-contained analysis
+  const dw = 200;
+  const dh = 200;
   const temp = document.createElement('canvas');
-  temp.width = W;
-  temp.height = H;
+  temp.width = dw;
+  temp.height = dh;
   const ctx = temp.getContext('2d');
-  ctx.drawImage(customFrameImg, 0, 0);
+  ctx.drawImage(customFrameImg, 0, 0, dw, dh);
   
   let imgData;
   try {
-    imgData = ctx.getImageData(0, 0, W, H);
+    imgData = ctx.getImageData(0, 0, dw, dh);
   } catch (canvasErr) {
     console.error('Failed to getImageData from canvas:', canvasErr);
     showToast('⚠️ Trình duyệt từ chối đọc ảnh này (Lỗi bảo mật CORS). Hãy thử dùng ảnh khác.');
@@ -11521,144 +11806,145 @@ function executeActualAIAlign() {
   }
   
   const data = imgData.data;
-  console.log('Image pixels loaded. Total bytes:', data.length);
+  const visited = new Uint8Array(dw * dh);
   
-  // 1. Thuật toán quét vùng đồng màu màn hình (Smart Uniform Color Square Detection)
+  // Helper to get pixel color
+  const getPixel = (x, y) => {
+    const idx = (y * dw + x) * 4;
+    return [data[idx], data[idx+1], data[idx+2], data[idx+3]];
+  };
+  
+  // Identify dominant background color from the 4 corners
+  const corners = [
+    getPixel(0, 0),
+    getPixel(dw - 1, 0),
+    getPixel(0, dh - 1),
+    getPixel(dw - 1, dh - 1)
+  ];
+  
+  // Simple check if two colors are similar
+  const areColorsSimilar = (c1, c2, threshold = 45) => {
+    if (c1[3] < 30 && c2[3] < 30) return true; // both transparent
+    if (Math.abs(c1[3] - c2[3]) > 40) return false;
+    
+    // If both are very white/light
+    const w1 = c1[0] > 210 && c1[1] > 210 && c1[2] > 210;
+    const w2 = c2[0] > 210 && c2[1] > 210 && c2[2] > 210;
+    if (w1 && w2) return true;
+    
+    const dist = Math.sqrt((c1[0] - c2[0])**2 + (c1[1] - c2[1])**2 + (c1[2] - c2[2])**2);
+    return dist < threshold;
+  };
+  
+  // We assume the background color is the most common corner color
+  let bgIdx = 0;
+  let maxBgSimilar = 0;
+  for (let i = 0; i < 4; i++) {
+    let simCount = 0;
+    for (let j = 0; j < 4; j++) {
+      if (areColorsSimilar(corners[i], corners[j])) simCount++;
+    }
+    if (simCount > maxBgSimilar) {
+      maxBgSimilar = simCount;
+      bgIdx = i;
+    }
+  }
+  const bgColor = corners[bgIdx];
+  
   let bestBox = null;
   let bestScore = -1;
   
-  const candidates = [];
-  // Thử lưới 7x7 ở giữa ảnh (từ 20% đến 80%)
-  for (let gx = 2; gx <= 8; gx++) {
-    for (let gy = 2; gy <= 8; gy++) {
-      candidates.push({
-        x: Math.floor((gx / 10) * W),
-        y: Math.floor((gy / 10) * H)
-      });
-    }
-  }
-  
-  for (const p of candidates) {
-    const startIdx = (p.y * W + p.x) * 4;
-    if (startIdx < 0 || startIdx >= data.length) continue;
-    
-    const sr = data[startIdx];
-    const sg = data[startIdx+1];
-    const sb = data[startIdx+2];
-    const sa = data[startIdx+3];
-    
-    if (sr === undefined || sg === undefined || sb === undefined || sa === undefined) continue;
-    if (sa < 15) continue; // Bỏ qua nếu quá trong suốt (sẽ quét bằng thuật toán 2)
-    
-    // Hàm kiểm tra màu tương đồng (Cực kỳ linh hoạt với bóng đổ 3D, gradient mờ và phản chiếu màn hình)
-    const isSimilar = (x, y) => {
-      const idx = (y * W + x) * 4;
-      if (idx < 0 || idx >= data.length) return false;
+  // Scan the image for candidate seed pixels
+  // We scan a grid in the central 15% to 85% area
+  for (let y = Math.floor(dh * 0.15); y < Math.floor(dh * 0.85); y += 4) {
+    for (let x = Math.floor(dw * 0.15); x < Math.floor(dw * 0.85); x += 4) {
+      const vIdx = y * dw + x;
+      if (visited[vIdx]) continue;
       
-      const r = data[idx];
-      const g = data[idx+1];
-      const b = data[idx+2];
-      const a = data[idx+3];
+      const seedColor = getPixel(x, y);
       
-      if (r === undefined || g === undefined || b === undefined || a === undefined) return false;
+      // Skip if seed is too dark (probably text, border, or line)
+      const brightness = (seedColor[0] + seedColor[1] + seedColor[2]) / 3;
+      if (brightness < 40 && seedColor[3] >= 30) {
+        visited[vIdx] = 1;
+        continue;
+      }
       
-      // Ngưỡng 1: Cả hai đều thuộc dải màu sáng màn hình (Trắng, xám nhạt, beige, kem) để vượt bóng phản chiếu
-      const isStartScreen = sr > 160 && sg > 160 && sb > 130;
-      const isTargetScreen = r > 160 && g > 160 && b > 130;
-      if (isStartScreen && isTargetScreen) return true;
+      // Run BFS flood fill
+      const queue = [[x, y]];
+      visited[vIdx] = 1;
       
-      // Ngưỡng 2: So sánh khoảng cách màu thông thường
-      const dist = Math.sqrt((r - sr)**2 + (g - sg)**2 + (b - sb)**2);
-      const alphaDist = Math.abs(a - sa);
-      return dist < 85 && alphaDist < 45;
-    };
-    
-    // Quét đa dòng song song (Multi-Line Ray-Casting) để tìm biên giới hạn rộng nhất
-    // Bỏ qua các vật thể đè lên góc/cạnh (như sticker, hoa lá, bóng đổ lệch)
-    let left = p.x;
-    let right = p.x;
-    let top = p.y;
-    let bottom = p.y;
-    
-    // Mở rộng thành 9 đường quét ngang để vượt qua sticker nhiều kích thước hơn
-    const yOffsets = [
-      0, 
-      -Math.floor(H * 0.05), Math.floor(H * 0.05), 
-      -Math.floor(H * 0.10), Math.floor(H * 0.10),
-      -Math.floor(H * 0.15), Math.floor(H * 0.15),
-      -Math.floor(H * 0.20), Math.floor(H * 0.20)
-    ];
-    let minLeft = p.x;
-    let maxRight = p.x;
-    for (const dy of yOffsets) {
-      const sy = Math.max(0, Math.min(H - 1, p.y + dy));
-      if (!isSimilar(p.x, sy)) continue;
+      let minX = x, maxX = x, minY = y, maxY = y;
+      let count = 0;
+      let touchesBorder = false;
       
-      let l = p.x;
-      while (l > 0 && isSimilar(l - 1, sy)) l--;
-      let r = p.x;
-      while (r < W - 1 && isSimilar(r + 1, sy)) r++;
-      
-      if (l < minLeft) minLeft = l;
-      if (r > maxRight) maxRight = r;
-    }
-    left = minLeft;
-    right = maxRight;
-    
-    // Mở rộng thành 9 đường quét dọc
-    const xOffsets = [
-      0, 
-      -Math.floor(W * 0.05), Math.floor(W * 0.05), 
-      -Math.floor(W * 0.10), Math.floor(W * 0.10),
-      -Math.floor(W * 0.15), Math.floor(W * 0.15),
-      -Math.floor(W * 0.20), Math.floor(W * 0.20)
-    ];
-    let minTop = p.y;
-    let maxBottom = p.y;
-    for (const dx of xOffsets) {
-      const sx = Math.max(0, Math.min(W - 1, p.x + dx));
-      if (!isSimilar(sx, p.y)) continue;
-      
-      let t = p.y;
-      while (t > 0 && isSimilar(sx, t - 1)) t--;
-      let b = p.y;
-      while (b < H - 1 && isSimilar(sx, b + 1)) b++;
-      
-      if (t < minTop) minTop = t;
-      if (b > maxBottom) maxBottom = b;
-    }
-    top = minTop;
-    bottom = maxBottom;
-    
-    const w = right - left;
-    const h = bottom - top;
-    
-    // Kích thước ô vuông hợp lý (từ 15% đến 85% kích thước ảnh)
-    if (w > W * 0.15 && w < W * 0.85 && h > H * 0.15 && h < H * 0.85) {
-      // Kiểm tra mật độ màu đồng đều trong vùng chứa
-      let matchCount = 0;
-      const sampleStep = Math.max(1, Math.floor(w / 15));
-      let totalSamples = 0;
-      for (let sy = top; sy <= bottom; sy += sampleStep) {
-        for (let sx = left; sx <= right; sx += sampleStep) {
-          totalSamples++;
-          if (isSimilar(sx, sy)) matchCount++;
+      let head = 0;
+      while (head < queue.length) {
+        const [cx, cy] = queue[head++];
+        count++;
+        
+        if (cx < minX) minX = cx;
+        if (cx > maxX) maxX = cx;
+        if (cy < minY) minY = cy;
+        if (cy > maxY) maxY = cy;
+        
+        if (cx === 0 || cx === dw - 1 || cy === 0 || cy === dh - 1) {
+          touchesBorder = true;
+        }
+        
+        // Check 4 neighbors
+        const neighbors = [
+          [cx + 1, cy],
+          [cx - 1, cy],
+          [cx, cy + 1],
+          [cx, cy - 1]
+        ];
+        
+        for (const [nx, ny] of neighbors) {
+          if (nx >= 0 && nx < dw && ny >= 0 && ny < dh) {
+            const nIdx = ny * dw + nx;
+            if (!visited[nIdx]) {
+              const nColor = getPixel(nx, ny);
+              // Use a slightly larger threshold for flood fill to handle soft gradients and noise
+              if (areColorsSimilar(seedColor, nColor, 55)) {
+                visited[nIdx] = 1;
+                queue.push([nx, ny]);
+              }
+            }
+          }
         }
       }
       
-      const density = matchCount / totalSamples;
-      if (density > 0.80) {
-        const aspect = Math.min(w, h) / Math.max(w, h);
-        const sizeScore = (w * h) / (W * H);
-        const centerDistX = Math.abs((left + w/2) - W/2) / W;
-        const centerDistY = Math.abs((top + h/2) - H/2) / H;
-        const centerScore = 1.0 - (centerDistX + centerDistY);
+      // If it doesn't touch the border, analyze the component
+      if (!touchesBorder) {
+        const w = maxX - minX + 1;
+        const h = maxY - minY + 1;
         
-        const score = aspect * 0.5 + centerScore * 0.3 + sizeScore * 0.2;
-        
-        if (score > bestScore) {
-          bestScore = score;
-          bestBox = { left, top, width: w, height: h };
+        // Component must be a reasonable size
+        if (w > dw * 0.12 && w < dw * 0.85 && h > dh * 0.12 && h < dh * 0.85) {
+          const aspect = Math.min(w, h) / Math.max(w, h);
+          
+          // Aspect ratio must be close to a square
+          if (aspect >= 0.72) {
+            const density = count / (w * h);
+            
+            // Density must be high (meaning it's mostly solid)
+            if (density > 0.58) {
+              const centerX = minX + w / 2;
+              const centerY = minY + h / 2;
+              const distFromCenter = Math.sqrt((centerX - 100)**2 + (centerY - 100)**2) / 141.4;
+              const centerScore = 1.0 - distFromCenter;
+              
+              // Score based on aspect, centrality, density, and size
+              const sizeScore = (w * h) / (dw * dh);
+              const score = aspect * 0.4 + centerScore * 0.3 + density * 0.2 + sizeScore * 0.1;
+              
+              if (score > bestScore) {
+                bestScore = score;
+                bestBox = { left: minX, top: minY, width: w, height: h };
+              }
+            }
+          }
         }
       }
     }
@@ -11669,71 +11955,24 @@ function executeActualAIAlign() {
   let targetSize = 52.0;
   let found = false;
   
-  if (bestBox && bestScore > 0.6) {
+  if (bestBox && bestScore > 0.4) {
     console.log('AI detected uniform color square box:', bestBox, 'Score:', bestScore);
     
-    // THIẾT KẾ HOÀN MỸ NÂNG CẤP: Thu nhỏ tỷ lệ còn 84% và tạo lề căn giữa 8% để QR nằm gọn gàng bên trong màn hình, tránh tràn mép vát cạnh 3D
-    const finalSize = Math.max(bestBox.width, bestBox.height) * 0.84;
-    const pad = (Math.max(bestBox.width, bestBox.height) * 0.16) / 2;
+    // Scale bestBox coordinates back to original W and H
+    const origLeft = (bestBox.left / dw) * W;
+    const origTop = (bestBox.top / dh) * H;
+    const origWidth = (bestBox.width / dw) * W;
+    const origHeight = (bestBox.height / dh) * H;
     
-    const finalLeft = bestBox.left + pad;
-    const finalTop = bestBox.top + pad;
+    // Calculate square QR size fitting inside the box with 92% scale (4% margin on each side)
+    const qrSizePx = Math.min(origWidth, origHeight) * 0.92;
+    const qrLeftPx = origLeft + (origWidth - qrSizePx) / 2;
+    const qrTopPx = origTop + (origHeight - qrSizePx) / 2;
     
-    targetSize = (finalSize / W) * 100;
-    targetX = (finalLeft / W) * 100;
-    targetY = (finalTop / H) * 100;
+    targetSize = (qrSizePx / W) * 100;
+    targetX = (qrLeftPx / W) * 100;
+    targetY = (qrTopPx / H) * 100;
     found = true;
-  } else {
-    console.log('AI Uniform scan did not find a high-score box. Trying transparent/white pixel fallback...');
-    
-    // 2. Thuật toán dự phòng: Quét toàn bộ điểm ảnh trong suốt hoặc nền trắng tinh
-    let minX = W, maxX = 0, minY = H, maxY = 0;
-    let count = 0;
-    
-    for (let y = 0; y < H; y++) {
-      for (let x = 0; x < W; x++) {
-        const idx = (y * W + x) * 4;
-        const r = data[idx];
-        const g = data[idx+1];
-        const b = data[idx+2];
-        const alpha = data[idx+3];
-        
-        const isTransparent = alpha < 15;
-        const isWhite = r > 240 && g > 240 && b > 240;
-        
-        if (isTransparent || isWhite) {
-          if (x < minX) minX = x;
-          if (x > maxX) maxX = x;
-          if (y < minY) minY = y;
-          if (y > maxY) maxY = y;
-          count++;
-        }
-      }
-    }
-    
-    if (count > W * H * 0.005) {
-      const holeW = maxX - minX;
-      const holeH = maxY - minY;
-      
-      // Tránh lấy toàn bộ ảnh làm vùng chứa (nếu toàn bộ nền là màu trắng)
-      if (holeW < W * 0.98 || holeH < H * 0.98) {
-        console.log('Fallback scanner detected transparent/white bounding box:', minX, minY, holeW, holeH);
-        
-        // Tương tự, áp dụng tỷ lệ 84% và lề an toàn 8% cho thuật toán dự phòng
-        const finalSize = Math.max(holeW, holeH) * 0.84;
-        const pad = (Math.max(holeW, holeH) * 0.16) / 2;
-        
-        const finalLeft = minX + pad;
-        const finalTop = minY + pad;
-        
-        targetSize = (finalSize / W) * 100;
-        targetX = (finalLeft / W) * 100;
-        targetY = (finalTop / H) * 100;
-        found = true;
-      } else {
-        console.log('Fallback scanner returned entire canvas size, ignoring as it is likely outer background.');
-      }
-    }
   }
   
   if (found) {
@@ -11743,8 +11982,8 @@ function executeActualAIAlign() {
     
     console.log('Updating custom sliders to target values:', targetX, targetY, targetSize);
     
-    $('s-custom-x').value = Math.max(0, Math.min(10, Math.round(((targetX + 100) / 30) * 10) / 10));
-    $('s-custom-y').value = Math.max(0, Math.min(10, Math.round(((targetY + 100) / 30) * 10) / 10));
+    $('s-custom-x').value = Math.max(0, Math.min(10, Math.round(((targetX + 30) / 16) * 100) / 100));
+    $('s-custom-y').value = Math.max(0, Math.min(10, Math.round(((targetY + 30) / 16) * 100) / 100));
     $('s-custom-size').value = Math.max(0.1, Math.min(10, Math.round((targetSize / 20) * 10) / 10));
     
     $('s-custom-x').dispatchEvent(new Event('input'));
@@ -11761,13 +12000,13 @@ function executeActualAIAlign() {
 
 // Sync custom co-scale sliders
 initSliderSync('s-custom-x', 's-custom-x-num', 's-custom-x-minus', 's-custom-x-plus', (val) => {
-  customQrX = -100 + val * 30;
-  $('s-custom-x-val').textContent = Math.round(customQrX) + '%';
+  customQrX = -30 + val * 16;
+  $('s-custom-x-val').textContent = (Math.round(customQrX * 10) / 10) + '%';
   render();
 });
 initSliderSync('s-custom-y', 's-custom-y-num', 's-custom-y-minus', 's-custom-y-plus', (val) => {
-  customQrY = -100 + val * 30;
-  $('s-custom-y-val').textContent = Math.round(customQrY) + '%';
+  customQrY = -30 + val * 16;
+  $('s-custom-y-val').textContent = (Math.round(customQrY * 10) / 10) + '%';
   render();
 });
 initSliderSync('s-custom-size', 's-custom-size-num', 's-custom-size-minus', 's-custom-size-plus', (val) => {
@@ -11782,17 +12021,630 @@ initSliderSync('s-custom-radius', 's-custom-radius-num', 's-custom-radius-minus'
 });
 initSliderSync('s-custom-rotate', 's-custom-rotate-num', 's-custom-rotate-minus', 's-custom-rotate-plus', (val) => {
   customQrRotate = -180 + val * 36;
-  $('s-custom-rotate-val').textContent = Math.round(customQrRotate) + '°';
+  $('s-custom-rotate-val').textContent = (Math.round(customQrRotate * 10) / 10) + '°';
   render();
 });
 
 // Wire AI Alignment button
 $('btn-ai-align').addEventListener('click', autoAlignAI);
+$('btn-remove-white-bg').addEventListener('click', removeWhiteBackground);
+$('btn-remove-frame-inner-white').addEventListener('click', () => {
+  removeFrameInnerWhite = !removeFrameInnerWhite;
+  const btn = $('btn-remove-frame-inner-white');
+  if (removeFrameInnerWhite) {
+    btn.classList.add('active');
+  } else {
+    btn.classList.remove('active');
+  }
+  render();
+});
+
+// Interactive Canvas Drag and Resize for Custom Uploaded Frame
+let isCanvasDragging = false;
+let isCanvasResizing = false;
+let isQrFocused = false;
+let canvasStartX = 0;
+let canvasStartY = 0;
+let canvasStartQrX = 0;
+let canvasStartQrY = 0;
+let canvasStartQrSize = 0;
+
+function setupCanvasInteractiveDragAndResize() {
+  const canvas = $('qr-canvas');
+  if (!canvas) return;
+  
+  canvas.addEventListener('mousedown', handleCanvasPointerDown);
+  canvas.addEventListener('touchstart', handleCanvasPointerDown, { passive: false });
+  canvas.addEventListener('mousemove', handleCanvasPointerHover);
+  
+  // Click outside to lose focus
+  window.addEventListener('mousedown', (e) => {
+    if (activeFrame !== 'custom') return;
+    if (e.target === canvas) return;
+    
+    // Keep focus if clicking customization panel elements
+    if (e.target.closest('#frame-customization-sec') || e.target.closest('#row-frame-align') || e.target.closest('.sl-row') || e.target.closest('.slider-input-sync')) {
+      return;
+    }
+    
+    if (isQrFocused) {
+      isQrFocused = false;
+      render();
+    }
+  });
+  
+  window.addEventListener('touchstart', (e) => {
+    if (activeFrame !== 'custom') return;
+    if (e.target === canvas) return;
+    
+    if (e.target.closest('#frame-customization-sec') || e.target.closest('#row-frame-align') || e.target.closest('.sl-row') || e.target.closest('.slider-input-sync')) {
+      return;
+    }
+    
+    if (isQrFocused) {
+      isQrFocused = false;
+      render();
+    }
+  });
+}
+
+function handleCanvasPointerDown(e) {
+  if (activeFrame !== 'custom') return;
+  
+  const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] && e.touches[0].clientX);
+  const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] && e.touches[0].clientY);
+  if (clientX === undefined || clientY === undefined) return;
+  
+  const canvas = $('qr-canvas');
+  const rect = canvas.getBoundingClientRect();
+  const S = 600;
+  const mouseX = ((clientX - rect.left) / rect.width) * S;
+  const mouseY = ((clientY - rect.top) / rect.height) * S;
+  
+  const qrSize = S * (customQrSize / 100);
+  const qrX = S * (customQrX / 100);
+  const qrY = S * (customQrY / 100);
+  
+  const cx = qrX + qrSize / 2;
+  const cy = qrY + qrSize / 2;
+  
+  const dx = mouseX - cx;
+  const dy = mouseY - cy;
+  const rad = -customQrRotate * Math.PI / 180;
+  const localX = dx * Math.cos(rad) - dy * Math.sin(rad) + qrSize / 2;
+  const localY = dx * Math.sin(rad) + dy * Math.cos(rad) + qrSize / 2;
+  
+  const distToHandle = Math.sqrt((localX - qrSize)**2 + (localY - qrSize)**2);
+  
+  let clickedOnSomething = false;
+  
+  if (isQrFocused && distToHandle <= 25) {
+    isCanvasResizing = true;
+    clickedOnSomething = true;
+    e.preventDefault();
+  } else if (localX >= 0 && localX <= qrSize && localY >= 0 && localY <= qrSize) {
+    isCanvasDragging = true;
+    clickedOnSomething = true;
+    e.preventDefault();
+  }
+  
+  if (clickedOnSomething) {
+    if (!isQrFocused) {
+      isQrFocused = true;
+      render();
+    }
+  } else {
+    if (isQrFocused) {
+      isQrFocused = false;
+      render();
+    }
+    return; // clicked outside QR code
+  }
+  
+  canvasStartX = clientX;
+  canvasStartY = clientY;
+  canvasStartQrX = customQrX;
+  canvasStartQrY = customQrY;
+  canvasStartQrSize = customQrSize;
+  
+  window.addEventListener('mousemove', handleCanvasPointerMove, { passive: false });
+  window.addEventListener('touchmove', handleCanvasPointerMove, { passive: false });
+  window.addEventListener('mouseup', handleCanvasPointerUp);
+  window.addEventListener('touchend', handleCanvasPointerUp);
+}
+
+function handleCanvasPointerMove(e) {
+  if (!isCanvasDragging && !isCanvasResizing) return;
+  
+  const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] && e.touches[0].clientX);
+  const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] && e.touches[0].clientY);
+  if (clientX === undefined || clientY === undefined) return;
+  
+  const canvas = $('qr-canvas');
+  const rect = canvas.getBoundingClientRect();
+  
+  if (isCanvasDragging) {
+    const deltaX = clientX - canvasStartX;
+    const deltaY = clientY - canvasStartY;
+    
+    const pctX = (deltaX / rect.width) * 100;
+    const pctY = (deltaY / rect.height) * 100;
+    
+    let newX = canvasStartQrX + pctX;
+    let newY = canvasStartQrY + pctY;
+    
+    newX = Math.max(-30, Math.min(130, newX));
+    newY = Math.max(-30, Math.min(130, newY));
+    
+    $('s-custom-x').value = (newX + 30) / 16;
+    $('s-custom-y').value = (newY + 30) / 16;
+    $('s-custom-x').dispatchEvent(new Event('input'));
+    $('s-custom-y').dispatchEvent(new Event('input'));
+  } else if (isCanvasResizing) {
+    const S = 600;
+    const mouseX = ((clientX - rect.left) / rect.width) * S;
+    const mouseY = ((clientY - rect.top) / rect.height) * S;
+    
+    const qrSize = S * (canvasStartQrSize / 100);
+    const qrX = S * (customQrX / 100);
+    const qrY = S * (customQrY / 100);
+    
+    const cx = qrX + qrSize / 2;
+    const cy = qrY + qrSize / 2;
+    
+    const dx = mouseX - cx;
+    const dy = mouseY - cy;
+    const rad = -customQrRotate * Math.PI / 180;
+    const localX = dx * Math.cos(rad) - dy * Math.sin(rad) + qrSize / 2;
+    const localY = dx * Math.sin(rad) + dy * Math.cos(rad) + qrSize / 2;
+    
+    let newSize = Math.max(20, Math.max(localX, localY));
+    let newSizePct = (newSize / S) * 100;
+    newSizePct = Math.max(5, Math.min(200, newSizePct));
+    
+    $('s-custom-size').value = newSizePct / 20;
+    $('s-custom-size').dispatchEvent(new Event('input'));
+  }
+  e.preventDefault();
+}
+
+function handleCanvasPointerUp(e) {
+  isCanvasDragging = false;
+  isCanvasResizing = false;
+  window.removeEventListener('mousemove', handleCanvasPointerMove);
+  window.removeEventListener('touchmove', handleCanvasPointerMove);
+  window.removeEventListener('mouseup', handleCanvasPointerUp);
+  window.removeEventListener('touchend', handleCanvasPointerUp);
+}
+
+function handleCanvasPointerHover(e) {
+  if (activeFrame !== 'custom' || isCanvasDragging || isCanvasResizing) return;
+  
+  const canvas = $('qr-canvas');
+  const rect = canvas.getBoundingClientRect();
+  const S = 600;
+  const mouseX = ((e.clientX - rect.left) / rect.width) * S;
+  const mouseY = ((e.clientY - rect.top) / rect.height) * S;
+  
+  const qrSize = S * (customQrSize / 100);
+  const qrX = S * (customQrX / 100);
+  const qrY = S * (customQrY / 100);
+  
+  const cx = qrX + qrSize / 2;
+  const cy = qrY + qrSize / 2;
+  
+  const dx = mouseX - cx;
+  const dy = mouseY - cy;
+  const rad = -customQrRotate * Math.PI / 180;
+  const localX = dx * Math.cos(rad) - dy * Math.sin(rad) + qrSize / 2;
+  const localY = dx * Math.sin(rad) + dy * Math.cos(rad) + qrSize / 2;
+  
+  if (!isQrFocused) {
+    if (localX >= 0 && localX <= qrSize && localY >= 0 && localY <= qrSize) {
+      canvas.style.cursor = 'pointer';
+    } else {
+      canvas.style.cursor = 'default';
+    }
+    return;
+  }
+  
+  const distToHandle = Math.sqrt((localX - qrSize)**2 + (localY - qrSize)**2);
+  
+  if (distToHandle <= 25) {
+    canvas.style.cursor = 'nwse-resize';
+  } else if (localX >= 0 && localX <= qrSize && localY >= 0 && localY <= qrSize) {
+    canvas.style.cursor = 'move';
+  } else {
+    canvas.style.cursor = 'default';
+  }
+}
+
+function detectQRBox(img) {
+  const W = img.naturalWidth || img.width || 0;
+  const H = img.naturalHeight || img.height || 0;
+  if (W <= 0 || H <= 0) return null;
+  
+  const dw = 200;
+  const dh = 200;
+  const temp = document.createElement('canvas');
+  temp.width = dw;
+  temp.height = dh;
+  const ctx = temp.getContext('2d');
+  ctx.drawImage(img, 0, 0, dw, dh);
+  
+  let imgData;
+  try {
+    imgData = ctx.getImageData(0, 0, dw, dh);
+  } catch (e) {
+    console.error('CORS or read error in detectQRBox:', e);
+    return null;
+  }
+  
+  const data = imgData.data;
+  const visited = new Uint8Array(dw * dh);
+  
+  const getPixel = (x, y) => {
+    const idx = (y * dw + x) * 4;
+    return [data[idx], data[idx+1], data[idx+2], data[idx+3]];
+  };
+  
+  const areColorsSimilar = (c1, c2, threshold = 45) => {
+    if (c1[3] < 30 && c2[3] < 30) return true;
+    if (Math.abs(c1[3] - c2[3]) > 40) return false;
+    
+    const w1 = c1[0] > 210 && c1[1] > 210 && c1[2] > 210;
+    const w2 = c2[0] > 210 && c2[1] > 210 && c2[2] > 210;
+    if (w1 && w2) return true;
+    
+    const dist = Math.sqrt((c1[0] - c2[0])**2 + (c1[1] - c2[1])**2 + (c1[2] - c2[2])**2);
+    return dist < threshold;
+  };
+  
+  let bestBox = null;
+  let bestScore = -1;
+  
+  for (let y = Math.floor(dh * 0.15); y < Math.floor(dh * 0.85); y += 4) {
+    for (let x = Math.floor(dw * 0.15); x < Math.floor(dw * 0.85); x += 4) {
+      const vIdx = y * dw + x;
+      if (visited[vIdx]) continue;
+      
+      const seedColor = getPixel(x, y);
+      const brightness = (seedColor[0] + seedColor[1] + seedColor[2]) / 3;
+      if (brightness < 40 && seedColor[3] >= 30) {
+        visited[vIdx] = 1;
+        continue;
+      }
+      
+      const queue = [[x, y]];
+      visited[vIdx] = 1;
+      let minX = x, maxX = x, minY = y, maxY = y;
+      let count = 0;
+      let touchesBorder = false;
+      
+      let head = 0;
+      while (head < queue.length) {
+        const [cx, cy] = queue[head++];
+        count++;
+        
+        if (cx < minX) minX = cx;
+        if (cx > maxX) maxX = cx;
+        if (cy < minY) minY = cy;
+        if (cy > maxY) maxY = cy;
+        
+        if (cx === 0 || cx === dw - 1 || cy === 0 || cy === dh - 1) {
+          touchesBorder = true;
+        }
+        
+        const neighbors = [
+          [cx + 1, cy],
+          [cx - 1, cy],
+          [cx, cy + 1],
+          [cx, cy - 1]
+        ];
+        
+        for (const [nx, ny] of neighbors) {
+          if (nx >= 0 && nx < dw && ny >= 0 && ny < dh) {
+            const nIdx = ny * dw + nx;
+            if (!visited[nIdx]) {
+              const nColor = getPixel(nx, ny);
+              if (areColorsSimilar(seedColor, nColor, 55)) {
+                visited[nIdx] = 1;
+                queue.push([nx, ny]);
+              }
+            }
+          }
+        }
+      }
+      
+      if (!touchesBorder) {
+        const w = maxX - minX + 1;
+        const h = maxY - minY + 1;
+        
+        if (w > dw * 0.12 && w < dw * 0.85 && h > dh * 0.12 && h < dh * 0.85) {
+          const aspect = Math.min(w, h) / Math.max(w, h);
+          if (aspect >= 0.72) {
+            const density = count / (w * h);
+            if (density > 0.58) {
+              const centerX = minX + w / 2;
+              const centerY = minY + h / 2;
+              const distFromCenter = Math.sqrt((centerX - 100)**2 + (centerY - 100)**2) / 141.4;
+              const centerScore = 1.0 - distFromCenter;
+              const sizeScore = (w * h) / (dw * dh);
+              const score = aspect * 0.4 + centerScore * 0.3 + density * 0.2 + sizeScore * 0.1;
+              
+              if (score > bestScore) {
+                bestScore = score;
+                bestBox = { left: minX, top: minY, width: w, height: h };
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  if (bestBox && bestScore > 0.4) {
+    const origLeft = (bestBox.left / dw) * W;
+    const origTop = (bestBox.top / dh) * H;
+    const origWidth = (bestBox.width / dw) * W;
+    const origHeight = (bestBox.height / dh) * H;
+    return { left: origLeft, top: origTop, width: origWidth, height: origHeight };
+  }
+  return null;
+}
+
+function detectQRBox(img) {
+  const W = img.naturalWidth || img.width || 0;
+  const H = img.naturalHeight || img.height || 0;
+  if (W <= 0 || H <= 0) return null;
+  
+  const dw = 200;
+  const dh = 200;
+  const temp = document.createElement('canvas');
+  temp.width = dw;
+  temp.height = dh;
+  const ctx = temp.getContext('2d');
+  ctx.drawImage(img, 0, 0, dw, dh);
+  
+  let imgData;
+  try {
+    imgData = ctx.getImageData(0, 0, dw, dh);
+  } catch (err) {
+    return null;
+  }
+  
+  const data = imgData.data;
+  const visited = new Uint8Array(dw * dh);
+  
+  const getPixel = (x, y) => {
+    const idx = (y * dw + x) * 4;
+    return [data[idx], data[idx+1], data[idx+2], data[idx+3]];
+  };
+  
+  const corners = [
+    getPixel(0, 0),
+    getPixel(dw - 1, 0),
+    getPixel(0, dh - 1),
+    getPixel(dw - 1, dh - 1)
+  ];
+  
+  const areColorsSimilar = (c1, c2, threshold = 45) => {
+    if (c1[3] < 30 && c2[3] < 30) return true;
+    if (Math.abs(c1[3] - c2[3]) > 40) return false;
+    const w1 = c1[0] > 210 && c1[1] > 210 && c1[2] > 210;
+    const w2 = c2[0] > 210 && c2[1] > 210 && c2[2] > 210;
+    if (w1 && w2) return true;
+    const dist = Math.sqrt((c1[0] - c2[0])**2 + (c1[1] - c2[1])**2 + (c1[2] - c2[2])**2);
+    return dist < threshold;
+  };
+  
+  let bgIdx = 0;
+  let maxBgSimilar = 0;
+  for (let i = 0; i < 4; i++) {
+    let simCount = 0;
+    for (let j = 0; j < 4; j++) {
+      if (areColorsSimilar(corners[i], corners[j])) simCount++;
+    }
+    if (simCount > maxBgSimilar) {
+      maxBgSimilar = simCount;
+      bgIdx = i;
+    }
+  }
+  
+  let bestBox = null;
+  let bestScore = -1;
+  
+  for (let y = Math.floor(dh * 0.15); y < Math.floor(dh * 0.85); y += 4) {
+    for (let x = Math.floor(dw * 0.15); x < Math.floor(dw * 0.85); x += 4) {
+      const vIdx = y * dw + x;
+      if (visited[vIdx]) continue;
+      
+      const seedColor = getPixel(x, y);
+      const brightness = (seedColor[0] + seedColor[1] + seedColor[2]) / 3;
+      if (brightness < 40 && seedColor[3] >= 30) {
+        visited[vIdx] = 1;
+        continue;
+      }
+      
+      const queue = [[x, y]];
+      visited[vIdx] = 1;
+      let minX = x, maxX = x, minY = y, maxY = y;
+      let count = 0;
+      let touchesBorder = false;
+      let head = 0;
+      
+      while (head < queue.length) {
+        const [cx, cy] = queue[head++];
+        count++;
+        if (cx < minX) minX = cx;
+        if (cx > maxX) maxX = cx;
+        if (cy < minY) minY = cy;
+        if (cy > maxY) maxY = cy;
+        if (cx === 0 || cx === dw - 1 || cy === 0 || cy === dh - 1) {
+          touchesBorder = true;
+        }
+        
+        const neighbors = [
+          [cx + 1, cy], [cx - 1, cy], [cx, cy + 1], [cx, cy - 1]
+        ];
+        for (const [nx, ny] of neighbors) {
+          if (nx >= 0 && nx < dw && ny >= 0 && ny < dh) {
+            const nIdx = ny * dw + nx;
+            if (!visited[nIdx]) {
+              const nColor = getPixel(nx, ny);
+              if (areColorsSimilar(seedColor, nColor, 55)) {
+                visited[nIdx] = 1;
+                queue.push([nx, ny]);
+              }
+            }
+          }
+        }
+      }
+      
+      if (!touchesBorder) {
+        const w = maxX - minX + 1;
+        const h = maxY - minY + 1;
+        if (w > dw * 0.12 && w < dw * 0.85 && h > dh * 0.12 && h < dh * 0.85) {
+          const aspect = Math.min(w, h) / Math.max(w, h);
+          if (aspect >= 0.72) {
+            const density = count / (w * h);
+            if (density > 0.58) {
+              const centerX = minX + w / 2;
+              const centerY = minY + h / 2;
+              const distFromCenter = Math.sqrt((centerX - 100)**2 + (centerY - 100)**2) / 141.4;
+              const centerScore = 1.0 - distFromCenter;
+              const sizeScore = (w * h) / (dw * dh);
+              const score = aspect * 0.4 + centerScore * 0.3 + density * 0.2 + sizeScore * 0.1;
+              if (score > bestScore) {
+                bestScore = score;
+                bestBox = { left: minX, top: minY, width: w, height: h };
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  if (bestBox && bestScore > 0.4) {
+    return {
+      left: (bestBox.left / dw) * W,
+      top: (bestBox.top / dh) * H,
+      width: (bestBox.width / dw) * W,
+      height: (bestBox.height / dh) * H
+    };
+  }
+  return null;
+}
+
+function removeWhiteBackground() {
+  const sourceImg = originalCustomFrameImg || customFrameImg;
+  if (!sourceImg) {
+    showToast('⚠️ Vui lòng tải lên ảnh khung viền trước!');
+    return;
+  }
+  
+  if (removeBgMode === 'none') {
+    removeBgMode = 'all';
+    const selectors = document.querySelectorAll('#custom-remove-bg-mode-selectors .shape-sel');
+    selectors.forEach(s => {
+      if (s.dataset.val === 'all') {
+        s.classList.add('active');
+      } else {
+        s.classList.remove('active');
+      }
+    });
+    const container = $('custom-remove-bg-mode-selectors');
+    if (container) {
+      syncSegmentedIndicator(container);
+    }
+  }
+  
+  const btn = $('btn-remove-white-bg');
+  if (btn) {
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    btn.innerHTML = '<div class="spinner"></div> Đang xóa...';
+  }
+  
+  setTimeout(() => {
+    try {
+      const W = sourceImg.naturalWidth || sourceImg.width;
+      const H = sourceImg.naturalHeight || sourceImg.height;
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(sourceImg, 0, 0);
+      
+      const imgData = ctx.getImageData(0, 0, W, H);
+      const data = imgData.data;
+      
+      // Determine if we should preserve the QR box
+      const qrBox = removeBgMode === 'outside' ? detectQRBox(sourceImg) : null;
+      let pad = 0;
+      if (qrBox) {
+        // Expand the preserved area slightly to cover the black border and any anti-aliasing edges
+        pad = Math.round(Math.max(W, H) * 0.012);
+      }
+      
+      // Process pixels: replace white with transparent
+      for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+          if (qrBox) {
+            // Keep pixels inside the QR box intact (with padding)
+            if (x >= qrBox.left - pad && x <= qrBox.left + qrBox.width + pad &&
+                y >= qrBox.top - pad && y <= qrBox.top + qrBox.height + pad) {
+              continue;
+            }
+          }
+          
+          const idx = (y * W + x) * 4;
+          const r = data[idx];
+          const g = data[idx+1];
+          const b = data[idx+2];
+          
+          // If pixel is white/very light, make it transparent
+          if (r > 200 && g > 200 && b > 200) {
+            data[idx+3] = 0; // alpha = 0
+          }
+        }
+      }
+      
+      ctx.putImageData(imgData, 0, 0);
+      
+      const newImg = new Image();
+      newImg.src = canvas.toDataURL('image/png');
+      newImg.onload = () => {
+        customFrameImg = newImg;
+        logoThumb.src = newImg.src;
+        render();
+        showToast(qrBox ? '✅ Đã xóa nền ngoài (giữ lại ô vuông trắng)!' : '✅ Đã xóa toàn bộ nền trắng!');
+        
+        if (btn) {
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          btn.innerHTML = '🪄 Xóa nền';
+        }
+      };
+    } catch (err) {
+      console.error('Error removing white background:', err);
+      showToast('❌ Lỗi xóa nền: ' + err.message);
+      if (btn) {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.innerHTML = '🪄 Xóa nền';
+      }
+    }
+  }, 300);
+}
 
 // Initialize Main Tabs, Icons, and Custom Frame System
 initMainTabsSwitching();
 initTabIcons();
 initPresetIcons();
+setupCanvasInteractiveDragAndResize();
 
 // Dismiss splash screen now that UI is ready
 (function dismissSplash() {
