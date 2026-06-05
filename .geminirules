@@ -1,0 +1,91 @@
+# Quy tắc Thiết kế Giao diện & Hiệu năng (UI/UX & Performance Rules)
+
+Mỗi khi chỉnh sửa, cập nhật hoặc thiết kế các thành phần UI/UX mới trong dự án này, bạn **bắt buộc** phải đọc và áp dụng các thông số quy chuẩn dưới đây để đảm bảo tính đồng bộ tuyệt đối về mặt trải nghiệm người dùng và hiệu năng tải trang.
+
+---
+
+## 1. Bố cục Header (Header Layout)
+* **Chiều cao (Height)**:
+  * Desktop: `54px`
+  * Mobile (max-width: 768px): `50px`
+* **Khoảng đệm (Padding)**:
+  * Desktop: `0 28px`
+  * Mobile: `0 16px`
+* **Căn chỉnh**: `display: flex; align-items: center; gap: 10px;`
+* **Độ rộng tối đa (Max Width)**: `1400px` (căn giữa qua `margin: 0 auto;`).
+
+---
+
+## 2. Quy chuẩn Thiết kế Nút trên Header (Header Buttons Style)
+Các nút trên Header (như nút Tải về, nút Tri ân/Cà phê) phải tuân theo cấu trúc kính mờ cao cấp (Premium Glassmorphism) và hiệu ứng chuyển động đồng bộ:
+
+### Kiểu dáng nút bấm:
+* **Nút dạng Viên thuốc (Pill shape - như nút Tải về)**: `height: 32px; padding: 0 14px; border-radius: 99px; font-size: 12px; font-weight: 600;`
+* **Nút dạng Tròn (Circle shape - như nút Cà phê)**: `width: 32px; height: 32px; border-radius: 50%; padding: 0;`
+
+### Phong cách nền & Bóng đổ:
+* **Nền Kính mờ (Glassmorphism)**: 
+  * CSS: `background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.08) 51%, rgba(255, 255, 255, 0.25) 100%);`
+  * Khử nhòe nền: `backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);`
+  * Viền: `border: none;` (hoặc viền mờ đồng điệu).
+  * Bóng đổ tĩnh: `box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.08);`
+  * Thời gian chuyển đổi (Transition): `transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);`
+
+### Hiệu ứng Tương tác (UX Interactions):
+* **Hover State (Di chuột)**:
+  * Nút nhấc lên trên: `transform: translateY(-2px);`
+  * Tăng bóng đổ: `box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18), 0 4px 10px rgba(15, 23, 42, 0.12);`
+  * Biểu tượng SVG bên trong **phải** được cấu hình hiệu ứng chuyển đổi co giãn đồng bộ:
+    ```css
+    .button-class svg { transition: transform 0.2s ease; }
+    .button-class:hover svg { transform: scale(1.1); }
+    ```
+* **Active State (Bấm chuột/Click)**:
+  * Nút lún xuống vị trí ban đầu: `transform: translateY(0);`
+  * Thu nhỏ bóng đổ mô phỏng độ nảy vật lý: `box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);`
+* **Ràng buộc về Animation**:
+  * Không gán trực tiếp các hiệu ứng animation xuất hiện (ví dụ: `popIn` có `forwards`) trực tiếp vào nút bấm, vì điều này sẽ khóa cứng thuộc tính `transform` và làm tê liệt hiệu ứng `:hover` và `:active`. 
+  * Hãy gán hiệu ứng xuất hiện vào thẻ bao ngoài (wrapper container) của nút.
+
+---
+
+## 3. Quy chuẩn Thông báo Toast (Toast Notification Style)
+Hộp thông báo Toast được định vị cố định ở phía trên chính giữa (top-center), căn đều với thanh Header:
+
+### Định vị & Kích thước:
+* **Vị trí**: Căn giữa theo chiều ngang và căn chính giữa theo chiều dọc của Header.
+  * Desktop: `top: 27px; left: 50%; transform: translate(-50%, -50%);`
+  * Mobile: `top: 25px; left: 50%; transform: translate(-50%, -50%);`
+* **Hình dáng**: Bo tròn viên nang mỏng gọn `border-radius: 20px;`.
+* **Chiều cao Slim**: Đệm dọc nhỏ gọn `padding: 7px 18px;`.
+* **Bóng mờ & Kính mờ**: `background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(15, 23, 42, 0.04);`.
+
+### Viền tiến trình chạy thời gian (Progress Bar):
+* Đặt viền chạy ngang mỏng **`2px`** dưới đáy hộp Toast (`.toast::after`).
+* Sử dụng dải màu gradient mờ dần ở hai bên biên để ôm khít bo tròn:
+  `background: linear-gradient(90deg, transparent 0%, var(--toast-color) 15%, var(--toast-color) 85%, transparent 100%);`
+* Khởi chạy hoạt ảnh co rút chiều rộng từ phải sang trái qua `transform-origin: left` khi và chỉ khi Toast hiển thị (`.toast.show::after`):
+  ```css
+  .toast::after { transform: scaleX(0); }
+  .toast.show::after { animation: toast-progress-drain 3s linear forwards; }
+  @keyframes toast-progress-drain {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+  }
+  ```
+
+### Hiệu ứng ra vào (Animation Transitions):
+* Trượt lên/xuống kết hợp co giãn và làm mờ dần với đường cong mượt đàn hồi:
+  * Ẩn: `transform: translate(-50%, -150%) scale(0.92); opacity: 0;`
+  * Hiện: `transform: translate(-50%, -50%) scale(1); opacity: 1;`
+  * Transition: `transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;`
+
+---
+
+## 4. Quy chuẩn Hiệu năng & Tải tài nguyên (Performance Rules)
+* **Tránh tải file trùng lặp**: Mọi ảnh logo presets đều được lưu dạng Base64 trong JS `PRESETS`. Không được khai báo đường dẫn tương đối trực tiếp trong thuộc tính `src` của ảnh trong HTML (ngoại trừ các icon tĩnh của tiêu đề phần nội dung).
+* **Khởi tạo Spacer**: Toàn bộ thẻ `img` động của các preset bấm hoặc Empty State trong HTML ban đầu phải khai báo spacer GIF 1x1 siêu nhẹ:
+  `src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"`
+  JavaScript sẽ tự động ghi đè nguồn ảnh khi nạp trang, tránh các HTTP Request thừa.
+* **Tải font bất đồng bộ**: Luôn dùng `rel="preload"` cho tệp Google Fonts để tránh việc tải font làm chặn kết xuất màn hình (render-blocking).
+* **Địa chỉ chạy Cục bộ**: Khuyến khích truy cập ứng dụng qua IP trực tiếp **`http://127.0.0.1:3000`** thay vì `localhost` để loại bỏ độ trễ phân giải DNS 2s trên hệ điều hành Windows.
