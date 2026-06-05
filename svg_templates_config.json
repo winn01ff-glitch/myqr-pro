@@ -50,7 +50,8 @@
         "height": 1000,
         "qrX": 151,
         "qrY": 258,
-        "qrSize": 248
+        "qrSize": 248,
+        "qrRotate": -45
       },
       {
         "id": "svg-006",
@@ -390,7 +391,8 @@
         "height": 1000,
         "qrX": 479,
         "qrY": 368,
-        "qrSize": 523
+        "qrSize": 523,
+        "qrRotate": -15
       },
       {
         "id": "svg-038",
@@ -1210,7 +1212,8 @@
         "height": 1000,
         "qrX": 239,
         "qrY": 93,
-        "qrSize": 525
+        "qrSize": 525,
+        "qrRotate": -45
       }
     ]
   },

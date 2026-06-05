@@ -5908,7 +5908,8 @@ const SVG_GROUPS = [
         "height": 1000,
         "qrX": 151,
         "qrY": 258,
-        "qrSize": 248
+        "qrSize": 248,
+        "qrRotate": -45
       },
       {
         "id": "svg-006",
@@ -6248,7 +6249,8 @@ const SVG_GROUPS = [
         "height": 1000,
         "qrX": 479,
         "qrY": 368,
-        "qrSize": 523
+        "qrSize": 523,
+        "qrRotate": -15
       },
       {
         "id": "svg-038",
@@ -7068,7 +7070,8 @@ const SVG_GROUPS = [
         "height": 1000,
         "qrX": 239,
         "qrY": 93,
-        "qrSize": 525
+        "qrSize": 525,
+        "qrRotate": -45
       }
     ]
   },
@@ -10024,7 +10027,8 @@ function render() {
   ctx.save();
   ctx.translate(qrX, qrY);
   ctx.translate(qrSize / 2, qrSize / 2);
-  ctx.rotate(customQrRotate * Math.PI / 180);
+  const activeRotate = isSvgTemplate ? (typeof isSvgTemplate.qrRotate === 'number' ? isSvgTemplate.qrRotate : 0) : customQrRotate;
+  ctx.rotate(activeRotate * Math.PI / 180);
   ctx.translate(-qrSize / 2, -qrSize / 2);
 
   // Draw QR Code
@@ -10243,7 +10247,8 @@ async function renderAtSize(size) {
     ctx.save();
     ctx.translate(qrX, qrY);
     ctx.translate(qrSize / 2, qrSize / 2);
-    ctx.rotate(customQrRotate * Math.PI / 180);
+    const activeRotate = isSvgTemplate ? (typeof isSvgTemplate.qrRotate === 'number' ? isSvgTemplate.qrRotate : 0) : customQrRotate;
+    ctx.rotate(activeRotate * Math.PI / 180);
     ctx.translate(-qrSize / 2, -qrSize / 2);
 
     // Draw QR Code
