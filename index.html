@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
@@ -5711,17 +5711,20 @@
 <script>
 const $ = id => document.getElementById(id);
 
-// Tự động preload toàn bộ 29 biểu tượng tiêu đề form khi trang vừa tải để tránh hiện tượng nhấp nháy do chưa load cache khi đổi tab
-[
-  'link.png', 'wifi.png', 'text.png', 'business-card.png', 'paypal.png', 
-  'bank.png', 'mail.png', 'phone-call.png', 'zalo-icon.png', 'facebook.png', 
-  'messenger.png', 'instagram.png', 'youtube.png', 'tik-tok.png', 'line.png', 
-  'pdf.png', 'picture.png', 'G.map.png', 'whatsapp.png', 'telegram.png', 
-  'form.png', 'X-twitter.png', 'snapchat.png', 'threads.png', 'spotify.png', 
-  'amazon.png', 'calendar.png', 'wechat.png', 'kakao-talk.png'
-].forEach(icon => {
-  const img = new Image();
-  img.src = 'LOGO Presets/' + icon;
+// Defer preload of 29 form section icons to browser idle time
+// (avoids competing for bandwidth with critical resources during initial paint)
+(typeof requestIdleCallback === 'function' ? requestIdleCallback : (fn) => setTimeout(fn, 200))(function() {
+  [
+    'link.png', 'wifi.png', 'text.png', 'business-card.png', 'paypal.png', 
+    'bank.png', 'mail.png', 'phone-call.png', 'zalo-icon.png', 'facebook.png', 
+    'messenger.png', 'instagram.png', 'youtube.png', 'tik-tok.png', 'line.png', 
+    'pdf.png', 'picture.png', 'G.map.png', 'whatsapp.png', 'telegram.png', 
+    'form.png', 'X-twitter.png', 'snapchat.png', 'threads.png', 'spotify.png', 
+    'amazon.png', 'calendar.png', 'wechat.png', 'kakao-talk.png'
+  ].forEach(icon => {
+    const img = new Image();
+    img.src = 'LOGO Presets/' + icon;
+  });
 });
 
 // ══════════════════════════════════
@@ -11684,17 +11687,14 @@ initSliderSync('s-custom-rotate', 's-custom-rotate-num', 's-custom-rotate-minus'
 // Wire AI Alignment button
 $('btn-ai-align').addEventListener('click', autoAlignAI);
 
-// Initialize Main Tabs and Custom Frame System
+// Initialize Main Tabs, Icons, and Custom Frame System
 initMainTabsSwitching();
-
-// IMPORTANT: Initialize tab and preset icons BEFORE initFrameSystem()
-// so that icons render immediately without showing emoji placeholders first.
-// initFrameSystem() is heavy (generates HTML for 122 SVG templates)
-// and would otherwise delay icon replacement, causing a visible emoji flash.
 initTabIcons();
 initPresetIcons();
 
-initFrameSystem();
+// Defer initFrameSystem() so the main UI renders first,
+// then build the heavy SVG template HTML (122 templates + 16 group tabs)
+setTimeout(initFrameSystem, 0);
 
 initClearInputWraps();
 initAutoExpandTextarea();
