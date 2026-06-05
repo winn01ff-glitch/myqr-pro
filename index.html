@@ -410,6 +410,58 @@
       animation: slideDownIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
       margin-bottom: 8px;
     }
+    .svg-group-dropdown-container {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.08) 51%, rgba(255, 255, 255, 0.25) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 12px;
+      padding: 0 14px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      margin-bottom: 8px;
+      margin-top: 0px;
+      user-select: none;
+      transition: border-color 0.2s ease;
+    }
+    [data-theme="dark"] .svg-group-dropdown-container {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: none;
+    }
+    .svg-group-dropdown-container:hover {
+      border-color: var(--accent);
+    }
+    .svg-group-dropdown-container:hover #group-dropdown-arrow {
+      color: var(--accent) !important;
+    }
+
+    .svg-group-dropdown-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      height: 38px;
+    }
+    
+    .svg-groups-tab-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding: 0 2px;
+      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .svg-groups-tab-grid.open {
+      max-height: 220px;
+      opacity: 1;
+      margin-top: 10px;
+      margin-bottom: 12px;
+      padding: 8px 4px;
+    }
     .opt-panel-title {
       font-size: 11px;
       font-weight: 700;
@@ -979,7 +1031,7 @@
     #qr-canvas {
       display: block;
       width: 340px;
-      height: 340px;
+      height: auto;
     }
 
     /* ─── EMPTY STATE ─── */
@@ -2321,7 +2373,7 @@
     }
     #modal-qr-img {
       width: 148px;
-      height: 148px;
+      height: auto;
       object-fit: contain;
       display: block;
     }
@@ -2636,6 +2688,20 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    .frame-preview-image {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .frame-preview-image img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
     }
 
 
@@ -5338,7 +5404,7 @@
               <span>Vòng tròn cổ điển</span>
             </div>
 
-            <!-- 7. Khung tự chọn -->
+            <!-- 5. Khung tự chọn -->
             <div class="frame-opt" data-frame="custom" style="display: none;">
               <div class="frame-preview-svg">
                 <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
@@ -5350,6 +5416,7 @@
               <span>Khung tự chọn</span>
             </div>
           </div>
+          <div id="grouped-svg-templates-container" style="margin-top: 4px; display: flex; flex-direction: column; gap: 8px;"></div>
         </div>
         <div class="upload-zone" id="frame-upload-zone" tabindex="0" style="padding: 12px 16px;">
           <input type="file" id="frame-file-input" accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml">
@@ -5418,8 +5485,8 @@
                 
                 <div class="color-pickers-container">
                   <div class="color-picker-wrap">
-                    <input type="color" id="frame-color-1" value="#4f46e5">
-                    <input type="text" class="color-hex" id="frame-color-1-hex" value="#4F46E5" maxlength="7">
+                    <input type="color" id="frame-color-1" value="#000000">
+                    <input type="text" class="color-hex" id="frame-color-1-hex" value="#000000" maxlength="7">
                     <span class="color-reset" title="Đặt lại mặc định">✕</span>
                   </div>
                   <div class="color-picker-wrap grad-only" id="frame-color-2-wrap" style="display:none">
@@ -5709,7 +5776,7 @@ let activeMainTab  = 'content';
 let activeFrame    = 'none';
 let frameText      = 'SCAN ME';
 let frameFontFamily = 'Inter';
-let frameColor1    = '#4f46e5';
+let frameColor1    = '#000000';
 let frameColor2    = '#0f172a';
 let customFrameImg = null;
 let customQrMode   = 'background';
@@ -5719,6 +5786,1328 @@ let customQrSize   = 52.0;
 let customQrRadius = 20.0;
 let customQrRotate = 0.0;
 let globalHandleFrameUpload = null;
+
+const SVG_GROUPS = [
+  {
+    "group": "✅ Khung cơ bản",
+    "templates": [
+      {
+        "id": "svg-001",
+        "name": "Khung Cơ Bản 02",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-02.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 129,
+        "qrY": 578,
+        "qrSize": 291
+      },
+      {
+        "id": "svg-002",
+        "name": "Khung Cơ Bản 03",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-03.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 113,
+        "qrY": 394,
+        "qrSize": 323
+      },
+      {
+        "id": "svg-003",
+        "name": "Khung Cơ Bản 12",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-12.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 97,
+        "qrY": 197,
+        "qrSize": 355
+      },
+      {
+        "id": "svg-004",
+        "name": "Khung Cơ Bản 18",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-18.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 28,
+        "qrY": 253,
+        "qrSize": 494
+      },
+      {
+        "id": "svg-005",
+        "name": "Khung Cơ Bản 19",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-19.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 26,
+        "qrY": 382,
+        "qrSize": 352
+      },
+      {
+        "id": "svg-006",
+        "name": "Khung Cơ Bản 22",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-22.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 100,
+        "qrY": 225,
+        "qrSize": 349
+      },
+      {
+        "id": "svg-007",
+        "name": "Khung Cơ Bản 24",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-24.svg",
+        "width": 824,
+        "height": 1000,
+        "qrX": 175,
+        "qrY": 198,
+        "qrSize": 473
+      },
+      {
+        "id": "svg-008",
+        "name": "Khung Cơ Bản 25",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-25.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 148,
+        "qrY": 357,
+        "qrSize": 253
+      },
+      {
+        "id": "svg-009",
+        "name": "Khung Cơ Bản 26",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-26.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 188,
+        "qrY": 241,
+        "qrSize": 314
+      },
+      {
+        "id": "svg-010",
+        "name": "Khung Cơ Bản 27",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-27.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 176,
+        "qrY": 110,
+        "qrSize": 314
+      },
+      {
+        "id": "svg-011",
+        "name": "Khung Cơ Bản 28",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-28.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 270,
+        "qrY": 224,
+        "qrSize": 319
+      },
+      {
+        "id": "svg-012",
+        "name": "Khung Cơ Bản 29",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-29.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 173,
+        "qrY": 67,
+        "qrSize": 314
+      },
+      {
+        "id": "svg-013",
+        "name": "Khung Cơ Bản 30",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-30.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 132,
+        "qrY": 98,
+        "qrSize": 425
+      },
+      {
+        "id": "svg-014",
+        "name": "Khung Cơ Bản 31",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-31.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 246,
+        "qrY": 193,
+        "qrSize": 314
+      },
+      {
+        "id": "svg-015",
+        "name": "Khung Cơ Bản 32",
+        "path": "Khung QR/✅ Khung cơ bản/general-qr-code-frame-32.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 191,
+        "qrY": 69,
+        "qrSize": 314
+      }
+    ]
+  },
+  {
+    "group": "✉️ Email",
+    "templates": [
+      {
+        "id": "svg-016",
+        "name": "Email 01",
+        "path": "Khung QR/✉️ Email/email-qr-code-frame-01.svg",
+        "width": 1000,
+        "height": 1003,
+        "qrX": 194,
+        "qrY": 5,
+        "qrSize": 613
+      },
+      {
+        "id": "svg-017",
+        "name": "Email 02",
+        "path": "Khung QR/✉️ Email/email-qr-code-frame-02.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 198,
+        "qrY": 118,
+        "qrSize": 603
+      },
+      {
+        "id": "svg-018",
+        "name": "Email 03",
+        "path": "Khung QR/✉️ Email/email-qr-code-frame-03.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 282,
+        "qrY": 129,
+        "qrSize": 436
+      },
+      {
+        "id": "svg-019",
+        "name": "Email 04",
+        "path": "Khung QR/✉️ Email/email-qr-code-frame-04.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 133,
+        "qrY": 30,
+        "qrSize": 734
+      }
+    ]
+  },
+  {
+    "group": "🌎 Trang web & Liên kết",
+    "templates": [
+      {
+        "id": "svg-020",
+        "name": "Trang Web 01",
+        "path": "Khung QR/🌎 Trang web & Liên kết/website-qr-code-cta-frame-1.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-021",
+        "name": "Trang Web 02",
+        "path": "Khung QR/🌎 Trang web & Liên kết/website-qr-code-cta-frame-2.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 170,
+        "qrY": 54,
+        "qrSize": 661
+      },
+      {
+        "id": "svg-022",
+        "name": "Trang Web 03",
+        "path": "Khung QR/🌎 Trang web & Liên kết/website-qr-code-cta-frame-3.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-023",
+        "name": "Trang Web 04",
+        "path": "Khung QR/🌎 Trang web & Liên kết/website-qr-code-cta-frame-4.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 277,
+        "qrY": 180,
+        "qrSize": 446
+      },
+      {
+        "id": "svg-024",
+        "name": "Trang Web 06",
+        "path": "Khung QR/🌎 Trang web & Liên kết/website-qr-code-cta-frame-6.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-025",
+        "name": "Trang Web 01",
+        "path": "Khung QR/🌎 Trang web & Liên kết/website-url-link-qr-code-frame-1.svg",
+        "width": 1000,
+        "height": 1001,
+        "qrX": 266,
+        "qrY": 70,
+        "qrSize": 686
+      },
+      {
+        "id": "svg-026",
+        "name": "Trang Web 02",
+        "path": "Khung QR/🌎 Trang web & Liên kết/website-url-link-qr-code-frame-2.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-027",
+        "name": "Trang Web 03",
+        "path": "Khung QR/🌎 Trang web & Liên kết/website-url-link-qr-code-frame-3.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 166,
+        "qrY": 34,
+        "qrSize": 668
+      },
+      {
+        "id": "svg-028",
+        "name": "Trang Web 04",
+        "path": "Khung QR/🌎 Trang web & Liên kết/website-url-link-qr-code-frame-4.svg",
+        "width": 2000,
+        "height": 1000,
+        "qrX": 1087,
+        "qrY": 107,
+        "qrSize": 786
+      }
+    ]
+  },
+  {
+    "group": "🍕 Thực đơn Cafe & Nhà hàng",
+    "templates": [
+      {
+        "id": "svg-029",
+        "name": "Thực Đơn 01",
+        "path": "Khung QR/🍕 Thực đơn Cafe & Nhà hàng/restaurant-qr-code-frame-1.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 40,
+        "qrY": 354,
+        "qrSize": 470
+      },
+      {
+        "id": "svg-030",
+        "name": "Thực Đơn 10",
+        "path": "Khung QR/🍕 Thực đơn Cafe & Nhà hàng/restaurant-qr-code-frame-10.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 73,
+        "qrY": 184,
+        "qrSize": 187
+      },
+      {
+        "id": "svg-031",
+        "name": "Thực Đơn 03",
+        "path": "Khung QR/🍕 Thực đơn Cafe & Nhà hàng/restaurant-qr-code-frame-3.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 40,
+        "qrY": 275,
+        "qrSize": 470
+      },
+      {
+        "id": "svg-032",
+        "name": "Thực Đơn 04",
+        "path": "Khung QR/🍕 Thực đơn Cafe & Nhà hàng/restaurant-qr-code-frame-4.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 172,
+        "qrY": 362,
+        "qrSize": 205
+      },
+      {
+        "id": "svg-033",
+        "name": "Thực Đơn 05",
+        "path": "Khung QR/🍕 Thực đơn Cafe & Nhà hàng/restaurant-qr-code-frame-5.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 136,
+        "qrY": 451,
+        "qrSize": 293
+      },
+      {
+        "id": "svg-034",
+        "name": "Thực Đơn 06",
+        "path": "Khung QR/🍕 Thực đơn Cafe & Nhà hàng/restaurant-qr-code-frame-6.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 123,
+        "qrY": 209,
+        "qrSize": 319
+      },
+      {
+        "id": "svg-035",
+        "name": "Thực Đơn 08",
+        "path": "Khung QR/🍕 Thực đơn Cafe & Nhà hàng/restaurant-qr-code-frame-8.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 50,
+        "qrY": 251,
+        "qrSize": 314
+      },
+      {
+        "id": "svg-036",
+        "name": "Thực Đơn 09",
+        "path": "Khung QR/🍕 Thực đơn Cafe & Nhà hàng/restaurant-qr-code-frame-9.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 125,
+        "qrY": 262,
+        "qrSize": 242
+      }
+    ]
+  },
+  {
+    "group": "🎁 Thẻ quà tặng & Phiếu thưởng",
+    "templates": [
+      {
+        "id": "svg-037",
+        "name": "Phiếu Quà 01",
+        "path": "Khung QR/🎁 Thẻ quà tặng & Phiếu thưởng/gift-card-qr-code-frame-voucher-1.svg",
+        "width": 2000,
+        "height": 1000,
+        "qrX": 420,
+        "qrY": 441,
+        "qrSize": 523
+      },
+      {
+        "id": "svg-038",
+        "name": "Phiếu Quà 02",
+        "path": "Khung QR/🎁 Thẻ quà tặng & Phiếu thưởng/gift-card-qr-code-frame-voucher-2.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 229,
+        "qrY": 229,
+        "qrSize": 543
+      },
+      {
+        "id": "svg-039",
+        "name": "Phiếu Quà 03",
+        "path": "Khung QR/🎁 Thẻ quà tặng & Phiếu thưởng/gift-card-qr-code-frame-voucher-3.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 228,
+        "qrY": 48,
+        "qrSize": 543
+      },
+      {
+        "id": "svg-040",
+        "name": "Phiếu Quà 04",
+        "path": "Khung QR/🎁 Thẻ quà tặng & Phiếu thưởng/gift-card-qr-code-frame-voucher-4.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 228,
+        "qrY": 422,
+        "qrSize": 543
+      },
+      {
+        "id": "svg-041",
+        "name": "Phiếu Quà 05",
+        "path": "Khung QR/🎁 Thẻ quà tặng & Phiếu thưởng/gift-card-qr-code-frame-voucher-5.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      }
+    ]
+  },
+  {
+    "group": "🎄 giáng sinh",
+    "templates": [
+      {
+        "id": "svg-042",
+        "name": "Giáng Sinh 04",
+        "path": "Khung QR/🎄 giáng sinh/q4-holiday-qr-code-frame-1.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 171,
+        "qrY": 300,
+        "qrSize": 659
+      },
+      {
+        "id": "svg-043",
+        "name": "Giáng Sinh 04",
+        "path": "Khung QR/🎄 giáng sinh/q4-holiday-qr-code-frame-2.svg",
+        "width": 1001,
+        "height": 1000,
+        "qrX": 310,
+        "qrY": 280,
+        "qrSize": 659
+      },
+      {
+        "id": "svg-044",
+        "name": "Giáng Sinh 04",
+        "path": "Khung QR/🎄 giáng sinh/q4-holiday-qr-code-frame-3.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 48,
+        "qrY": 402,
+        "qrSize": 567
+      },
+      {
+        "id": "svg-045",
+        "name": "Giáng Sinh 04",
+        "path": "Khung QR/🎄 giáng sinh/q4-holiday-qr-code-frame-4.svg",
+        "width": 1000,
+        "height": 1002,
+        "qrX": 448,
+        "qrY": 516,
+        "qrSize": 451
+      },
+      {
+        "id": "svg-046",
+        "name": "Giáng Sinh 04",
+        "path": "Khung QR/🎄 giáng sinh/q4-holiday-qr-code-frame-5.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 501,
+        "qrY": 387,
+        "qrSize": 464
+      },
+      {
+        "id": "svg-047",
+        "name": "Giáng Sinh 04",
+        "path": "Khung QR/🎄 giáng sinh/q4-holiday-qr-code-frame-6.svg",
+        "width": 1036,
+        "height": 1038,
+        "qrX": 289,
+        "qrY": 380,
+        "qrSize": 501
+      }
+    ]
+  },
+  {
+    "group": "🎉 Năm mới",
+    "templates": [
+      {
+        "id": "svg-048",
+        "name": "Năm Mới 01",
+        "path": "Khung QR/🎉 Năm mới/new-year-qr-code-frame1.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 201,
+        "qrY": 363,
+        "qrSize": 598
+      },
+      {
+        "id": "svg-049",
+        "name": "Năm Mới 10",
+        "path": "Khung QR/🎉 Năm mới/new-year-qr-code-frame10.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-050",
+        "name": "Năm Mới 11",
+        "path": "Khung QR/🎉 Năm mới/new-year-qr-code-frame11.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 238,
+        "qrY": 437,
+        "qrSize": 527
+      },
+      {
+        "id": "svg-051",
+        "name": "Năm Mới 12",
+        "path": "Khung QR/🎉 Năm mới/new-year-qr-code-frame12.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-052",
+        "name": "Năm Mới 14",
+        "path": "Khung QR/🎉 Năm mới/new-year-qr-code-frame14.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 236,
+        "qrY": 132,
+        "qrSize": 527
+      },
+      {
+        "id": "svg-053",
+        "name": "Năm Mới 02",
+        "path": "Khung QR/🎉 Năm mới/new-year-qr-code-frame2.svg",
+        "width": 1065,
+        "height": 1087,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1065
+      },
+      {
+        "id": "svg-054",
+        "name": "Năm Mới 03",
+        "path": "Khung QR/🎉 Năm mới/new-year-qr-code-frame3.svg",
+        "width": 1000,
+        "height": 1191,
+        "qrX": 242,
+        "qrY": 626,
+        "qrSize": 515
+      },
+      {
+        "id": "svg-055",
+        "name": "Năm Mới 04",
+        "path": "Khung QR/🎉 Năm mới/new-year-qr-code-frame4.svg",
+        "width": 1300,
+        "height": 550,
+        "qrX": 750,
+        "qrY": 25,
+        "qrSize": 500
+      },
+      {
+        "id": "svg-056",
+        "name": "Năm Mới 05",
+        "path": "Khung QR/🎉 Năm mới/new-year-qr-code-frame5.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 250,
+        "qrY": 144,
+        "qrSize": 500
+      },
+      {
+        "id": "svg-057",
+        "name": "Năm Mới 06",
+        "path": "Khung QR/🎉 Năm mới/new-year-qr-code-frame6.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-058",
+        "name": "Năm Mới 07",
+        "path": "Khung QR/🎉 Năm mới/new-year-qr-code-frame7.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-059",
+        "name": "Năm Mới 08",
+        "path": "Khung QR/🎉 Năm mới/new-year-qr-code-frame8.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 262,
+        "qrY": 182,
+        "qrSize": 476
+      },
+      {
+        "id": "svg-060",
+        "name": "Năm Mới 09",
+        "path": "Khung QR/🎉 Năm mới/new-year-qr-code-frame9.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 181,
+        "qrY": 64,
+        "qrSize": 639
+      }
+    ]
+  },
+  {
+    "group": "🎟️ Vé",
+    "templates": [
+      {
+        "id": "svg-061",
+        "name": "Vé Sự Kiện 01",
+        "path": "Khung QR/🎟️ Vé/ticket-qr-code-frame-1.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 203,
+        "qrY": 181,
+        "qrSize": 235
+      },
+      {
+        "id": "svg-062",
+        "name": "Vé Sự Kiện 02",
+        "path": "Khung QR/🎟️ Vé/ticket-qr-code-frame-2.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 298,
+        "qrY": 310,
+        "qrSize": 253
+      },
+      {
+        "id": "svg-063",
+        "name": "Vé Sự Kiện 03",
+        "path": "Khung QR/🎟️ Vé/ticket-qr-code-frame-3.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 113,
+        "qrY": 123,
+        "qrSize": 201
+      }
+    ]
+  },
+  {
+    "group": "💬 Tin nhắn",
+    "templates": [
+      {
+        "id": "svg-064",
+        "name": "Tin Nhắn 15",
+        "path": "Khung QR/💬 Tin nhắn/message-qr-code-frame-15.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 144,
+        "qrY": 43,
+        "qrSize": 712
+      },
+      {
+        "id": "svg-065",
+        "name": "Tin Nhắn 24",
+        "path": "Khung QR/💬 Tin nhắn/message-qr-code-frame-24.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 144,
+        "qrY": 73,
+        "qrSize": 712
+      },
+      {
+        "id": "svg-066",
+        "name": "Tin Nhắn 26",
+        "path": "Khung QR/💬 Tin nhắn/message-qr-code-frame-26.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 232,
+        "qrY": 121,
+        "qrSize": 536
+      },
+      {
+        "id": "svg-067",
+        "name": "Tin Nhắn 36",
+        "path": "Khung QR/💬 Tin nhắn/message-qr-code-frame-36.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 269,
+        "qrY": 303,
+        "qrSize": 462
+      }
+    ]
+  },
+  {
+    "group": "💳 vCard",
+    "templates": [
+      {
+        "id": "svg-068",
+        "name": "Danh Thiếp 01",
+        "path": "Khung QR/💳 vCard/v-card-qr-code-frame-business-1.svg",
+        "width": 1544,
+        "height": 1000,
+        "qrX": 823,
+        "qrY": 169,
+        "qrSize": 661
+      },
+      {
+        "id": "svg-069",
+        "name": "Danh Thiếp 02",
+        "path": "Khung QR/💳 vCard/v-card-qr-code-frame-business-2.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-070",
+        "name": "Danh Thiếp 03",
+        "path": "Khung QR/💳 vCard/v-card-qr-code-frame-business-3.svg",
+        "width": 1200,
+        "height": 1000,
+        "qrX": 20,
+        "qrY": 221,
+        "qrSize": 560
+      },
+      {
+        "id": "svg-071",
+        "name": "Danh Thiếp 04",
+        "path": "Khung QR/💳 vCard/v-card-qr-code-frame-business-4.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 193,
+        "qrY": 128,
+        "qrSize": 613
+      },
+      {
+        "id": "svg-072",
+        "name": "Danh Thiếp 05",
+        "path": "Khung QR/💳 vCard/v-card-qr-code-frame-business-5.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-073",
+        "name": "Danh Thiếp 06",
+        "path": "Khung QR/💳 vCard/v-card-qr-code-frame-business-6.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 169,
+        "qrY": 50,
+        "qrSize": 661
+      },
+      {
+        "id": "svg-074",
+        "name": "Danh Thiếp 01",
+        "path": "Khung QR/💳 vCard/vcard-business-card-qr-code-frame-1.svg",
+        "width": 2000,
+        "height": 1000,
+        "qrX": 216,
+        "qrY": 210,
+        "qrSize": 579
+      },
+      {
+        "id": "svg-075",
+        "name": "Danh Thiếp 02",
+        "path": "Khung QR/💳 vCard/vcard-business-card-qr-code-frame-2.svg",
+        "width": 2000,
+        "height": 1000,
+        "qrX": 192,
+        "qrY": 186,
+        "qrSize": 627
+      },
+      {
+        "id": "svg-076",
+        "name": "Danh Thiếp 03",
+        "path": "Khung QR/💳 vCard/vcard-business-card-qr-code-frame-3.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 186,
+        "qrY": 344,
+        "qrSize": 627
+      },
+      {
+        "id": "svg-077",
+        "name": "Danh Thiếp 04",
+        "path": "Khung QR/💳 vCard/vcard-business-card-qr-code-frame-4.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 164,
+        "qrY": 335,
+        "qrSize": 479
+      }
+    ]
+  },
+  {
+    "group": "📅 Lịch",
+    "templates": [
+      {
+        "id": "svg-078",
+        "name": "Sự Kiện 01",
+        "path": "Khung QR/📅 Lịch/calendar-qr-code-frame-1.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 89,
+        "qrY": 145,
+        "qrSize": 345
+      },
+      {
+        "id": "svg-079",
+        "name": "Sự Kiện 02",
+        "path": "Khung QR/📅 Lịch/calendar-qr-code-frame-2.svg",
+        "width": 666.66669,
+        "height": 666.66669,
+        "qrX": 303,
+        "qrY": 279,
+        "qrSize": 259
+      },
+      {
+        "id": "svg-080",
+        "name": "Sự Kiện 01",
+        "path": "Khung QR/📅 Lịch/event-date-qr-code-frame-1.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-081",
+        "name": "Sự Kiện 02",
+        "path": "Khung QR/📅 Lịch/event-date-qr-code-frame-2.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 240,
+        "qrY": 332,
+        "qrSize": 518
+      },
+      {
+        "id": "svg-082",
+        "name": "Sự Kiện 03",
+        "path": "Khung QR/📅 Lịch/event-date-qr-code-frame-3.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 524,
+        "qrY": 274,
+        "qrSize": 451
+      },
+      {
+        "id": "svg-083",
+        "name": "Sự Kiện 04",
+        "path": "Khung QR/📅 Lịch/event-date-qr-code-frame-4.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 81,
+        "qrY": 54,
+        "qrSize": 661
+      }
+    ]
+  },
+  {
+    "group": "📍 Vị trí",
+    "templates": [
+      {
+        "id": "svg-084",
+        "name": "Bản Đồ 10",
+        "path": "Khung QR/📍 Vị trí/location-qr-code-frame-10.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 175,
+        "qrY": 319,
+        "qrSize": 650
+      },
+      {
+        "id": "svg-085",
+        "name": "Bản Đồ 17",
+        "path": "Khung QR/📍 Vị trí/location-qr-code-frame-17.svg",
+        "width": 1000,
+        "height": 1001,
+        "qrX": 282,
+        "qrY": 109,
+        "qrSize": 436
+      },
+      {
+        "id": "svg-086",
+        "name": "Bản Đồ 18",
+        "path": "Khung QR/📍 Vị trí/location-qr-code-frame-18.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 215,
+        "qrY": 390,
+        "qrSize": 570
+      },
+      {
+        "id": "svg-087",
+        "name": "Bản Đồ 20",
+        "path": "Khung QR/📍 Vị trí/location-qr-code-frame-20.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 215,
+        "qrY": 117,
+        "qrSize": 570
+      }
+    ]
+  },
+  {
+    "group": "📞 Gọi",
+    "templates": [
+      {
+        "id": "svg-088",
+        "name": "Gọi Điện 01",
+        "path": "Khung QR/📞 Gọi/call-phone-qr-code-cta-frame-1.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 226,
+        "qrY": 164,
+        "qrSize": 549
+      },
+      {
+        "id": "svg-089",
+        "name": "Gọi Điện 02",
+        "path": "Khung QR/📞 Gọi/call-phone-qr-code-cta-frame-2.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 247,
+        "qrY": 267,
+        "qrSize": 579
+      },
+      {
+        "id": "svg-090",
+        "name": "Gọi Điện 03",
+        "path": "Khung QR/📞 Gọi/call-phone-qr-code-cta-frame-3.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 170,
+        "qrY": 63,
+        "qrSize": 659
+      },
+      {
+        "id": "svg-091",
+        "name": "Gọi Điện 04",
+        "path": "Khung QR/📞 Gọi/call-phone-qr-code-cta-frame-4.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 162,
+        "qrY": 34,
+        "qrSize": 677
+      }
+    ]
+  },
+  {
+    "group": "📱 Di động & Truyền thông xã hội",
+    "templates": [
+      {
+        "id": "svg-092",
+        "name": "Facebook 01",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/facebook-qr-code-frame-1.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-093",
+        "name": "Facebook 02",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/facebook-qr-code-frame-2.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 201,
+        "qrY": 149,
+        "qrSize": 611
+      },
+      {
+        "id": "svg-094",
+        "name": "Facebook 03",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/facebook-qr-code-frame-3.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-095",
+        "name": "Instagram 01",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/Instagram-qr-code-frame-1.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 207,
+        "qrY": 187,
+        "qrSize": 586
+      },
+      {
+        "id": "svg-096",
+        "name": "Instagram 02",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/Instagram-qr-code-frame-2.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 264,
+        "qrY": 236,
+        "qrSize": 471
+      },
+      {
+        "id": "svg-097",
+        "name": "LinkedIn 01",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/linkedin-qr-code-frame-1.svg",
+        "width": 2000,
+        "height": 1000,
+        "qrX": 914,
+        "qrY": 69,
+        "qrSize": 861
+      },
+      {
+        "id": "svg-098",
+        "name": "LinkedIn 02",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/linkedin-qr-code-frame-2.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 197,
+        "qrY": 40,
+        "qrSize": 659
+      },
+      {
+        "id": "svg-099",
+        "name": "Tin Nhắn 11",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/message-qr-code-frame-11.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 115,
+        "qrY": 209,
+        "qrSize": 319
+      },
+      {
+        "id": "svg-100",
+        "name": "Tin Nhắn 13",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/message-qr-code-frame-13.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 40,
+        "qrY": 382,
+        "qrSize": 470
+      },
+      {
+        "id": "svg-101",
+        "name": "Tin Nhắn 26",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/message-qr-code-frame-26-1.svg",
+        "width": 550,
+        "height": 1000,
+        "qrX": 67,
+        "qrY": 292,
+        "qrSize": 415
+      },
+      {
+        "id": "svg-102",
+        "name": "Pinterest 01",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/pinterest-qr-code-frame-1.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 274,
+        "qrY": 148,
+        "qrSize": 451
+      },
+      {
+        "id": "svg-103",
+        "name": "Pinterest 02",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/pinterest-qr-code-frame-2.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 274,
+        "qrY": 137,
+        "qrSize": 451
+      },
+      {
+        "id": "svg-104",
+        "name": "TikTok 01",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/tiktok-qr-code-frame-1.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 180,
+        "qrY": 134,
+        "qrSize": 640
+      },
+      {
+        "id": "svg-105",
+        "name": "TikTok 02",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/tiktok-qr-code-frame-2.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 413,
+        "qrY": 414,
+        "qrSize": 551
+      },
+      {
+        "id": "svg-106",
+        "name": "Twitter 01",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/twitter-qr-code-frame-1.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 278,
+        "qrSize": 697
+      },
+      {
+        "id": "svg-107",
+        "name": "Twitter 02",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/twitter-qr-code-frame-2.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-108",
+        "name": "YouTube 01",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/youtube-qr-code-frame-1.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 152,
+        "qrY": 282,
+        "qrSize": 697
+      },
+      {
+        "id": "svg-109",
+        "name": "YouTube 02",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/youtube-qr-code-frame-2.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-110",
+        "name": "YouTube 03",
+        "path": "Khung QR/📱 Di động & Truyền thông xã hội/youtube-qr-code-frame-3.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 223,
+        "qrY": 128,
+        "qrSize": 579
+      }
+    ]
+  },
+  {
+    "group": "📶 Wi-Fi",
+    "templates": [
+      {
+        "id": "svg-111",
+        "name": "Wi-Fi 01",
+        "path": "Khung QR/📶 Wi-Fi/wifi-login-qr-code-frame-1.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 223,
+        "qrY": 412,
+        "qrSize": 554
+      },
+      {
+        "id": "svg-112",
+        "name": "Wi-Fi 02",
+        "path": "Khung QR/📶 Wi-Fi/wifi-login-qr-code-frame-2.svg",
+        "width": 1000,
+        "height": 1001,
+        "qrX": 240,
+        "qrY": 307,
+        "qrSize": 519
+      },
+      {
+        "id": "svg-113",
+        "name": "Wi-Fi 03",
+        "path": "Khung QR/📶 Wi-Fi/wifi-login-qr-code-frame-3.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 260,
+        "qrY": 194,
+        "qrSize": 479
+      },
+      {
+        "id": "svg-114",
+        "name": "Wi-Fi 04",
+        "path": "Khung QR/📶 Wi-Fi/wifi-login-qr-code-frame-4.svg",
+        "width": 1004,
+        "height": 1000,
+        "qrX": 58,
+        "qrY": 249,
+        "qrSize": 456
+      }
+    ]
+  },
+  {
+    "group": "🪙 Tiền điện tử",
+    "templates": [
+      {
+        "id": "svg-115",
+        "name": "Tiền Số 01",
+        "path": "Khung QR/🪙 Tiền điện tử/crypto-payment-qr-code-frame-1.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 245,
+        "qrY": 355,
+        "qrSize": 496
+      },
+      {
+        "id": "svg-116",
+        "name": "Tiền Số 02",
+        "path": "Khung QR/🪙 Tiền điện tử/crypto-payment-qr-code-frame-2.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 34,
+        "qrY": 304,
+        "qrSize": 596
+      },
+      {
+        "id": "svg-117",
+        "name": "Tiền Số 03",
+        "path": "Khung QR/🪙 Tiền điện tử/crypto-payment-qr-code-frame-3.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-118",
+        "name": "Tiền Số 04",
+        "path": "Khung QR/🪙 Tiền điện tử/crypto-payment-qr-code-frame-4.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-119",
+        "name": "Tiền Số 05",
+        "path": "Khung QR/🪙 Tiền điện tử/crypto-payment-qr-code-frame-5.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 186,
+        "qrY": 4,
+        "qrSize": 784
+      },
+      {
+        "id": "svg-120",
+        "name": "Tiền Số 06",
+        "path": "Khung QR/🪙 Tiền điện tử/crypto-payment-qr-code-frame-6.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 149,
+        "qrY": 149,
+        "qrSize": 696
+      },
+      {
+        "id": "svg-121",
+        "name": "Tiền Số 07",
+        "path": "Khung QR/🪙 Tiền điện tử/crypto-payment-qr-code-frame-7.svg",
+        "width": 1000,
+        "height": 1000,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      },
+      {
+        "id": "svg-122",
+        "name": "Tiền Số 08",
+        "path": "Khung QR/🪙 Tiền điện tử/crypto-payment-qr-code-frame-8.svg",
+        "width": 1000,
+        "height": 1001,
+        "qrX": 0,
+        "qrY": 0,
+        "qrSize": 1000
+      }
+    ]
+  }
+];
+
+const SVG_TEMPLATES = {};
+SVG_GROUPS.forEach(g => {
+  g.templates.forEach(tpl => {
+    SVG_TEMPLATES[tpl.id] = {
+      path: tpl.path,
+      width: tpl.width,
+      height: tpl.height,
+      qrX: tpl.qrX,
+      qrY: tpl.qrY,
+      qrSize: tpl.qrSize,
+      image: new Image()
+    };
+    SVG_TEMPLATES[tpl.id].image.onload = () => {
+      if (activeFrame === tpl.id) render();
+    };
+    SVG_TEMPLATES[tpl.id].image.src = encodeURI(tpl.path);
+  });
+});
 
 let currentPreset = 'none'; // The currently active preset logo type
 let historySaveTimeout = null;
@@ -7471,7 +8860,7 @@ const COLOR_DEFAULTS = {
   'eye-in-color-2': '#4f46e5',
   'border-color-1': '#1a1130',
   'border-color-2': '#4f46e5',
-  'frame-color-1': '#4f46e5',
+  'frame-color-1': '#000000',
   'frame-color-2': '#0f172a'
 };
 
@@ -8180,11 +9569,103 @@ function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius, color) {
   ctx.restore();
 }
 
+const SVG_TEXTS = {};
+let svgColorCache = {
+  frameId: null,
+  color1: null,
+  color2: null,
+  isGrad: null,
+  image: null
+};
+
 function drawFrameBackground(ctx, S) {
   if (activeFrame === 'none') return;
 
   ctx.save();
   const scale = S / 600;
+
+  const isSvgTemplate = SVG_TEMPLATES[activeFrame];
+  if (isSvgTemplate) {
+    const isGrad = document.getElementById('frame-grad-enable')?.checked || false;
+    const cacheHit = (
+      svgColorCache.frameId === activeFrame &&
+      svgColorCache.color1 === frameColor1 &&
+      svgColorCache.color2 === frameColor2 &&
+      svgColorCache.isGrad === isGrad &&
+      svgColorCache.image &&
+      svgColorCache.image.complete
+    );
+    
+    if (cacheHit) {
+      const targetHeight = Math.round(S * (isSvgTemplate.height / isSvgTemplate.width));
+      ctx.drawImage(svgColorCache.image, 0, 0, S, targetHeight);
+    } else {
+      if (isSvgTemplate.image && isSvgTemplate.image.complete) {
+        const targetHeight = Math.round(S * (isSvgTemplate.height / isSvgTemplate.width));
+        ctx.drawImage(isSvgTemplate.image, 0, 0, S, targetHeight);
+      }
+      
+      if (SVG_TEXTS[activeFrame]) {
+        const text = SVG_TEXTS[activeFrame];
+        let modified = text;
+        let replacement = frameColor1;
+        
+        if (isGrad) {
+          const gradDef = `
+            <defs>
+              <linearGradient id="svgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="${frameColor1}" />
+                <stop offset="100%" stop-color="${frameColor2}" />
+              </linearGradient>
+            </defs>
+          `;
+          const svgTagMatch = modified.match(/<svg[^>]*>/i);
+          if (svgTagMatch) {
+            const insertIndex = svgTagMatch.index + svgTagMatch[0].length;
+            modified = modified.slice(0, insertIndex) + gradDef + modified.slice(insertIndex);
+          }
+          replacement = "url(#svgGrad)";
+        }
+        
+        modified = modified
+          .replace(/#333333/gi, replacement)
+          .replace(/#2a2a2b/gi, replacement)
+          .replace(/#000000/gi, replacement)
+          .replace(/fill="black"/gi, `fill="${replacement}"`)
+          .replace(/stroke="black"/gi, `stroke="${replacement}"`)
+          .replace(/fill:#2a2a2b/gi, `fill:${replacement}`)
+          .replace(/fill:#333333/gi, `fill:${replacement}`)
+          .replace(/stroke:#2a2a2b/gi, `stroke:${replacement}`)
+          .replace(/stroke:#333333/gi, `stroke:${replacement}`);
+          
+        const blob = new Blob([modified], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = () => {
+          svgColorCache = {
+            frameId: activeFrame,
+            color1: frameColor1,
+            color2: frameColor2,
+            isGrad: isGrad,
+            image: img
+          };
+          render();
+          URL.revokeObjectURL(url);
+        };
+        img.src = url;
+      } else {
+        fetch(encodeURI(isSvgTemplate.path))
+          .then(res => res.text())
+          .then(text => {
+            SVG_TEXTS[activeFrame] = text;
+            render();
+          })
+          .catch(err => console.error("Error fetching SVG:", err));
+      }
+    }
+    ctx.restore();
+    return;
+  }
 
   const isGrad = document.getElementById('frame-grad-enable')?.checked;
   let color1 = frameColor1;
@@ -8237,6 +9718,12 @@ function drawFrameForeground(ctx, S) {
   
   ctx.save();
   const scale = S / 600;
+
+  const isSvgTemplate = SVG_TEMPLATES[activeFrame];
+  if (isSvgTemplate) {
+    ctx.restore();
+    return;
+  }
   
   const isGrad = document.getElementById('frame-grad-enable')?.checked;
   let color1 = frameColor1;
@@ -8353,14 +9840,18 @@ function drawFrameForeground(ctx, S) {
 function render() {
   if (!hasQR) return;
   
-  
   const dpr = window.devicePixelRatio || 1;
-  const S = 600;
+  const isSvgTemplate = SVG_TEMPLATES[activeFrame];
+  const S = isSvgTemplate ? isSvgTemplate.width : 600;
   
-  qrCanvas.width = qrCanvas.height = S * dpr;
+  const canvasWidth = S;
+  const canvasHeight = isSvgTemplate ? isSvgTemplate.height : S;
+  
+  qrCanvas.width = canvasWidth * dpr;
+  qrCanvas.height = canvasHeight * dpr;
   const ctx = qrCanvas.getContext('2d');
   ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, S, S);
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
   const rawQR = QRCode.create(currentURL, { errorCorrectionLevel: qrErrorCorrectionLevel });
   const cr = parseFloat(sQrRadius.value) * 9.6;
@@ -8396,6 +9887,10 @@ function render() {
       qrSize = S * (customQrSize / 100);
       qrX = S * (customQrX / 100);
       qrY = S * (customQrY / 100);
+    } else if (isSvgTemplate) {
+      qrSize = isSvgTemplate.qrSize;
+      qrX = isSvgTemplate.qrX;
+      qrY = isSvgTemplate.qrY;
     } else {
       // Standard co-scaling
       qrSize = S * 0.72;
@@ -8454,6 +9949,8 @@ function render() {
       cardRadius = 30 * (340 / 600); // 17px
     } else if (activeFrame === 'floral') {
       cardRadius = 16 * (340 / 600); // 9px
+    } else if (isSvgTemplate) {
+      cardRadius = 16;
     }
   }
   
@@ -8464,9 +9961,25 @@ function render() {
     } else {
       card.classList.remove('no-border');
     }
+    if (isSvgTemplate) {
+      card.style.background = 'transparent';
+      card.style.boxShadow = 'none';
+    } else {
+      card.style.background = '';
+      card.style.boxShadow = '';
+    }
   }
   if (modalPreview) {
     modalPreview.style.borderRadius = isCircle ? '50%' : cardRadius + 'px';
+    if (isSvgTemplate) {
+      modalPreview.style.background = 'transparent';
+      modalPreview.style.boxShadow = 'none';
+      modalPreview.style.border = 'none';
+    } else {
+      modalPreview.style.background = '';
+      modalPreview.style.boxShadow = '';
+      modalPreview.style.border = '';
+    }
   }
 
   // Update modal QR image in real-time if open
@@ -8549,7 +10062,15 @@ function rrPath(ctx, x, y, w, h, r) {
 async function renderAtSize(size) {
   return new Promise((resolve, reject) => {
     const tmp = document.createElement('canvas');
-    tmp.width = tmp.height = size;
+    const isSvgTemplate = SVG_TEMPLATES[activeFrame];
+    let exportWidth = size;
+    let exportHeight = size;
+    if (isSvgTemplate) {
+      exportWidth = size;
+      exportHeight = Math.round(size * (isSvgTemplate.height / isSvgTemplate.width));
+    }
+    tmp.width = exportWidth;
+    tmp.height = exportHeight;
     const ctx = tmp.getContext('2d');
 
     const rawQR = QRCode.create(currentURL, { errorCorrectionLevel: qrErrorCorrectionLevel });
@@ -8561,46 +10082,51 @@ async function renderAtSize(size) {
     // Bo góc/hình tròn tổng thể ngoài cùng card canvas
     if (overallShape === 'circle') {
       ctx.beginPath();
-      ctx.arc(size / 2, size / 2, size / 2 - 4, 0, 2 * Math.PI);
+      ctx.arc(exportWidth / 2, exportHeight / 2, exportWidth / 2 - 4, 0, 2 * Math.PI);
       ctx.clip();
     } else if (activeFrame === 'none' && cr > 0) {
       ctx.beginPath();
-      rrPath(ctx, 0, 0, size, size, cr * (size / 600));
+      rrPath(ctx, 0, 0, exportWidth, exportHeight, cr * (exportWidth / 600));
       ctx.clip();
     } else if (activeFrame === 'custom' && customQrRadius > 0) {
       ctx.beginPath();
-      rrPath(ctx, 0, 0, size, size, customQrRadius * (size / 600));
+      rrPath(ctx, 0, 0, exportWidth, exportHeight, customQrRadius * (exportWidth / 600));
       ctx.clip();
     }
 
     // Draw Frame Background behind everything at full size scale
-    drawFrameBackground(ctx, size);
+    drawFrameBackground(ctx, exportWidth);
 
     // Setup QR size and positions inside the frame
-    let qrSize = size;
+    let qrSize = exportWidth;
     let qrX = 0;
     let qrY = 0;
     if (activeFrame !== 'none') {
       if (activeFrame === 'custom') {
-        qrSize = size * (customQrSize / 100);
-        qrX = size * (customQrX / 100);
-        qrY = size * (customQrY / 100);
+        qrSize = exportWidth * (customQrSize / 100);
+        qrX = exportWidth * (customQrX / 100);
+        qrY = exportWidth * (customQrY / 100);
+      } else if (isSvgTemplate) {
+        const scaleExport = exportWidth / isSvgTemplate.width;
+        qrSize = isSvgTemplate.qrSize * scaleExport;
+        qrX = isSvgTemplate.qrX * scaleExport;
+        qrY = isSvgTemplate.qrY * scaleExport;
       } else {
-        qrSize = size * 0.72;
-        qrX = size * 0.14;
-        qrY = size * 0.14;
+        qrSize = exportWidth * 0.72;
+        qrX = exportWidth * 0.14;
+        qrY = exportWidth * 0.14;
         if (activeFrame === 'scan-me-bottom') {
-          qrSize = size * 0.72;
-          qrX = (size - qrSize) / 2;
-          qrY = size * 0.08;
+          qrSize = exportWidth * 0.72;
+          qrX = (exportWidth - qrSize) / 2;
+          qrY = exportWidth * 0.08;
         } else if (activeFrame === 'scan-me-top') {
-          qrSize = size * 0.72;
-          qrX = (size - qrSize) / 2;
-          qrY = size * 0.20;
+          qrSize = exportWidth * 0.72;
+          qrX = (exportWidth - qrSize) / 2;
+          qrY = exportWidth * 0.20;
         } else if (activeFrame === 'ring') {
-          qrSize = size * 0.62;
-          qrX = (size - qrSize) / 2;
-          qrY = (size - qrSize) / 2;
+          qrSize = exportWidth * 0.62;
+          qrX = (exportWidth - qrSize) / 2;
+          qrY = (exportWidth - qrSize) / 2;
         }
       }
     }
@@ -8620,7 +10146,7 @@ async function renderAtSize(size) {
     ctx.restore(); // Restore outer translation/rotation
 
     // Draw Frame Foreground on top of everything at full size scale
-    drawFrameForeground(ctx, size);
+    drawFrameForeground(ctx, exportWidth);
 
     ctx.restore(); // Restore outer context
     resolve(tmp);
@@ -8678,10 +10204,11 @@ document.querySelectorAll('.dl-opt').forEach(opt => {
       let dataURL;
       if (fmt === 'jpg' || bg === 'white') {
         const flat = document.createElement('canvas');
-        flat.width = flat.height = 2000;
+        flat.width = src.width;
+        flat.height = src.height;
         const fCtx = flat.getContext('2d');
         fCtx.fillStyle = '#ffffff';
-        fCtx.fillRect(0, 0, 2000, 2000);
+        fCtx.fillRect(0, 0, flat.width, flat.height);
         fCtx.drawImage(src, 0, 0);
         const mime = fmt === 'jpg' ? 'image/jpeg' : 'image/png';
         dataURL = flat.toDataURL(mime, 0.95);
@@ -9394,10 +10921,11 @@ function initBottomSheet() {
       try {
         const src = await renderAtSize(2000);
         const flat = document.createElement('canvas');
-        flat.width = flat.height = 2000;
+        flat.width = src.width;
+        flat.height = src.height;
         const fCtx = flat.getContext('2d');
         fCtx.fillStyle = '#ffffff';
-        fCtx.fillRect(0, 0, 2000, 2000);
+        fCtx.fillRect(0, 0, flat.width, flat.height);
         fCtx.drawImage(src, 0, 0);
         const dataURL = flat.toDataURL('image/png');
         const a = document.createElement('a');
@@ -9423,10 +10951,11 @@ function initBottomSheet() {
       try {
         const src = await renderAtSize(2000);
         const flat = document.createElement('canvas');
-        flat.width = flat.height = 2000;
+        flat.width = src.width;
+        flat.height = src.height;
         const fCtx = flat.getContext('2d');
         fCtx.fillStyle = '#ffffff';
-        fCtx.fillRect(0, 0, 2000, 2000);
+        fCtx.fillRect(0, 0, flat.width, flat.height);
         fCtx.drawImage(src, 0, 0);
         const dataURL = flat.toDataURL('image/jpeg', 0.95);
         const a = document.createElement('a');
@@ -9494,6 +11023,153 @@ function initMainTabsSwitching() {
 }
 
 function initFrameSystem() {
+  // Dynamic rendering of SVG templates groups as a collapsible 4x4 tab button grid
+  const groupedContainer = $('grouped-svg-templates-container');
+  if (groupedContainer && typeof SVG_GROUPS !== 'undefined') {
+    const SVG_GROUP_DETAILS = {
+      "✅ Khung cơ bản": { emoji: "✅", name: "Cơ bản" },
+      "✉️ Email": { emoji: "✉️", name: "Email" },
+      "🌎 Trang web & Liên kết": { emoji: "🌎", name: "Website" },
+      "🍕 Thực đơn Cafe & Nhà hàng": { emoji: "🍕", name: "Cafe/Food" },
+      "🎁 Thẻ quà tặng & Phiếu thưởng": { emoji: "🎁", name: "Quà tặng" },
+      "🎄 giáng sinh": { emoji: "🎄", name: "Giáng sinh" },
+      "🎉 Năm mới": { emoji: "🎉", name: "Năm mới" },
+      "🎟️ Vé": { emoji: "🎟️", name: "Vé/Ticket" },
+      "💬 Tin nhắn": { emoji: "💬", name: "Tin nhắn" },
+      "💳 vCard": { emoji: "💳", name: "vCard" },
+      "📅 Lịch": { emoji: "📅", name: "Lịch/Event" },
+      "📍 Vị trí": { emoji: "📍", name: "Vị trí/Map" },
+      "📞 Gọi": { emoji: "📞", name: "Gọi điện" },
+      "📱 Di động & Truyền thông xã hội": { emoji: "📱", name: "MXH/Phone" },
+      "📶 Wi-Fi": { emoji: "📶", name: "Wi-Fi" },
+      "🪙 Tiền điện tử": { emoji: "🪙", name: "Crypto" }
+    };
+
+    let html = '';
+    
+    // Dropdown container enclosing both header row and 16 buttons grid
+    html += `
+      <div class="svg-group-dropdown-container" id="svg-group-dropdown-container">
+        <div class="svg-group-dropdown-header" id="svg-group-dropdown-header">
+          <span class="selected-group-label" style="font-size: 12.5px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 6px;">
+            Nhóm: <span id="current-group-display" style="color: var(--accent); font-weight: 800;">Cơ bản</span>
+          </span>
+          <svg class="dropdown-arrow-icon" id="group-dropdown-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.2s; color: var(--dim);"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        
+        <div class="svg-groups-tab-grid" id="svg-groups-tab-grid">
+    `;
+    
+    SVG_GROUPS.forEach((g, gIdx) => {
+      const isFirst = gIdx === 0;
+      const activeClass = isFirst ? 'active' : '';
+      const details = SVG_GROUP_DETAILS[g.group] || { emoji: "📁", name: g.group };
+      
+      html += `
+        <div class="preset-btn svg-group-tab-btn ${activeClass}" data-group-index="${gIdx}" style="font-size: 10px; height: 32px; padding: 0 2px; display: flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          <span style="font-size: 11px; flex-shrink: 0;">${details.emoji}</span>
+          <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${details.name}</span>
+        </div>
+      `;
+    });
+    
+    html += `
+        </div>
+      </div>
+    `; // Close svg-groups-tab-grid and svg-group-dropdown-container
+    
+    // 2. Content areas containing the frame grids
+    SVG_GROUPS.forEach((g, gIdx) => {
+      const isFirst = gIdx === 0;
+      const displayContent = isFirst ? 'block' : 'none';
+      
+      html += `
+        <div class="svg-group-content-wrapper" id="svg-group-content-${gIdx}" style="display: ${displayContent};">
+          <div class="frame-grid">
+      `;
+      
+      g.templates.forEach(tpl => {
+        html += `
+          <div class="frame-opt" data-frame="${tpl.id}">
+            <div class="frame-preview-image">
+              <img src="${encodeURI(tpl.path)}" alt="${tpl.name}" loading="lazy">
+            </div>
+            <span>${tpl.name}</span>
+          </div>
+        `;
+      });
+      
+      html += `
+          </div>
+        </div>
+      `;
+    });
+    
+    groupedContainer.innerHTML = html;
+    
+    const dropdownHeader = $('svg-group-dropdown-header');
+    const tabGrid = $('svg-groups-tab-grid');
+    const dropdownArrow = $('group-dropdown-arrow');
+    
+    if (dropdownHeader && tabGrid) {
+      dropdownHeader.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = tabGrid.classList.contains('open');
+        if (isOpen) {
+          tabGrid.classList.remove('open');
+        } else {
+          tabGrid.classList.add('open');
+        }
+        if (dropdownArrow) {
+          dropdownArrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+      });
+      
+      tabGrid.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    }
+
+    // Add click event listeners to switch groups
+    const tabBtns = groupedContainer.querySelectorAll('.svg-group-tab-btn');
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        groupedContainer.querySelectorAll('.svg-group-content-wrapper').forEach(content => {
+          content.style.display = 'none';
+        });
+        
+        const gIdx = btn.getAttribute('data-group-index');
+        const activeContent = $('svg-group-content-' + gIdx);
+        if (activeContent) {
+          activeContent.style.display = 'block';
+        }
+
+        // Update header label
+        const displayLabel = $('current-group-display');
+        if (displayLabel) {
+          const groupName = SVG_GROUPS[gIdx].group;
+          const details = SVG_GROUP_DETAILS[groupName] || { emoji: "📁", name: groupName };
+          displayLabel.textContent = details.name;
+        }
+
+        // Collapse dropdown
+        if (tabGrid) tabGrid.classList.remove('open');
+        if (dropdownArrow) dropdownArrow.style.transform = 'rotate(0deg)';
+      });
+    });
+
+    // Close dropdown on outside click
+    document.addEventListener('click', () => {
+      if (tabGrid && tabGrid.classList.contains('open')) {
+        tabGrid.classList.remove('open');
+        if (dropdownArrow) dropdownArrow.style.transform = 'rotate(0deg)';
+      }
+    });
+  }
+
   const frameOpts = document.querySelectorAll('.frame-opt');
   const customSec = $('frame-customization-sec');
   const uploadZone = $('frame-upload-zone');
@@ -9518,7 +11194,12 @@ function initFrameSystem() {
     
     customSec.style.display = 'flex';
     
-    if (activeFrame === 'custom') {
+    if (SVG_TEMPLATES[activeFrame]) {
+      if (rowText) rowText.style.display = 'none';
+      if (rowFont) rowFont.style.display = 'none';
+      if (rowColor) rowColor.style.display = 'block';
+      if (rowAlign) rowAlign.style.display = 'none';
+    } else if (activeFrame === 'custom') {
       if (rowText) rowText.style.display = 'none';
       if (rowFont) rowFont.style.display = 'none';
       if (rowColor) rowColor.style.display = 'none';
