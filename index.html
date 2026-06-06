@@ -8251,6 +8251,9 @@ function updateQRDetailsCard(content) {
       emptyLogoEl.style.display = 'flex';
       emptyLogoEl.innerHTML = `<img src="${logoSrc}" style="width: 44px; height: 44px; object-fit: contain; opacity: 0.28;">`;
     }
+    if (qrCanvas) {
+      qrCanvas.style.display = 'none';
+    }
 
     cardContainer.innerHTML = `
       <div class="mock-card" style="justify-content: center; align-items: flex-start; padding: 10px 12px; height: 100%;">
@@ -8264,6 +8267,13 @@ function updateQRDetailsCard(content) {
   }
 
   if (content) {
+    if (qrCanvas) {
+      qrCanvas.style.display = 'block';
+    }
+    const emptyLogoEl = $('qr-empty-logo');
+    if (emptyLogoEl) {
+      emptyLogoEl.style.display = 'none';
+    }
     const cleanContent = content.trim();
     if (cleanContent.toLowerCase().startsWith('http://') || cleanContent.toLowerCase().startsWith('https://')) {
       linkBtn = `<button type="button" class="mock-header-btn card-scan-btn" data-url="${cleanContent}">Quét thử</button>`;
@@ -8844,6 +8854,8 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
             }
             logoSettings.style.display = 'none';
           } else {
+            originalLogo = null;
+            logo = null;
             const img = new Image();
             img.onload = () => {
               if (currentPreset !== matchingPreset) return;
@@ -10833,9 +10845,15 @@ function drawFrameForeground(ctx, S) {
 
 function render() {
   const emptyLogoEl = $('qr-empty-logo');
-  if (emptyLogoEl) emptyLogoEl.style.display = 'none';
   
-  if (!hasQR) return;
+  if (!hasQR) {
+    if (emptyLogoEl) emptyLogoEl.style.display = 'flex';
+    if (qrCanvas) qrCanvas.style.display = 'none';
+    return;
+  }
+  
+  if (emptyLogoEl) emptyLogoEl.style.display = 'none';
+  if (qrCanvas) qrCanvas.style.display = 'block';
   
   const isBgTransparent = $('bg-transparent-enable')?.checked || false;
   const dpr = window.devicePixelRatio || 1;
