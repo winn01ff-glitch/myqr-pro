@@ -21,7 +21,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@400;700&family=Pacifico&family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    button, input, select, textarea, a { outline: none !important; }
 
     :root {
       --bg:       #f1f5f9;
@@ -1951,7 +1952,7 @@
     }
     
     .btn-step, .custom-sync-btn {
-      width: 26px; /* Square step button (increased from 22px to 26px in STEP 2626) */
+      width: 22px; /* Reduced to 22px to give more space for the input */
       height: 100%;
       border: none;
       background: none;
@@ -1992,13 +1993,16 @@
       box-shadow: none !important;
       backdrop-filter: none !important;
       border-radius: 0 !important;
+      font-size: 12px;
       text-align: center;
-      font-size: 11px;
       font-weight: 700;
+      letter-spacing: -0.2px;
       color: var(--accent);
       outline: none;
       padding: 0;
       box-sizing: border-box;
+      transform: scale(0.78);
+      transform-origin: center;
     }
     
     .sync-unit {
@@ -2471,7 +2475,7 @@
         width: 100% !important;
         height: 100% !important;
         object-fit: contain !important; /* Tự co giãn tỷ lệ nằm gọn trong ô vuông */
-        display: block !important;
+        display: block;
         image-rendering: -webkit-optimize-contrast !important;
         image-rendering: auto !important;
         transform: translateZ(0);
@@ -2768,11 +2772,14 @@
       z-index: 1999;
       opacity: 0;
       pointer-events: none;
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       transition: opacity 0.3s ease;
     }
     .qr-modal-backdrop.show {
-      opacity: 0;
-      pointer-events: none;
+      opacity: 1;
+      pointer-events: auto;
     }
     
     .qr-modal {
@@ -2988,42 +2995,33 @@
       color: #fff;
     }
 
-    .modal-toggle-footer {
+    .qr-modal-drag-handle {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 44px;
-      height: 22px;
-      margin: 0 auto;
-      position: relative;
-      bottom: -22px;
-      margin-top: -22px;
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-top: none;
-      border-radius: 0 0 14px 14px;
-      cursor: pointer;
+      height: 24px;
+      width: 100%;
+      cursor: grab;
       user-select: none;
-      z-index: 2001;
-      transition: all 0.3s ease;
-      color: var(--dim);
-      opacity: 0;
-      pointer-events: none;
+      background: transparent;
+      flex-shrink: 0;
+      padding-bottom: 8px;
+      box-sizing: border-box;
     }
-    .qr-modal.show ~ .modal-toggle-footer,
-    .qr-modal.show .modal-toggle-footer {
-      opacity: 1;
-      pointer-events: auto;
+    .qr-modal-drag-handle:active {
+      cursor: grabbing;
     }
-    .modal-toggle-footer:hover {
-      color: var(--accent);
-      background: var(--accent-l);
+    .qr-modal-drag-handle .drag-bar {
+      width: 36px;
+      height: 5px;
+      background: var(--muted);
+      border-radius: 99px;
+      opacity: 0.5;
+      transition: background 0.2s, opacity 0.2s;
     }
-    .modal-toggle-footer svg {
-      transition: transform 0.2s ease;
-    }
-    .modal-toggle-footer:active svg {
-      transform: translateY(2px);
+    .qr-modal-drag-handle:hover .drag-bar {
+      opacity: 0.8;
+      background: var(--dim);
     }
 
 
@@ -6403,8 +6401,8 @@
     </div>
   </div>
   
-  <div class="modal-toggle-footer" id="modal-toggle-footer">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px;"><polyline points="18 15 12 9 6 15"/></svg>
+  <div class="qr-modal-drag-handle" id="modal-drag-handle">
+    <div class="drag-bar"></div>
   </div>
 </div>
 
@@ -11225,11 +11223,18 @@ $('dl-copy-opt').addEventListener('click', async () => {
   saveMain.innerHTML = '<div class="spinner"></div> Đang tạo…';
   try {
     const src = await renderAtSize(2000);
-    src.toBlob(async blob => {
-      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-      showToast('✅ Đã sao chép PNG 2000px trong suốt!');
-    });
-  } catch {
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        'image/png': new Promise((resolve) => {
+          src.toBlob((blob) => {
+            resolve(blob);
+          }, 'image/png');
+        })
+      })
+    ]);
+    showToast('✅ Đã sao chép PNG 2000px trong suốt!');
+  } catch (err) {
+    console.error(err);
     showToast('⚠️ Trình duyệt không hỗ trợ sao chép ảnh');
   } finally {
     saveMain.disabled = false;
@@ -11943,6 +11948,83 @@ function initBottomSheet() {
   
   const toggleFooter = document.getElementById('modal-toggle-footer');
   if (toggleFooter) toggleFooter.addEventListener('click', closeQRModal);
+
+  // Kéo thả và Click để đóng/mở cho thanh gạch ngang trên modal mobile
+  const dragHandle = document.getElementById('modal-drag-handle');
+  if (dragHandle && modal) {
+    let startY = 0;
+    let currentDeltaY = 0;
+    let isDragging = false;
+    let modalHeight = 0;
+
+    const startDrag = (clientY) => {
+      startY = clientY;
+      isDragging = true;
+      modalHeight = modal.offsetHeight;
+      modal.style.transition = 'none';
+      currentDeltaY = 0;
+    };
+
+    const moveDrag = (clientY) => {
+      if (!isDragging) return;
+      const deltaY = clientY - startY;
+      currentDeltaY = deltaY;
+      
+      // Top Sheet trượt từ trên xuống: kéo lên (deltaY < 0) là hướng đóng, kéo xuống (deltaY > 0) là hướng mở thêm
+      let translateY = deltaY;
+      if (deltaY > 0) {
+        translateY = deltaY * 0.15; // Tạo lực cản nhẹ khi kéo xuống quá giới hạn
+      }
+      modal.style.transform = `translateY(${translateY}px)`;
+    };
+
+    const endDrag = () => {
+      if (!isDragging) return;
+      isDragging = false;
+      modal.style.transition = '';
+      
+      // Nhấn nhẹ (Click): nếu di chuyển ít hơn 6px, coi như Click và đóng modal
+      if (Math.abs(currentDeltaY) < 6) {
+        modal.style.transform = '';
+        closeQRModal();
+        return;
+      }
+      
+      // Nếu kéo lên trên hơn 20% chiều cao modal, đóng modal
+      if (currentDeltaY < -modalHeight * 0.2) {
+        modal.style.transform = '';
+        closeQRModal();
+      } else {
+        modal.style.transform = '';
+      }
+    };
+
+    // Sự kiện Touch (Mobile)
+    dragHandle.addEventListener('touchstart', (e) => {
+      startDrag(e.touches[0].clientY);
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+      if (isDragging) {
+        moveDrag(e.touches[0].clientY);
+      }
+    }, { passive: false });
+
+    document.addEventListener('touchend', endDrag);
+
+    // Sự kiện Mouse (PC để thử nghiệm)
+    dragHandle.addEventListener('mousedown', (e) => {
+      startDrag(e.clientY);
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        moveDrag(e.clientY);
+      }
+    });
+
+    document.addEventListener('mouseup', endDrag);
+  }
   
   // Bind action buttons in modal
   const btnDownload = document.getElementById('modal-btn-download');
@@ -11981,11 +12063,18 @@ function initBottomSheet() {
       btnCopy.innerHTML = '<span style="font-size:10px;color:var(--accent);">⌛ Đang tạo…</span>';
       try {
         const src = await renderAtSize(2000);
-        src.toBlob(async blob => {
-          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-          showToast('✅ Đã sao chép PNG 2000px trong suốt!');
-        });
-      } catch {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'image/png': new Promise((resolve) => {
+              src.toBlob((blob) => {
+                resolve(blob);
+              }, 'image/png');
+            })
+          })
+        ]);
+        showToast('✅ Đã sao chép PNG 2000px trong suốt!');
+      } catch (err) {
+        console.error(err);
         showToast('⚠️ Trình duyệt không hỗ trợ sao chép ảnh');
       } finally {
         btnCopy.disabled = false;
@@ -13833,11 +13922,16 @@ if (clearHistoryBtn) {
       
       if (qrLaser.classList.contains('scanning')) return;
       
+      // Mở cửa sổ mới ngay lập tức để tránh bị pop-up blocker chặn trên Safari/Chrome mobile
+      const newWindow = window.open('about:blank', '_blank');
+      
       qrLaser.classList.add('scanning');
       showToast('⚡ Đang quét mô phỏng mã QR của bạn...', 'info');
       
       setTimeout(() => {
-        window.open(targetUrl, '_blank');
+        if (newWindow) {
+          newWindow.location.href = targetUrl;
+        }
         setTimeout(() => {
           qrLaser.classList.remove('scanning');
         }, 300);
@@ -13861,11 +13955,16 @@ if (clearHistoryBtn) {
       const laser = $('qr-laser');
       if (laser && laser.classList.contains('scanning')) return;
       
+      // Mở cửa sổ mới ngay lập tức để tránh bị pop-up blocker chặn trên Safari/Chrome mobile
+      const newWindow = window.open('about:blank', '_blank');
+      
       if (laser) laser.classList.add('scanning');
       showToast('⚡ Đang quét mô phỏng mã QR của bạn...', 'info');
       
       setTimeout(() => {
-        window.open(targetUrl, '_blank');
+        if (newWindow) {
+          newWindow.location.href = targetUrl;
+        }
         setTimeout(() => {
           if (laser) laser.classList.remove('scanning');
         }, 300);
