@@ -2365,12 +2365,32 @@
         flex: 1 !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
-        padding: 8px 20px 180px 20px !important;
+        padding: 8px 20px 260px 20px !important; /* Tăng padding-bottom để cuộn thoải mái không bị che */
         margin-top: 0 !important;
         display: flex !important;
         flex-direction: column !important;
         gap: 8px !important;
         -webkit-overflow-scrolling: touch;
+      }
+
+      /* Cho phép vuốt cuộn dọc mượt mà trên các khu vực chứa sliders trên Mobile */
+      .sliders, .sl-row, .slider-input-sync, .style-group-inner-card {
+        touch-action: pan-y !important;
+      }
+      .slider-input-sync input[type="range"] {
+        touch-action: pan-y !important;
+      }
+
+      /* Tối ưu hóa kích thước sliders và độ giãn để hiển thị tốt trên Mobile */
+      .sliders {
+        gap: 10px !important;
+      }
+      .sl-row {
+        gap: 4px !important;
+      }
+      .style-group-inner-card {
+        padding: 10px !important;
+        gap: 10px !important;
       }
 
       /* Xóa / ẩn các phần tử rỗng và chỉ báo quét thử trên Mobile */
