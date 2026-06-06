@@ -2334,7 +2334,7 @@
         -webkit-backdrop-filter: none !important;
         background: transparent !important;
       }
-      .sidebar-header, .sidebar-body {
+      .sidebar-header {
         padding: 0 !important;
         overflow: visible !important;
         height: auto !important;
@@ -13991,36 +13991,36 @@ if (clearHistoryBtn) {
       
       if (qrLaser.classList.contains('scanning')) return;
       
-      // Tự tính toán trước đường dẫn và trạng thái thiết bị để chuyển tiếp mượt mà
+      // Tự tính toán trước đường dẫn và trạng thái thiết bị để chuyển tiếp mượt mà sau khi quét
       const appUrl = getAppSchemeUrl(targetUrl);
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       
-      // Mở cửa sổ mới ngay lập tức để tránh bị pop-up blocker chặn trên di động (được giữ trống trong lúc quét)
-      const newWindow = window.open('about:blank', '_blank');
-      
+      // Kích hoạt chạy hiệu ứng quét laser trước
       qrLaser.classList.add('scanning');
       showToast('⚡ Đang quét mô phỏng mã QR của bạn...', 'info');
       
+      // Chờ quét laser xong mới bắt đầu thực hiện chuyển hướng (tránh làm gián đoạn hiệu ứng quét)
       setTimeout(() => {
-        if (newWindow) {
-          if (isMobile && appUrl) {
-            // Chuyển hướng trực tiếp trong cửa sổ mới tới app
-            newWindow.location.href = appUrl;
+        if (isMobile) {
+          // Trên di động, chuyển hướng trực tiếp trên chính tab hiện tại để xem trọn vẹn laser và tránh bị chặn pop-up
+          if (appUrl) {
+            window.location.href = appUrl;
             // Fallback sang web nếu máy chưa cài app
             setTimeout(() => {
-              try {
-                newWindow.location.href = targetUrl;
-              } catch (e) {}
+              window.location.href = targetUrl;
             }, 1500);
           } else {
-            // Trên PC hoặc link không hỗ trợ app scheme, mở trực tiếp web
-            newWindow.location.href = targetUrl;
+            window.location.href = targetUrl;
           }
+        } else {
+          // Trên PC, mở tab mới (trình duyệt PC cho phép window.open sau click 1.2s của người dùng)
+          window.open(targetUrl, '_blank');
         }
+        
         setTimeout(() => {
           qrLaser.classList.remove('scanning');
         }, 300);
-      }, 1600);
+      }, 1200);
     });
   }
 
@@ -14044,29 +14044,27 @@ if (clearHistoryBtn) {
       const appUrl = getAppSchemeUrl(targetUrl);
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       
-      // Mở cửa sổ mới ngay lập tức để tránh bị pop-up blocker chặn trên di động (được giữ trống trong lúc quét)
-      const newWindow = window.open('about:blank', '_blank');
-      
       if (laser) laser.classList.add('scanning');
       showToast('⚡ Đang quét mô phỏng mã QR của bạn...', 'info');
       
       setTimeout(() => {
-        if (newWindow) {
-          if (isMobile && appUrl) {
-            newWindow.location.href = appUrl;
+        if (isMobile) {
+          if (appUrl) {
+            window.location.href = appUrl;
             setTimeout(() => {
-              try {
-                newWindow.location.href = targetUrl;
-              } catch (e) {}
+              window.location.href = targetUrl;
             }, 1500);
           } else {
-            newWindow.location.href = targetUrl;
+            window.location.href = targetUrl;
           }
+        } else {
+          window.open(targetUrl, '_blank');
         }
+        
         setTimeout(() => {
           if (laser) laser.classList.remove('scanning');
         }, 300);
-      }, 1600);
+      }, 1200);
     }
   });
 })();
@@ -14339,10 +14337,7 @@ if (clearHistoryBtn) {
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
     const bankInfo = BANK_DEEPLINKS[selectedApp];
 
-    // 2. Mở cửa sổ mới ngay lập tức một cách đồng bộ để tránh bị pop-up blocker chặn trên iOS/Android (được giữ trống trong lúc quét)
-    const newWindow = window.open('about:blank', '_blank');
-
-    // 3. Chạy hiệu ứng quét laser neon độc lập trên chính mã QR tri ân
+    // 2. Chạy hiệu ứng quét laser neon độc lập trên chính mã QR tri ân trước
     if (gratitudeQrLaser) {
       if (gratitudeQrLaser.classList.contains('scanning')) return;
       
@@ -14351,40 +14346,42 @@ if (clearHistoryBtn) {
       showToast(`⚡ Đang quét mô phỏng và kết nối ứng dụng ngân hàng (${bankNameText})...`, 'info');
 
       setTimeout(() => {
-        if (newWindow) {
-          if (isMobile && bankInfo) {
-            // Mở app banking trực tiếp bằng custom URL scheme
-            newWindow.location.href = bankInfo.scheme;
+        if (isMobile) {
+          if (bankInfo) {
+            // Trên Mobile, gọi trực tiếp custom scheme của ngân hàng
+            window.location.href = bankInfo.scheme;
             // Fallback sang store tải ứng dụng nếu chưa cài app ngân hàng đó sau 1.5 giây
             const storeUrl = isIOS ? bankInfo.iosStore : bankInfo.androidStore;
             setTimeout(() => {
-              try {
-                newWindow.location.href = storeUrl;
-              } catch (e) {}
+              window.location.href = storeUrl;
             }, 1500);
           } else {
-            // Trên PC hoặc nút Quét QR chung không chọn ngân hàng cụ thể
-            newWindow.location.href = payUrl;
+            // Nút Quét QR chung
+            window.location.href = payUrl;
           }
+        } else {
+          // Trên PC, mở tab mới sau khi quét xong 1.2s
+          window.open(payUrl, '_blank');
         }
+        
         setTimeout(() => {
           gratitudeQrLaser.classList.remove('scanning');
         }, 300);
       }, 1200);
     } else {
       // Fallback trực tiếp nếu không tìm thấy laser element
-      if (newWindow) {
-        if (isMobile && bankInfo) {
-          newWindow.location.href = bankInfo.scheme;
+      if (isMobile) {
+        if (bankInfo) {
+          window.location.href = bankInfo.scheme;
           const storeUrl = isIOS ? bankInfo.iosStore : bankInfo.androidStore;
           setTimeout(() => {
-            try {
-              newWindow.location.href = storeUrl;
-            } catch (e) {}
+            window.location.href = storeUrl;
           }, 1500);
         } else {
-          newWindow.location.href = payUrl;
+          window.location.href = payUrl;
         }
+      } else {
+        window.open(payUrl, '_blank');
       }
     }
   }
