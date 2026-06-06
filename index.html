@@ -13907,6 +13907,37 @@ if (clearHistoryBtn) {
     defaultTabBtn.click();
   }
   
+  // Helper chuyển đổi link mạng xã hội sang App Scheme (ưu tiên mở ứng dụng trực tiếp trên di động)
+  function getAppSchemeUrl(url) {
+    const lower = url.toLowerCase();
+    
+    // Facebook
+    if (lower.includes('facebook.com') || lower.includes('fb.com')) {
+      return `fb://facewebmodal/f?href=${encodeURIComponent(url)}`;
+    }
+    
+    // Instagram
+    if (lower.includes('instagram.com')) {
+      const match = url.match(/instagram\.com\/([a-zA-Z0-9_\.]+)/i);
+      if (match && match[1]) {
+        return `instagram://user?username=${match[1]}`;
+      }
+      return `instagram://`;
+    }
+    
+    // Youtube
+    if (lower.includes('youtube.com') || lower.includes('youtu.be')) {
+      return url.replace(/^https?:\/\//i, 'youtube://');
+    }
+    
+    // TikTok
+    if (lower.includes('tiktok.com')) {
+      return url.replace(/^https?:\/\//i, 'snssdk1128://');
+    }
+    
+    return null;
+  }
+
   // Đăng ký sự kiện Click cho nút "Quét thử" (Neon Laser simulator scan)
   const scanBtn = $('scan-test-btn');
   const qrLaser = $('qr-laser');
@@ -13930,7 +13961,41 @@ if (clearHistoryBtn) {
       
       setTimeout(() => {
         if (newWindow) {
-          newWindow.location.href = targetUrl;
+          const appUrl = getAppSchemeUrl(targetUrl);
+          const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+          
+          if (isMobile && appUrl) {
+            // Viết code điều hướng trong tab mới để mở app, nếu không có app thì tự động fallback sang trình duyệt sau 1.5s
+            newWindow.document.write(`
+              <html>
+              <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Đang kết nối ứng dụng...</title>
+              </head>
+              <body style="margin:0; padding:20px; font-family:sans-serif; text-align:center; background:#f8fafc; color:#4f46e5; display:flex; flex-direction:column; align-items:center; justify-content:center; height:80vh;">
+                <div style="font-size:48px; margin-bottom:16px; animation: pulse 1.5s infinite;">⚡</div>
+                <h3 style="margin:0 0 8px 0; font-size:18px; font-weight:700;">Đang kết nối ứng dụng...</h3>
+                <p style="margin:0; font-size:13px; color:#64748b; max-width:260px;">Hệ thống đang mở ứng dụng trực tiếp trên thiết bị của bạn.</p>
+                <style>
+                  @keyframes pulse {
+                    0% { transform: scale(1); opacity: 1; }
+                    50% { transform: scale(1.15); opacity: 0.7; }
+                    100% { transform: scale(1); opacity: 1; }
+                  }
+                </style>
+                <script>
+                  window.location.href = "${appUrl}";
+                  setTimeout(function() {
+                    window.location.href = "${targetUrl}";
+                  }, 1500);
+                <\/script>
+              </body>
+              </html>
+            `);
+            newWindow.document.close();
+          } else {
+            newWindow.location.href = targetUrl;
+          }
         }
         setTimeout(() => {
           qrLaser.classList.remove('scanning');
@@ -13963,7 +14028,40 @@ if (clearHistoryBtn) {
       
       setTimeout(() => {
         if (newWindow) {
-          newWindow.location.href = targetUrl;
+          const appUrl = getAppSchemeUrl(targetUrl);
+          const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+          
+          if (isMobile && appUrl) {
+            newWindow.document.write(`
+              <html>
+              <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Đang kết nối ứng dụng...</title>
+              </head>
+              <body style="margin:0; padding:20px; font-family:sans-serif; text-align:center; background:#f8fafc; color:#4f46e5; display:flex; flex-direction:column; align-items:center; justify-content:center; height:80vh;">
+                <div style="font-size:48px; margin-bottom:16px; animation: pulse 1.5s infinite;">⚡</div>
+                <h3 style="margin:0 0 8px 0; font-size:18px; font-weight:700;">Đang kết nối ứng dụng...</h3>
+                <p style="margin:0; font-size:13px; color:#64748b; max-width:260px;">Hệ thống đang mở ứng dụng trực tiếp trên thiết bị của bạn.</p>
+                <style>
+                  @keyframes pulse {
+                    0% { transform: scale(1); opacity: 1; }
+                    50% { transform: scale(1.15); opacity: 0.7; }
+                    100% { transform: scale(1); opacity: 1; }
+                  }
+                </style>
+                <script>
+                  window.location.href = "${appUrl}";
+                  setTimeout(function() {
+                    window.location.href = "${targetUrl}";
+                  }, 1500);
+                <\/script>
+              </body>
+              </html>
+            `);
+            newWindow.document.close();
+          } else {
+            newWindow.location.href = targetUrl;
+          }
         }
         setTimeout(() => {
           if (laser) laser.classList.remove('scanning');
