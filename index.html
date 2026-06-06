@@ -161,6 +161,11 @@
       color: var(--dim);
       display: flex; align-items: center; gap: 6px;
     }
+    .sec-title img,
+    .sec-title svg {
+      position: relative;
+      top: 0.5px;
+    }
     .sec-title-img {
       width: 14px;
       height: 14px;
@@ -479,20 +484,24 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
-      max-height: 0;
+      height: 0;
       opacity: 0;
       overflow: hidden;
+      transform: translateY(-10px);
+      transition: opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1), transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
       margin-top: 0;
       margin-bottom: 0;
       padding: 0 2px;
-      transition: max-height 0.23s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.23s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.23s cubic-bezier(0.4, 0, 0.2, 1), margin-bottom 0.23s cubic-bezier(0.4, 0, 0.2, 1), padding 0.23s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
     }
     .svg-groups-tab-grid.open {
-      max-height: 220px;
+      height: auto;
       opacity: 1;
-      margin-top: 2px;
+      transform: translateY(0);
+      margin-top: 6px;
       margin-bottom: 10px;
       padding: 4px 4px 8px 4px;
+      pointer-events: auto;
     }
     .opt-panel-title {
       font-size: 11px;
@@ -2173,8 +2182,8 @@
     .btn-reset {
       cursor: pointer;
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.08) 51%, rgba(255, 255, 255, 0.25) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      color: var(--accent);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #f87171;
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03), 0 1px 2px rgba(15, 23, 42, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -2182,14 +2191,14 @@
     }
     .btn-reset:hover:not(:disabled) {
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.45) 100%);
-      border-color: #ef4444;
-      color: #ef4444;
+      border-color: #b91c1c;
+      color: #b91c1c;
       transform: translateY(-1.5px);
-      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.12);
+      box-shadow: 0 6px 16px rgba(185, 28, 28, 0.15);
     }
     .btn-reset:active:not(:disabled) {
       transform: translateY(0);
-      box-shadow: 0 2px 6px rgba(79, 70, 229, 0.04);
+      box-shadow: 0 2px 6px rgba(185, 28, 28, 0.05);
     }
 
 
@@ -2671,7 +2680,7 @@
       gap: 8px;
       margin-bottom: 8px;
     }
-    .frame-opt {
+    .frame-opt, .frame-opt-link {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -2687,8 +2696,9 @@
       color: var(--dim);
       text-align: center;
       box-shadow: none;
+      text-decoration: none;
     }
-    .frame-opt:hover {
+    .frame-opt:hover, .frame-opt-link:hover {
       border-color: var(--accent);
       color: var(--accent);
       background: rgba(255, 255, 255, 0.55);
@@ -2699,49 +2709,18 @@
       color: var(--accent);
       box-shadow: none;
     }
-    .frame-opt-link {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: 6px 4px;
-      border: 1px dashed var(--border2);
-      border-radius: 11px;
-      background: rgba(255, 255, 255, 0.35);
-      cursor: pointer;
-      transition: all 0.18s;
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--dim);
-      text-align: center;
-      text-decoration: none;
-    }
-    .frame-opt-link:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(255, 255, 255, 0.55);
-    }
-    [data-theme="dark"] .frame-opt {
+    [data-theme="dark"] .frame-opt, [data-theme="dark"] .frame-opt-link {
       background: rgba(255, 255, 255, 0.04);
       border-color: rgba(255, 255, 255, 0.06);
       color: rgba(255, 255, 255, 0.6);
     }
-    [data-theme="dark"] .frame-opt:hover {
+    [data-theme="dark"] .frame-opt:hover, [data-theme="dark"] .frame-opt-link:hover {
       background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent);
       color: var(--accent);
     }
     [data-theme="dark"] .frame-opt.active {
       background: rgba(255, 255, 255, 0.04);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-    [data-theme="dark"] .frame-opt-link {
-      background: rgba(255, 255, 255, 0.04);
-      border-color: rgba(255, 255, 255, 0.12);
-      color: rgba(255, 255, 255, 0.6);
-    }
-    [data-theme="dark"] .frame-opt-link:hover {
-      background: rgba(255, 255, 255, 0.08);
       border-color: var(--accent);
       color: var(--accent);
     }
@@ -3482,6 +3461,7 @@
       position: relative;
       padding: 6px 0; /* Vertical-only safety spacing so shadows are not clipped vertically */
       margin: -6px 0; /* Compensate for vertical safety padding, completely eliminating horizontal color bleeding */
+      border-radius: 0 0 14px 14px;
     }
     .gratitude-slider-track {
       display: flex;
@@ -3495,13 +3475,119 @@
       flex-direction: column;
       align-items: center;
       gap: 12px;
-      padding: 0 4px; /* Safety horizontal padding to protect borders & shadows from edge-clipping */
+      padding: 0 4px;
       box-sizing: border-box;
       transition: opacity 0.35s ease;
-      opacity: 0.25; /* Blur and fade inactive tabs for stellar visual focus */
+      opacity: 0.25;
+      position: relative;
     }
     .gratitude-content.active {
       opacity: 1;
+    }
+    
+    .bank-select-panel {
+      position: absolute;
+      top: -6px;
+      left: 0;
+      right: 0;
+      bottom: -6px;
+      z-index: 50;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(16, 185, 129, 0.45);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+      display: flex;
+      flex-direction: column;
+      padding: 8px 10px;
+      justify-content: space-between;
+      box-sizing: border-box;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(4px) scale(0.95);
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s;
+    }
+    .bank-select-panel.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+    [data-theme="dark"] .bank-select-panel {
+      background: rgba(15, 23, 42, 0.96);
+      border-color: rgba(16, 185, 129, 0.55);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    }
+    .bank-select-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text);
+      border-bottom: 1.5px solid rgba(16, 185, 129, 0.15);
+      padding-bottom: 5px;
+      margin-bottom: 8px;
+    }
+    [data-theme="dark"] .bank-select-header {
+      border-bottom-color: rgba(16, 185, 129, 0.25);
+    }
+    .bank-select-close {
+      border: none;
+      background: none;
+      font-size: 15px;
+      font-weight: bold;
+      color: var(--dim);
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+    .bank-select-close:hover {
+      color: var(--accent);
+    }
+    .bank-select-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      width: 100%;
+      flex: 1;
+    }
+    .bank-select-item {
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 7.5px;
+      font-weight: 800;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      padding: 0;
+    }
+    .bank-select-item:hover {
+      opacity: 0.9;
+      transform: scale(1.08);
+      filter: brightness(1.1);
+    }
+    .bank-select-item:active {
+      transform: scale(0.95);
+    }
+    .bank-select-dl {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      font-size: 7px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5px;
+      color: #ffffff;
+      border-radius: 5px;
+      font-weight: 800;
+      box-shadow: 0 1.5px 3px rgba(16, 185, 129, 0.2);
     }
     
     /* New side-by-side layout for VietQR tab */
@@ -3930,7 +4016,7 @@
       <div class="gratitude-slider-wrap">
         <div class="gratitude-slider-track" id="gratitude-slider-track">
           <!-- Vietnam Bank Tab -->
-          <div class="gratitude-content active" id="gratitude-content-vn">
+          <div class="gratitude-content active" id="gratitude-content-vn" style="position: relative;">
             <div class="gratitude-vn-layout">
               <!-- Cột trái: Mã VietQR -->
               <div class="gratitude-vn-left">
@@ -3983,6 +4069,29 @@
                 <div class="gratitude-custom-amount-wrap">
                   <input type="text" class="gratitude-custom-amount-input" id="gratitude-custom-input" placeholder="Tự nhập số tiền...">
                 </div>
+              </div>
+            </div>
+
+            <!-- Panel chọn ngân hàng (mặt định ẩn, bao phủ toàn bộ tab VietQR) -->
+            <div class="bank-select-panel" id="bank-select-panel">
+              <div class="bank-select-header">
+                <span>Chọn app ngân hàng chuyển tiền:</span>
+                <button type="button" class="bank-select-close" id="bank-select-close-btn" title="Đóng">&times;</button>
+              </div>
+              <div class="bank-select-grid">
+                <button type="button" class="bank-select-item" data-app="vcb" style="background: #00A859;" title="Vietcombank">VCB</button>
+                <button type="button" class="bank-select-item" data-app="bidv" style="background: #005B94;" title="BIDV">BIDV</button>
+                <button type="button" class="bank-select-item" data-app="tcb" style="background: #E31837;" title="Techcombank">TCB</button>
+                <button type="button" class="bank-select-item" data-app="mb" style="background: #003399;" title="MB Bank">MB</button>
+                <button type="button" class="bank-select-item" data-app="icb" style="background: #0072C6;" title="VietinBank (iPay)">iPay</button>
+                <button type="button" class="bank-select-item" data-app="vba" style="background: #741D17;" title="Agribank">ARG</button>
+                <button type="button" class="bank-select-item" data-app="vpb" style="background: #009A51;" title="VPBank">VPB</button>
+                <button type="button" class="bank-select-item" data-app="tpb" style="background: #582F91;" title="TPBank">TPB</button>
+                <button type="button" class="bank-select-item" data-app="acb" style="background: #0078C1;" title="ACB">ACB</button>
+                <button type="button" class="bank-select-item bank-select-dl" id="bank-select-dl-btn" title="Tải ảnh QR tri ân hiện tại xuống">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 9px; height: 9px; margin-right: 1.5px; display: inline-block; vertical-align: middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  <span>Tải QR</span>
+                </button>
               </div>
             </div>
           </div>
@@ -13270,8 +13379,66 @@ if (clearHistoryBtn) {
   const gratitudeScanBtn = document.getElementById('gratitude-scan-btn');
   const gratitudeQrContainer = document.getElementById('gratitude-vietqr-container');
   const gratitudeQrLaser = document.getElementById('gratitude-qr-laser');
+  const bankSelectPanel = document.getElementById('bank-select-panel');
+  const bankSelectCloseBtn = document.getElementById('bank-select-close-btn');
+  const bankSelectDlBtn = document.getElementById('bank-select-dl-btn');
 
-  function executeGratitudeScan() {
+  function openBankSelector() {
+    if (bankSelectPanel) {
+      bankSelectPanel.classList.add('open');
+    }
+  }
+
+  function closeBankSelector() {
+    if (bankSelectPanel) {
+      bankSelectPanel.classList.remove('open');
+    }
+  }
+
+  if (bankSelectCloseBtn) {
+    bankSelectCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeBankSelector();
+    });
+  }
+
+  // Hàm tải mã QR tri ân về máy người dùng
+  function downloadGratitudeQR() {
+    if (!gratitudeVietqrImg) return;
+    const url = gratitudeVietqrImg.src;
+    if (!url) return;
+    
+    showToast('📥 Đang chuẩn bị tải mã QR...', 'info');
+    
+    fetch(url)
+      .then(response => response.blob())
+      .then(blob => {
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = `vietqr-tri-an-${GRATITUDE_CONFIG.vnBankId}-${GRATITUDE_CONFIG.vnAccountNo}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+        showToast('✅ Tải mã QR tri ân thành công!', 'success');
+      })
+      .catch(err => {
+        console.error('Lỗi tải QR:', err);
+        window.open(url, '_blank');
+        showToast('💡 Đã mở mã QR ở tab mới. Bạn có thể nhấn giữ hoặc chuột phải để lưu!', 'success');
+      });
+  }
+
+  if (bankSelectDlBtn) {
+    bankSelectDlBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeBankSelector();
+      downloadGratitudeQR();
+    });
+  }
+
+  function executeGratitudeScan(selectedApp = '') {
     // 1. Xác định số tiền hiện tại đang được lựa chọn
     let currentAmount = GRATITUDE_CONFIG.vnDefaultAmount;
     const activeChip = document.querySelector('.gratitude-chip.active');
@@ -13283,38 +13450,53 @@ if (clearHistoryBtn) {
     }
 
     // 2. Tạo link thanh toán chuẩn VietQR tự động chuyển hướng ứng dụng ngân hàng
-    const payUrl = `https://dl.vietqr.io/pay?ba=${GRATITUDE_CONFIG.vnAccountNo}@${GRATITUDE_CONFIG.vnBankId.toLowerCase()}&am=${currentAmount}&tn=${encodeURIComponent(GRATITUDE_CONFIG.vnMemo)}`;
+    let payUrl = `https://dl.vietqr.io/pay?ba=${GRATITUDE_CONFIG.vnAccountNo}@${GRATITUDE_CONFIG.vnBankId.toLowerCase()}&am=${currentAmount}&tn=${encodeURIComponent(GRATITUDE_CONFIG.vnMemo)}`;
+    if (selectedApp) {
+      payUrl += `&app=${selectedApp}`;
+    }
 
     // 3. Chạy hiệu ứng quét laser neon độc lập trên chính mã QR tri ân
     if (gratitudeQrLaser) {
       if (gratitudeQrLaser.classList.contains('scanning')) return;
       
       gratitudeQrLaser.classList.add('scanning');
-      showToast('⚡ Đang quét mô phỏng mã VietQR tri ân...', 'info');
+      const bankNameText = selectedApp ? selectedApp.toUpperCase() : 'tự động';
+      showToast(`⚡ Đang mở ứng dụng ngân hàng (${bankNameText})...`, 'info');
 
       setTimeout(() => {
         window.open(payUrl, '_blank');
         setTimeout(() => {
           gratitudeQrLaser.classList.remove('scanning');
         }, 300);
-      }, 1600);
+      }, 1200);
     } else {
       // Fallback trực tiếp nếu không tìm thấy laser element
       window.open(payUrl, '_blank');
     }
   }
 
-  // Đăng ký cho cả nút "Quét thử" và container ảnh QR để tăng diện tích tương tác thuận tiện
+  // Đăng ký sự kiện click cho các nút ngân hàng cụ thể (loại trừ nút tải xuống)
+  const bankItems = document.querySelectorAll('.bank-select-item:not(.bank-select-dl)');
+  bankItems.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const app = btn.dataset.app;
+      closeBankSelector();
+      executeGratitudeScan(app);
+    });
+  });
+
+  // Đăng ký cho cả nút "Quét thử" và container ảnh QR để mở panel chọn ngân hàng
   if (gratitudeScanBtn) {
     gratitudeScanBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      executeGratitudeScan();
+      openBankSelector();
     });
   }
   if (gratitudeQrContainer) {
     gratitudeQrContainer.addEventListener('click', (e) => {
       e.stopPropagation();
-      executeGratitudeScan();
+      openBankSelector();
     });
   }
 
@@ -13325,6 +13507,7 @@ if (clearHistoryBtn) {
     if (thankWrap) {
       thankWrap.classList.remove('open');
       hasShowedGratitudeThisSession = true;
+      closeBankSelector();
     }
   }
 
