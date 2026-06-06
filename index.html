@@ -2233,7 +2233,6 @@
         grid-template-columns: repeat(4, 1fr) !important; /* Mobile hiển thị 4 cột */
       }
     }
-    }
 
     @media (min-width: 769px) and (max-width: 1024px) {
       main {
@@ -2260,18 +2259,22 @@
         overflow: auto;
       }
       body {
-        overflow-y: auto;
-        overflow-x: hidden;
-        padding-bottom: 24px !important;
+        overflow: hidden !important;
+        height: 100vh !important;
+        width: 100vw !important;
       }
       header {
         padding: 0 16px;
         height: 50px;
-        position: sticky;
+        position: fixed; /* Chuyển thành fixed để cố định 100% trên đỉnh di động */
         top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
         z-index: 1001;
         background: var(--surface);
         border-bottom: 1px solid var(--border);
+        box-sizing: border-box;
       }
       header h1 {
         font-size: 14px;
@@ -2291,17 +2294,22 @@
       }
       main {
         grid-template-columns: 1fr;
-        height: auto;
-        overflow: visible;
+        height: calc(100vh - 50px) !important;
+        overflow: hidden !important;
+        margin-top: 50px; /* Thêm khoảng trống bằng đúng chiều cao header cố định */
       }
       .sidebar {
         order: 1 !important;
-        overflow: visible;
-        height: auto;
+        overflow: hidden !important;
+        height: 100% !important;
         border-right: none;
-        padding: 16px;
-        gap: 16px;
-        padding-bottom: 24px !important;
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0 !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: transparent !important;
       }
       .sidebar-header, .sidebar-body {
         padding: 0 !important;
@@ -2312,25 +2320,339 @@
         gap: inherit;
       }
       
-      /* Enable the desktop preview stack below the form on mobile */
-      .preview {
-        display: flex !important;
+      /* Cố định dải 4 tab thiết kế trên Mobile */
+      .sidebar-header {
+        position: static !important;
+        flex-shrink: 0 !important;
+        z-index: 1000 !important;
         background: transparent !important;
-        padding: 32px 16px !important;
-        gap: 20px !important;
-        width: 100% !important;
+        padding: 16px 20px 0 20px !important;
+        border-bottom: 1.5px solid var(--border) !important;
         box-sizing: border-box !important;
-      }
-      .qr-card, .empty, .dl-panel, .qr-details-card, .qr-card-wrap .save-wrap {
-        width: 100% !important;
-        max-width: 340px !important;
-        box-sizing: border-box !important;
-      }
-      #qr-canvas {
-        width: 100% !important;
-        max-width: 300px !important;
+        margin: 0 !important;
         height: auto !important;
-        aspect-ratio: 1 !important;
+      }
+      .sidebar-header .main-tabs {
+        margin-top: 4px !important;
+        margin-bottom: 16px !important;
+        border-bottom: none !important;
+      }
+      /* Đẩy phần body của form xuống dưới phần tab cố định */
+      .sidebar-body {
+        flex: 1 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        padding: 8px 20px 124px 20px !important;
+        margin-top: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* Xóa / ẩn các phần tử rỗng và chỉ báo quét thử trên Mobile */
+      #empty-state, #err-state, .scan-ind, .qr-card-wrap .save-wrap, #ambient-aurora {
+        display: none !important;
+      }
+
+      /* Biến đổi preview-sec thành Sticky Bottom Panel cao cấp sát đáy fullwidth */
+      #preview-sec {
+        position: fixed !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        top: auto !important;
+        width: auto !important;
+        max-width: none !important;
+        height: auto !important; /* Tự động co giãn theo nội dung */
+        min-height: 124px !important; /* Chiều cao tối thiểu của Panel di động */
+        z-index: 999 !important;
+        background: var(--surface) !important;
+        border-top: 1.5px solid var(--border) !important; /* Chỉ viền trên */
+        border-left: none !important;
+        border-right: none !important;
+        border-bottom: none !important;
+        border-radius: 20px 20px 0 0 !important; /* Bo góc trên */
+        box-shadow: 0 -4px 24px rgba(15, 23, 42, 0.08) !important;
+        padding: 12px 16px !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        display: block !important;
+      }
+      [data-theme="dark"] #preview-sec {
+        background: var(--surface) !important;
+        border-color: var(--border) !important;
+        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.35) !important;
+      }
+
+      /* Bố cục bên trong: QR bên trái, Details bên phải */
+      #qr-section {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 14px !important;
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      /* Thẻ chứa QR bên trái (Canvas thật, hiệu ứng laser quét) */
+      .qr-card {
+        width: 100px !important; /* Ô vuông preview cố định */
+        height: 100px !important;
+        border-radius: 12px !important;
+        padding: 6px !important;
+        box-sizing: border-box !important;
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        border: 1px solid rgba(15, 23, 42, 0.05);
+        flex-shrink: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 !important;
+        position: relative !important;
+        overflow: hidden !important;
+        cursor: pointer !important;
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease !important;
+        transform: translateZ(0);
+      }
+      .qr-card:active {
+        transform: scale(0.94) translateZ(0) !important;
+      }
+      .qr-card.no-border {
+        border: none !important;
+      }
+      
+      .qr-card canvas {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important; /* Tự co giãn tỷ lệ nằm gọn trong ô vuông */
+        display: block !important;
+        image-rendering: -webkit-optimize-contrast !important;
+        image-rendering: auto !important;
+        transform: translateZ(0);
+      }
+
+      /* Thẻ chi tiết thông tin bên phải */
+      #qr-details-card {
+        flex: 1 !important;
+        margin: 0 !important;
+        width: auto !important;
+        max-width: none !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        height: auto !important; /* Tự động co giãn theo nội dung */
+        min-height: 100px !important;
+        overflow: visible !important;
+      }
+
+      /* Thu nhỏ card chi tiết thông tin (.mock-card) bên phải cho vừa không gian di động */
+      #qr-details-card .mock-card {
+        background: rgba(255, 255, 255, 0.45) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        padding: 8px 10px !important;
+        border-radius: 12px !important;
+        box-shadow: none !important;
+        height: auto !important;
+        min-height: 100px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        gap: 6px !important;
+      }
+      [data-theme="dark"] #qr-details-card .mock-card {
+        background: rgba(15, 23, 42, 0.3) !important;
+        border-color: rgba(255, 255, 255, 0.05) !important;
+      }
+
+      #qr-details-card .mock-card::before {
+        display: none !important;
+      }
+
+      #qr-details-card .mock-header {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        margin: 0 !important;
+      }
+
+      #qr-details-card .mock-icon-wrap {
+        width: 24px !important;
+        height: 24px !important;
+        border-radius: 6px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+      }
+
+      #qr-details-card .mock-icon-wrap img {
+        width: 14px !important;
+        height: 14px !important;
+      }
+
+      #qr-details-card .mock-header-info {
+        flex: 1 !important;
+        min-width: 0 !important;
+      }
+
+      #qr-details-card .mock-qr-name {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        line-height: 1.2 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        color: var(--text) !important;
+      }
+
+      #qr-details-card .mock-qr-type {
+        font-size: 8.5px !important;
+        color: var(--dim) !important;
+        line-height: 1.1 !important;
+      }
+
+      #qr-details-card .mock-header-btn {
+        font-size: 8.5px !important;
+        height: 18px !important;
+        padding: 0 6px !important;
+        border-radius: 99px !important;
+        flex-shrink: 0 !important;
+      }
+
+      #qr-details-card .mock-body {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 4px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      #qr-details-card .mock-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        font-size: 9.5px !important;
+        padding: 0 !important;
+      }
+
+      #qr-details-card .mock-row .label {
+        font-size: 9px !important;
+        color: var(--dim) !important;
+        width: auto !important;
+      }
+
+      #qr-details-card .mock-row .value {
+        font-size: 9.5px !important;
+        font-weight: 600 !important;
+        max-width: 140px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+
+      /* vCard Business Card Mockup trên mobile panel */
+      #qr-details-card .business-card-mock {
+        height: auto !important;
+        min-height: 100px !important;
+        padding: 8px 10px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        border-radius: 12px !important;
+        background: rgba(255, 255, 255, 0.45) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        gap: 6px !important;
+      }
+      [data-theme="dark"] #qr-details-card .business-card-mock {
+        background: rgba(15, 23, 42, 0.3) !important;
+        border-color: rgba(255, 255, 255, 0.05) !important;
+      }
+
+      #qr-details-card .bc-mock-top {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-bottom: 2px !important;
+      }
+
+      #qr-details-card .bc-mock-name {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        color: var(--text) !important;
+      }
+
+      #qr-details-card .bc-mock-title {
+        font-size: 8px !important;
+        color: var(--dim) !important;
+      }
+
+      #qr-details-card .bc-mock-logo {
+        width: 24px !important;
+        height: 24px !important;
+        border-radius: 6px !important;
+      }
+
+      #qr-details-card .bc-mock-logo img {
+        width: 14px !important;
+        height: 14px !important;
+      }
+
+      #qr-details-card .bc-mock-details {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 3px !important;
+      }
+
+      #qr-details-card .bc-mock-item {
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        font-size: 8.5px !important;
+        color: var(--text) !important;
+      }
+
+      /* Bố cục dòng dạng cột (chiếm toàn bộ chiều rộng và căn trái trên mobile) */
+      #qr-details-card .mock-row.col-layout {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        width: 100% !important;
+        gap: 4px !important;
+      }
+      #qr-details-card .mock-row.col-layout .label {
+        width: 100% !important;
+        text-align: left !important;
+        margin-bottom: 2px !important;
+      }
+      #qr-details-card .mock-row.col-layout .value {
+        max-width: none !important;
+        width: 100% !important;
+        text-align: left !important;
+        box-sizing: border-box !important;
+        white-space: normal !important; /* Cho phép xuống dòng */
+        word-break: break-all !important;
+      }
+      
+      /* Tăng kích thước modal preview trên di động để hiển thị siêu sắc nét */
+      .modal-preview-area {
+        width: 240px !important;
+        min-height: 240px !important;
+      }
+      #modal-qr-img {
+        width: 220px !important;
+        image-rendering: -webkit-optimize-contrast !important;
+        image-rendering: auto !important;
       }
     }
 
@@ -5909,6 +6231,7 @@
       <div class="qr-card" style="z-index: 2; position: relative;">
         <canvas id="qr-canvas"></canvas>
         <div class="qr-laser" id="qr-laser"></div>
+        <div id="qr-empty-logo" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0.22; z-index: 1;"></div>
       </div>
       <div class="scan-ind" style="z-index: 2; display: flex; align-items: center; justify-content: center; gap: 6px;">
         <span class="scan-dot"></span>
@@ -7721,10 +8044,122 @@ function updateQRDetailsCard(content) {
   
   let linkBtn = '';
   const scanTestBtn = $('scan-test-btn');
+  if (!content) {
+    if (scanTestBtn) scanTestBtn.style.display = 'none';
+    let detectedTab = activeTab;
+    
+    const ambientColors = {
+      url: 'rgba(79, 70, 229, 0.25)',
+      facebook: 'rgba(24, 119, 242, 0.25)',
+      youtube: 'rgba(255, 0, 0, 0.18)',
+      tiktok: 'rgba(255, 255, 255, 0.18)',
+      zalo: 'rgba(0, 104, 224, 0.25)',
+      messenger: 'rgba(0, 132, 255, 0.25)',
+      instagram: 'rgba(225, 48, 108, 0.22)',
+      whatsapp: 'rgba(37, 211, 102, 0.25)',
+      telegram: 'rgba(0, 136, 204, 0.25)',
+      wechat: 'rgba(9, 187, 7, 0.25)',
+      twitter: 'rgba(29, 161, 242, 0.25)',
+      threads: 'rgba(255, 255, 255, 0.22)',
+      line: 'rgba(6, 199, 85, 0.25)',
+      kakaotalk: 'rgba(250, 225, 0, 0.22)',
+      snapchat: 'rgba(255, 252, 0, 0.18)',
+      wifi: 'rgba(22, 163, 74, 0.25)',
+      sms: 'rgba(34, 197, 94, 0.25)',
+      email: 'rgba(234, 67, 53, 0.22)',
+      vietqr: 'rgba(217, 119, 6, 0.25)',
+      vcard: 'rgba(124, 58, 237, 0.25)',
+      paypal: 'rgba(0, 69, 124, 0.25)',
+      text: 'rgba(100, 116, 139, 0.22)',
+      pdf: 'rgba(239, 68, 68, 0.22)',
+      image: 'rgba(16, 185, 129, 0.22)',
+      'google-maps': 'rgba(244, 63, 94, 0.22)',
+      'google-forms': 'rgba(103, 58, 183, 0.22)',
+      calendar: 'rgba(245, 158, 11, 0.22)',
+      spotify: 'rgba(30, 215, 96, 0.25)',
+      amazon: 'rgba(255, 153, 0, 0.22)'
+    };
+    const glowColor = ambientColors[detectedTab] || 'rgba(79, 70, 229, 0.25)';
+    const softIconBg = glowColor.replace('0.25', '0.12').replace('0.22', '0.10').replace('0.18', '0.08');
+    
+    const tabNames = {
+      url: 'Liên kết Website', facebook: 'Mạng xã hội Facebook', youtube: 'Kênh YouTube', tiktok: 'Kênh TikTok',
+      zalo: 'Tài khoản Zalo', messenger: 'Trò chuyện Messenger', instagram: 'Trang Instagram', whatsapp: 'Trò chuyện WhatsApp',
+      telegram: 'Tài khoản Telegram', wechat: 'Tài khoản WeChat', twitter: 'Tài khoản X/Twitter', threads: 'Tài khoản Threads',
+      line: 'Tài khoản LINE', kakaotalk: 'Tài khoản KakaoTalk', snapchat: 'Tài khoản Snapchat', wifi: 'Cấu hình WiFi',
+      sms: 'Tin nhắn SMS / Điện thoại', email: 'Hộp thư Email', vietqr: 'Tài khoản VietQR', vcard: 'Danh thiếp Điện tử vCard',
+      paypal: 'Thanh toán PayPal', text: 'Văn bản ghi chú', pdf: 'Tài liệu PDF', image: 'Hình ảnh / Album',
+      'google-maps': 'Bản đồ Google Maps', 'google-forms': 'Biểu mẫu Google Forms', calendar: 'Sự kiện Lịch',
+      spotify: 'Nhạc Spotify', amazon: 'Sản phẩm Amazon'
+    };
+    
+    const PRESET_LABELS = {
+      none: 'Không chèn logo', vietqr: 'VietQR', zalo: 'Zalo', momo: 'Momo', facebook: 'Facebook',
+      messenger: 'Messenger', tiktok: 'TikTok', instagram: 'Instagram', youtube: 'YouTube', telegram: 'Telegram',
+      gmail: 'Gmail', phone: 'Điện thoại', web: 'Website', wifi: 'WiFi', apple: 'Apple', android: 'Android', custom: 'Logo tùy chọn'
+    };
+
+    const getTabSVGIcon = (t) => {
+      const paths = {
+        url: 'LOGO Presets/link.png', facebook: 'LOGO Presets/facebook.png', youtube: 'LOGO Presets/youtube.png',
+        tiktok: 'LOGO Presets/tik-tok.png', zalo: 'LOGO Presets/zalo-icon.png', messenger: 'LOGO Presets/messenger.png',
+        instagram: 'LOGO Presets/instagram.png', whatsapp: 'LOGO Presets/whatsapp.png', telegram: 'LOGO Presets/telegram.png',
+        wechat: 'LOGO Presets/wechat.png', twitter: 'LOGO Presets/X-twitter.png', threads: 'LOGO Presets/threads.png',
+        line: 'LOGO Presets/line.png', kakaotalk: 'LOGO Presets/kakao-talk.png', snapchat: 'LOGO Presets/snapchat.png',
+        wifi: 'LOGO Presets/wifi.png', sms: 'LOGO Presets/phone-call.png', email: 'LOGO Presets/mail.png',
+        vietqr: 'LOGO Presets/bank.png', vcard: 'LOGO Presets/business-card.png', paypal: 'LOGO Presets/paypal.png',
+        text: 'LOGO Presets/text.png', pdf: 'LOGO Presets/pdf.png', image: 'LOGO Presets/picture.png',
+        'google-maps': 'LOGO Presets/G.map.png', 'google-forms': 'LOGO Presets/form.png', calendar: 'LOGO Presets/calendar.png',
+        spotify: 'LOGO Presets/spotify.png', amazon: 'LOGO Presets/amazon.png'
+      };
+      const src = paths[t] || 'LOGO Presets/link.png';
+      return `<img src="${src}" class="details-card-icon-img" loading="lazy" decoding="async">`;
+    };
+
+    let label = tabNames[detectedTab] || 'Website';
+    let logoSrc = 'LOGO Presets/link.png';
+    if (logo) {
+      const activePresetLabel = currentPreset !== 'none' ? (PRESET_LABELS[currentPreset] || currentPreset) : 'Logo cá nhân';
+      label = activePresetLabel;
+      logoSrc = logo.src;
+    } else {
+      const paths = {
+        url: 'LOGO Presets/link.png', facebook: 'LOGO Presets/facebook.png', youtube: 'LOGO Presets/youtube.png',
+        tiktok: 'LOGO Presets/tik-tok.png', zalo: 'LOGO Presets/zalo-icon.png', messenger: 'LOGO Presets/messenger.png',
+        instagram: 'LOGO Presets/instagram.png', whatsapp: 'LOGO Presets/whatsapp.png', telegram: 'LOGO Presets/telegram.png',
+        wechat: 'LOGO Presets/wechat.png', twitter: 'LOGO Presets/X-twitter.png', threads: 'LOGO Presets/threads.png',
+        line: 'LOGO Presets/line.png', kakaotalk: 'LOGO Presets/kakao-talk.png', snapchat: 'LOGO Presets/snapchat.png',
+        wifi: 'LOGO Presets/wifi.png', sms: 'LOGO Presets/phone-call.png', email: 'LOGO Presets/mail.png',
+        vietqr: 'LOGO Presets/bank.png', vcard: 'LOGO Presets/business-card.png', paypal: 'LOGO Presets/paypal.png',
+        text: 'LOGO Presets/text.png', pdf: 'LOGO Presets/pdf.png', image: 'LOGO Presets/picture.png',
+        'google-maps': 'LOGO Presets/G.map.png', 'google-forms': 'LOGO Presets/form.png', calendar: 'LOGO Presets/calendar.png',
+        spotify: 'LOGO Presets/spotify.png', amazon: 'LOGO Presets/amazon.png'
+      };
+      logoSrc = paths[detectedTab] || 'LOGO Presets/link.png';
+    }
+
+    // Cập nhật logo mờ vào trong ô vuông QR bên trái
+    const emptyLogoEl = $('qr-empty-logo');
+    if (emptyLogoEl) {
+      emptyLogoEl.style.display = 'flex';
+      emptyLogoEl.innerHTML = `<img src="${logoSrc}" style="width: 44px; height: 44px; object-fit: contain; opacity: 0.28;">`;
+    }
+
+    cardContainer.innerHTML = `
+      <div class="mock-card" style="justify-content: center; align-items: flex-start; padding: 10px 12px; height: 100%;">
+        <div style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
+          <div style="font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; text-transform: capitalize;">Logo: <span style="color: var(--accent); text-transform: none;">${label}</span></div>
+          <div style="font-size: 9.5px; color: var(--dim); line-height: 1.4; margin: 0; white-space: normal;">Nhập thông tin bên trái để tạo mã QR chèn logo tự động</div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
   if (content) {
     const cleanContent = content.trim();
     if (cleanContent.toLowerCase().startsWith('http://') || cleanContent.toLowerCase().startsWith('https://')) {
-      linkBtn = `<a href="${cleanContent}" target="_blank" class="mock-header-btn">Truy cập</a>`;
+      linkBtn = `<button type="button" class="mock-header-btn card-scan-btn" data-url="${cleanContent}">Quét thử</button>`;
       if (scanTestBtn) scanTestBtn.style.display = 'inline-flex';
     } else {
       if (scanTestBtn) scanTestBtn.style.display = 'none';
@@ -8001,7 +8436,7 @@ function updateQRDetailsCard(content) {
             <span class="value" style="font-family: monospace; color: var(--accent); font-size: 14px; font-weight: 700;">${phone}</span>
           </div>
           ${msg ? `
-          <div class="mock-row" style="flex-direction: column; gap: 4px; align-items: stretch; border-top: 1px dashed var(--border); padding-top: 8px;">
+          <div class="mock-row col-layout" style="flex-direction: column; gap: 4px; align-items: stretch; border-top: 1px dashed var(--border); padding-top: 8px;">
             <span class="label" style="text-align: left; width: auto; font-size:11px; text-transform: uppercase;">Nội dung tin nhắn:</span>
             <span class="value" style="text-align: left; word-break: break-all; color: var(--text); font-size:12.5px; background: var(--surface2); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); display: block; max-height: 80px; overflow-y: auto; white-space: pre-wrap;">${msg}</span>
           </div>
@@ -8033,7 +8468,7 @@ function updateQRDetailsCard(content) {
             <span class="value">${sub}</span>
           </div>
           ${bdy ? `
-          <div class="mock-row" style="flex-direction: column; gap: 4px; align-items: stretch; border-top: 1px dashed var(--border); padding-top: 8px;">
+          <div class="mock-row col-layout" style="flex-direction: column; gap: 4px; align-items: stretch; border-top: 1px dashed var(--border); padding-top: 8px;">
             <span class="label" style="text-align: left; width: auto; font-size:11px; text-transform: uppercase;">Nội dung thư:</span>
             <span class="value" style="text-align: left; word-break: break-all; color: var(--text); font-size:12.5px; background: var(--surface2); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); display: block; max-height: 80px; overflow-y: auto; white-space: pre-wrap;">${bdy}</span>
           </div>
@@ -8083,7 +8518,7 @@ function updateQRDetailsCard(content) {
           </div>
           ` : ''}
           ${desc ? `
-          <div class="mock-row" style="flex-direction: column; gap: 4px; align-items: stretch; border-top: 1px dashed var(--border); padding-top: 8px;">
+          <div class="mock-row col-layout" style="flex-direction: column; gap: 4px; align-items: stretch; border-top: 1px dashed var(--border); padding-top: 8px;">
             <span class="label" style="text-align: left; width: auto; font-size:11px; text-transform: uppercase;">Mô tả chi tiết:</span>
             <span class="value" style="text-align: left; word-break: break-all; color: var(--text); font-size:12.5px; background: var(--surface2); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); display: block; max-height: 80px; overflow-y: auto; white-space: pre-wrap;">${desc}</span>
           </div>
@@ -8106,7 +8541,7 @@ function updateQRDetailsCard(content) {
           <span style="font-size: 11px; background: var(--accent-l); color: var(--accent); padding: 2px 8px; border-radius: 99px; font-weight: 700;">${len} ký tự</span>
         </div>
         <div class="mock-body">
-          <div class="mock-row" style="flex-direction: column; gap: 4px; align-items: stretch;">
+          <div class="mock-row col-layout" style="flex-direction: column; gap: 4px; align-items: stretch;">
             <span class="label" style="text-align: left; width: auto; font-size:11px; text-transform: uppercase;">Nội dung văn bản:</span>
             <span class="value" style="text-align: left; word-break: break-all; color: var(--text); font-size:12.5px; background: var(--surface2); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); display: block; max-height: 120px; overflow-y: auto; white-space: pre-wrap; line-height: 1.5;">${txt || '(Chưa nhập nội dung)'}</span>
           </div>
@@ -8150,7 +8585,7 @@ function updateQRDetailsCard(content) {
           ${linkBtn}
         </div>
         <div class="mock-body">
-          <div class="mock-row" style="flex-direction: column; gap: 4px; align-items: stretch;">
+          <div class="mock-row col-layout" style="flex-direction: column; gap: 4px; align-items: stretch;">
             <span class="label" style="text-align: left; width: auto; font-size:11px; text-transform: uppercase;">${detailLabel}</span>
             <span class="value" style="text-align: left; word-break: break-all; color: var(--accent); font-family: monospace; font-size:12.5px; background: var(--surface2); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); display: block; max-height: 80px; overflow-y: auto;">${displayValue}</span>
           </div>
@@ -8896,6 +9331,7 @@ const PRESET_LABELS = {
 };
 
 function showEmpty() {
+  updateQRDetailsCard('');
   if (emptyState) {
     emptyState.style.display = 'flex';
     $('err-state').style.display = 'none';
@@ -10286,6 +10722,9 @@ function drawFrameForeground(ctx, S) {
 }
 
 function render() {
+  const emptyLogoEl = $('qr-empty-logo');
+  if (emptyLogoEl) emptyLogoEl.style.display = 'none';
+  
   if (!hasQR) return;
   
   const isBgTransparent = $('bg-transparent-enable')?.checked || false;
@@ -11338,6 +11777,36 @@ function initBottomSheet() {
         openQRModal(e);
       }
     }, true); // capturing phase so it runs before desktop dropdown listener
+  }
+
+  // Đăng ký chạm nhẹ / nhấn giữ vào ô preview mã QR trên di động để phóng to
+  const qrCardEl = document.querySelector('.qr-card');
+  if (qrCardEl) {
+    qrCardEl.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768) {
+        e.preventDefault();
+        e.stopPropagation();
+        openQRModal(e);
+      }
+    });
+
+    let touchTimeout = null;
+    qrCardEl.addEventListener('touchstart', (e) => {
+      if (window.innerWidth <= 768) {
+        touchTimeout = setTimeout(() => {
+          openQRModal(e);
+          if (navigator.vibrate) navigator.vibrate(50); // Rung nhẹ phản hồi xúc giác
+        }, 500);
+      }
+    }, { passive: true });
+
+    qrCardEl.addEventListener('touchend', () => {
+      clearTimeout(touchTimeout);
+    });
+
+    qrCardEl.addEventListener('touchmove', () => {
+      clearTimeout(touchTimeout);
+    });
   }
   
   // Bind close events
@@ -13246,6 +13715,34 @@ if (clearHistoryBtn) {
       }, 1600);
     });
   }
+
+  // Đăng ký sự kiện Click cho nút "Quét thử" (.card-scan-btn) trên thẻ chi tiết thông tin QR
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.card-scan-btn');
+    if (btn) {
+      const url = btn.getAttribute('data-url');
+      if (!url) return;
+      
+      const targetUrl = normalise(url);
+      if (!targetUrl || (!targetUrl.toLowerCase().startsWith('http://') && !targetUrl.toLowerCase().startsWith('https://'))) {
+        showToast('❌ Không tìm thấy liên kết hợp lệ để quét!', 'error');
+        return;
+      }
+      
+      const laser = $('qr-laser');
+      if (laser && laser.classList.contains('scanning')) return;
+      
+      if (laser) laser.classList.add('scanning');
+      showToast('⚡ Đang quét mô phỏng mã QR của bạn...', 'info');
+      
+      setTimeout(() => {
+        window.open(targetUrl, '_blank');
+        setTimeout(() => {
+          if (laser) laser.classList.remove('scanning');
+        }, 300);
+      }, 1600);
+    }
+  });
 })();
 </script>
 
