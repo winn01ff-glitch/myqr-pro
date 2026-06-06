@@ -14261,8 +14261,65 @@ if (clearHistoryBtn) {
     });
   }
 
+  const BANK_DEEPLINKS = {
+    vcb: {
+      name: 'Vietcombank',
+      scheme: 'vietcombank://',
+      iosStore: 'https://apps.apple.com/vn/app/vietcombank/id561546073',
+      androidStore: 'https://play.google.com/store/apps/details?id=com.vietcombank.vietcombanksmartotp'
+    },
+    bidv: {
+      name: 'BIDV',
+      scheme: 'bidvsmartbanking://',
+      iosStore: 'https://apps.apple.com/vn/app/bidv-smartbanking/id1041926618',
+      androidStore: 'https://play.google.com/store/apps/details?id=com.vnpay.bidv'
+    },
+    tcb: {
+      name: 'Techcombank',
+      scheme: 'techcombank://',
+      iosStore: 'https://apps.apple.com/vn/app/techcombank-mobile/id1548623362',
+      androidStore: 'https://play.google.com/store/apps/details?id=com.techcombank.publicmobile5'
+    },
+    mb: {
+      name: 'MB Bank',
+      scheme: 'mbbank://',
+      iosStore: 'https://apps.apple.com/vn/app/mb-bank/id1205807363',
+      androidStore: 'https://play.google.com/store/apps/details?id=com.mbmobile'
+    },
+    icb: {
+      name: 'VietinBank',
+      scheme: 'vietinbankipay://',
+      iosStore: 'https://apps.apple.com/vn/app/vietinbank-ipay/id689966482',
+      androidStore: 'https://play.google.com/store/apps/details?id=com.vietinbank.ipay'
+    },
+    vba: {
+      name: 'Agribank',
+      scheme: 'agribankemobile://',
+      iosStore: 'https://apps.apple.com/vn/app/agribank-e-mobile-banking/id931527411',
+      androidStore: 'https://play.google.com/store/apps/details?id=com.vnpay.agribank'
+    },
+    vpb: {
+      name: 'VPBank',
+      scheme: 'vpbankneo://',
+      iosStore: 'https://apps.apple.com/vn/app/vpbank-neo/id1209848119',
+      androidStore: 'https://play.google.com/store/apps/details?id=com.vpb.neo'
+    },
+    tpb: {
+      name: 'TPBank',
+      scheme: 'tpbank://',
+      iosStore: 'https://apps.apple.com/vn/app/tpbank-mobile/id1290370425',
+      androidStore: 'https://play.google.com/store/apps/details?id=com.tpb.mb.android'
+    },
+    acb: {
+      name: 'ACB',
+      scheme: 'acbapp://',
+      iosStore: 'https://apps.apple.com/vn/app/acb-one/id950186981',
+      androidStore: 'https://play.google.com/store/apps/details?id=com.acb.mbank'
+    }
+  };
+
   function executeGratitudeScan(selectedApp = '') {
-    // 1. Xác định số tiền hiện tại đang được lựa chọn
+    // 1. Tự tính toán trước số tiền và các URL chuyển tiếp (app scheme, store link) trong lúc chạy hiệu ứng
     let currentAmount = GRATITUDE_CONFIG.vnDefaultAmount;
     const activeChip = document.querySelector('.gratitude-chip.active');
     if (activeChip) {
@@ -14272,11 +14329,18 @@ if (clearHistoryBtn) {
       currentAmount = parseInt(cleanVal) || GRATITUDE_CONFIG.vnDefaultAmount;
     }
 
-    // 2. Tạo link thanh toán chuẩn VietQR tự động chuyển hướng ứng dụng ngân hàng
     let payUrl = `https://dl.vietqr.io/pay?ba=${GRATITUDE_CONFIG.vnAccountNo}@${GRATITUDE_CONFIG.vnBankId.toLowerCase()}&am=${currentAmount}&tn=${encodeURIComponent(GRATITUDE_CONFIG.vnMemo)}`;
     if (selectedApp) {
       payUrl += `&app=${selectedApp}`;
     }
+
+    // Các tham số cấu hình mở app banking trực tiếp trên di động
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const bankInfo = BANK_DEEPLINKS[selectedApp];
+
+    // 2. Mở cửa sổ mới ngay lập tức một cách đồng bộ để tránh bị pop-up blocker chặn trên iOS/Android (được giữ trống trong lúc quét)
+    const newWindow = window.open('about:blank', '_blank');
 
     // 3. Chạy hiệu ứng quét laser neon độc lập trên chính mã QR tri ân
     if (gratitudeQrLaser) {
@@ -14284,17 +14348,44 @@ if (clearHistoryBtn) {
       
       gratitudeQrLaser.classList.add('scanning');
       const bankNameText = selectedApp ? selectedApp.toUpperCase() : 'tự động';
-      showToast(`⚡ Đang mở ứng dụng ngân hàng (${bankNameText})...`, 'info');
+      showToast(`⚡ Đang quét mô phỏng và kết nối ứng dụng ngân hàng (${bankNameText})...`, 'info');
 
       setTimeout(() => {
-        window.open(payUrl, '_blank');
+        if (newWindow) {
+          if (isMobile && bankInfo) {
+            // Mở app banking trực tiếp bằng custom URL scheme
+            newWindow.location.href = bankInfo.scheme;
+            // Fallback sang store tải ứng dụng nếu chưa cài app ngân hàng đó sau 1.5 giây
+            const storeUrl = isIOS ? bankInfo.iosStore : bankInfo.androidStore;
+            setTimeout(() => {
+              try {
+                newWindow.location.href = storeUrl;
+              } catch (e) {}
+            }, 1500);
+          } else {
+            // Trên PC hoặc nút Quét QR chung không chọn ngân hàng cụ thể
+            newWindow.location.href = payUrl;
+          }
+        }
         setTimeout(() => {
           gratitudeQrLaser.classList.remove('scanning');
         }, 300);
       }, 1200);
     } else {
       // Fallback trực tiếp nếu không tìm thấy laser element
-      window.open(payUrl, '_blank');
+      if (newWindow) {
+        if (isMobile && bankInfo) {
+          newWindow.location.href = bankInfo.scheme;
+          const storeUrl = isIOS ? bankInfo.iosStore : bankInfo.androidStore;
+          setTimeout(() => {
+            try {
+              newWindow.location.href = storeUrl;
+            } catch (e) {}
+          }, 1500);
+        } else {
+          newWindow.location.href = payUrl;
+        }
+      }
     }
   }
 
