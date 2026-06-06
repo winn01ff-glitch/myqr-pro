@@ -11883,7 +11883,7 @@ function initBottomSheet() {
   
   // Open modal function
   function openQRModal(e, mode = 'preview') {
-    if (window.innerWidth > 768) return; // Only on mobile
+    if (window.innerWidth > 1024) return; // Only on mobile/tablet
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -11955,7 +11955,7 @@ function initBottomSheet() {
   const qrCardEl = document.querySelector('.qr-card');
   if (qrCardEl) {
     qrCardEl.addEventListener('click', (e) => {
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 1024) {
         e.preventDefault();
         e.stopPropagation();
         openQRModal(e, 'preview');
@@ -11964,7 +11964,7 @@ function initBottomSheet() {
 
     let touchTimeout = null;
     qrCardEl.addEventListener('touchstart', (e) => {
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 1024) {
         touchTimeout = setTimeout(() => {
           openQRModal(e, 'preview');
           if (navigator.vibrate) navigator.vibrate(50); // Rung nhẹ phản hồi xúc giác
