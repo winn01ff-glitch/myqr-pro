@@ -2233,7 +2233,7 @@
         grid-template-columns: repeat(3, 1fr) !important;
       }
     }
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       .tabs-grid {
         grid-template-columns: repeat(3, 1fr) !important; /* Mobile hiển thị 3 cột loại mã */
       }
@@ -2268,26 +2268,7 @@
       }
     }
 
-    @media (min-width: 769px) and (max-width: 1024px) {
-      main {
-        grid-template-columns: 360px 1fr;
-      }
-      .preview {
-        padding: 24px 20px;
-      }
-      .qr-card, .empty, .dl-panel, .qr-details-card {
-        width: 100%;
-        max-width: 340px;
-      }
-      #qr-canvas {
-        width: 100%;
-        max-width: 340px;
-        height: auto;
-        aspect-ratio: 1;
-      }
-    }
-
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       html, body {
         height: auto;
         overflow: auto;
