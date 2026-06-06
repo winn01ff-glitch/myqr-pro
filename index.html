@@ -11804,6 +11804,23 @@ function initBottomSheet() {
   const backdrop = document.getElementById('qr-modal-backdrop');
   
   if (!modal || !backdrop) return;
+
+  // Logic ngăn cuộn màn hình phía sau khi mở modal di động (body scroll lock)
+  let scrollPosition = 0;
+  function disableBodyScroll() {
+    scrollPosition = window.pageYOffset;
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollPosition}px`;
+    document.body.style.width = '100%';
+  }
+  function enableBodyScroll() {
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, scrollPosition);
+  }
   
   // Ensure the button is always enabled on mobile so it can receive clicks
   if (saveMain) {
@@ -11904,13 +11921,14 @@ function initBottomSheet() {
     // Show modal
     modal.classList.add('show');
     backdrop.classList.add('show');
+    disableBodyScroll();
   }
   
   // Close modal function
   function closeQRModal() {
     modal.classList.remove('show');
     backdrop.classList.remove('show');
-    document.body.style.overflow = '';
+    enableBodyScroll();
   }
 
   // Đăng ký chạm nhẹ / nhấn giữ vào ô preview mã QR trên di động để phóng to
