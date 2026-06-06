@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#4f46e5">
   <link rel="apple-touch-icon" href="/icon-192.png">
@@ -938,8 +938,8 @@
     .shape-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .shape-opt input { display: none; }
     .shape-opt label {
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-      padding: 12px 8px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 6px 8px;
       border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 11px;
       cursor: pointer; transition: all .18s;
       font-size: 11px; font-weight: 600; color: var(--dim);
@@ -951,10 +951,10 @@
       background: rgba(255, 255, 255, 0.55);
     }
     .sh-icon {
-      width: 26px; height: 26px;
-      border: 2px solid currentColor; opacity: .6; transition: all .18s;
+      width: 18px; height: 18px;
+      border: 1.5px solid currentColor; opacity: .6; transition: all .18s;
     }
-    .sh-sq { border-radius: 6px; }
+    .sh-sq { border-radius: 4px; }
     .sh-ci { border-radius: 50%; }
     .shape-opt input:checked + label {
       border-color: var(--accent);
@@ -1733,7 +1733,7 @@
     
     .segmented-indicator {
       position: absolute;
-      top: 1px;
+      top: 1.5px;
       left: 2px;
       height: 24px; /* Matches 28px container height minus 4px padding */
       background: #ffffff;
@@ -1963,6 +1963,11 @@
       justify-content: center;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
       outline: none;
       box-sizing: border-box;
     }
@@ -2229,8 +2234,37 @@
       }
     }
     @media (max-width: 768px) {
-      .tabs-grid, .presets-grid {
-        grid-template-columns: repeat(4, 1fr) !important; /* Mobile hiển thị 4 cột */
+      .tabs-grid {
+        grid-template-columns: repeat(3, 1fr) !important; /* Mobile hiển thị 3 cột loại mã */
+      }
+      .presets-grid {
+        grid-template-columns: repeat(3, 1fr) !important; /* Mobile hiển thị 3 cột logo mẫu */
+      }
+      .grouped-frame-grid {
+        grid-template-columns: repeat(3, 1fr) !important; /* Mobile hiển thị 3 cột khung viền trong nhóm */
+      }
+      .hide-mobile {
+        display: none !important;
+      }
+      .color-type-toggle {
+        width: 38% !important; /* Tăng chiều dài cho 2 nút đơn sắc và gradient trên mobile */
+      }
+      .color-picker-wrap {
+        padding: 0 6px !important;
+        gap: 4px !important;
+      }
+      .color-picker-wrap input[type="text"].color-hex {
+        font-size: 11px !important;
+      }
+      .color-picker-wrap .color-reset {
+        display: none !important; /* Ẩn nút reset để chừa chỗ cho chấm tròn màu và text # trên mobile */
+      }
+      .upload-formats-hint {
+        display: none !important;
+      }
+      /* Ngăn chặn zoom tự động trên iOS khi focus vào ô nhập liệu */
+      input, textarea, select {
+        font-size: 16px !important;
       }
     }
 
@@ -2342,7 +2376,7 @@
         flex: 1 !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
-        padding: 8px 20px 124px 20px !important;
+        padding: 8px 20px 180px 20px !important;
         margin-top: 0 !important;
         display: flex !important;
         flex-direction: column !important;
@@ -2367,7 +2401,10 @@
         height: auto !important; /* Tự động co giãn theo nội dung */
         min-height: 124px !important; /* Chiều cao tối thiểu của Panel di động */
         z-index: 999 !important;
-        background: var(--surface) !important;
+        background: radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.14) 0, transparent 50%),
+                    radial-gradient(at 50% 0%, rgba(79, 70, 229, 0.16) 0, transparent 60%),
+                    radial-gradient(at 100% 0%, rgba(22, 163, 74, 0.09) 0, transparent 50%),
+                    #f8fafc !important;
         border-top: 1.5px solid var(--border) !important; /* Chỉ viền trên */
         border-left: none !important;
         border-right: none !important;
@@ -2380,7 +2417,9 @@
         display: block !important;
       }
       [data-theme="dark"] #preview-sec {
-        background: var(--surface) !important;
+        background: radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.1) 0, transparent 50%),
+                    radial-gradient(at 50% 0%, rgba(79, 70, 229, 0.12) 0, transparent 60%),
+                    #0f172a !important;
         border-color: var(--border) !important;
         box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.35) !important;
       }
@@ -2400,14 +2439,14 @@
 
       /* Thẻ chứa QR bên trái (Canvas thật, hiệu ứng laser quét) */
       .qr-card {
-        width: 100px !important; /* Ô vuông preview cố định */
-        height: 100px !important;
+        width: 112px !important; /* Ô vuông preview cố định */
+        height: 112px !important;
         border-radius: 12px !important;
-        padding: 6px !important;
+        padding: 0 !important;
         box-sizing: border-box !important;
-        background: #ffffff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-        border: 1px solid rgba(15, 23, 42, 0.05);
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
         flex-shrink: 0 !important;
         display: flex !important;
         align-items: center !important;
@@ -2416,8 +2455,25 @@
         position: relative !important;
         overflow: hidden !important;
         cursor: pointer !important;
-        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease !important;
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
         transform: translateZ(0);
+      }
+      [data-theme="dark"] .qr-card {
+        background: transparent !important;
+        border: none !important;
+      }
+      .qr-card:has(#qr-empty-logo:not([style*="display: none"])) {
+        border: 1.5px solid rgba(255, 255, 255, 0.6) !important;
+        background: rgba(255, 255, 255, 0.45) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+      }
+      [data-theme="dark"] .qr-card:has(#qr-empty-logo:not([style*="display: none"])) {
+        border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+        background: rgba(255, 255, 255, 0.04) !important;
+        box-shadow: none !important;
       }
       .qr-card:active {
         transform: scale(0.94) translateZ(0) !important;
@@ -2450,7 +2506,7 @@
         flex-direction: column !important;
         justify-content: center !important;
         height: auto !important; /* Tự động co giãn theo nội dung */
-        min-height: 100px !important;
+        min-height: 112px !important;
         overflow: visible !important;
       }
 
@@ -2462,7 +2518,7 @@
         border-radius: 12px !important;
         box-shadow: none !important;
         height: auto !important;
-        min-height: 100px !important;
+        min-height: 112px !important;
         box-sizing: border-box !important;
         display: flex !important;
         flex-direction: column !important;
@@ -2648,11 +2704,57 @@
       .modal-preview-area {
         width: 240px !important;
         min-height: 240px !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      [data-theme="dark"] .modal-preview-area {
+        background: transparent !important;
+        border: none !important;
       }
       #modal-qr-img {
-        width: 220px !important;
+        width: 240px !important;
         image-rendering: -webkit-optimize-contrast !important;
         image-rendering: auto !important;
+      }
+      
+      /* Ẩn các nút hành động trong modal xem trước di động */
+      .qr-modal .modal-actions-list {
+        display: none !important;
+      }
+      .qr-modal .modal-preview-area {
+        display: flex !important;
+        margin: 0 auto !important;
+      }
+      .qr-modal .qr-modal-body {
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 20px 16px !important;
+      }
+
+      /* Định vị dropdown tải xuống của PC dưới nút Tải về trên di động */
+      header .save-dropdown {
+        position: absolute !important;
+        top: calc(100% + 11px) !important; /* Dịch xuống thêm 1px thành 11px */
+        right: 0 !important;
+        left: auto !important;
+        width: 260px !important;
+        transform-origin: top right !important;
+        box-shadow: 0 16px 40px rgba(15, 12, 30, 0.2) !important;
+        border-radius: 14px !important;
+        z-index: 2000 !important;
+      }
+      header .save-dropdown::before {
+        right: 16px !important;
+        top: -8px !important;
+      }
+      header .save-dropdown::after {
+        right: 16px !important;
+        top: -6.5px !important;
+      }
+      .gratitude-dropdown {
+        top: calc(100% + 11px) !important;
       }
     }
 
@@ -2678,7 +2780,10 @@
     .qr-modal {
       position: fixed;
       left: 0; right: 0; top: 0; bottom: auto;
-      background: var(--surface);
+      background: radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.14) 0, transparent 50%),
+                  radial-gradient(at 50% 0%, rgba(79, 70, 229, 0.16) 0, transparent 60%),
+                  radial-gradient(at 100% 0%, rgba(22, 163, 74, 0.09) 0, transparent 50%),
+                  #f8fafc;
       border-radius: 0 0 24px 24px;
       box-shadow: 0 16px 40px rgba(15, 12, 30, 0.15);
       z-index: 2000;
@@ -2689,6 +2794,12 @@
       box-sizing: border-box;
       border-bottom: 1.5px solid var(--border);
       max-height: 90vh;
+    }
+    [data-theme="dark"] .qr-modal {
+      background: radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.1) 0, transparent 50%),
+                  radial-gradient(at 50% 0%, rgba(79, 70, 229, 0.12) 0, transparent 60%),
+                  #0f172a !important;
+      border-color: var(--border) !important;
     }
     .qr-modal.show {
       transform: translateY(0);
@@ -3370,7 +3481,7 @@
       gap: 8px;
       max-height: 160px;
       overflow-y: auto;
-      padding-right: 4px;
+      padding: 4px 4px 4px 2px;
     }
     .history-list::-webkit-scrollbar { width: 3px; }
     .history-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
@@ -3494,6 +3605,10 @@
       position: relative;
       z-index: 100;
     }
+    header .save-wrap.disabled {
+      opacity: 0.9;
+      pointer-events: none;
+    }
     header .save-btn {
       height: 32px;
       padding: 0 14px;
@@ -3531,29 +3646,23 @@
       transform: translateY(0);
       box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
     }
-    header .save-btn:disabled {
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--muted);
-      cursor: not-allowed;
-      opacity: 0.55;
-      transform: none;
-      box-shadow: none;
+    .save-wrap.disabled .save-btn {
+      border: 1px solid rgba(15, 23, 42, 0.12) !important;
+      background: rgba(255, 255, 255, 0.05) !important;
+      color: #556070 !important; /* Màu xám tối như ảnh */
+      cursor: not-allowed !important;
+      opacity: 1 !important;
+      transform: none !important;
+      box-shadow: none !important;
     }
-    [data-theme="dark"] header .save-btn:disabled {
-      background: rgba(255, 255, 255, 0.02);
-      border-color: rgba(255, 255, 255, 0.04);
+    [data-theme="dark"] .save-wrap.disabled .save-btn {
+      background: rgba(255, 255, 255, 0.02) !important;
+      border-color: rgba(255, 255, 255, 0.04) !important;
+      color: #8fa0b5 !important;
     }
-    header .save-btn .sb-icon {
-      display: flex; align-items: center; justify-content: center;
-      transition: all .2s;
-      flex-shrink: 0;
-    }
-    header .save-btn:hover:not(:disabled) .sb-icon {
-      transform: scale(1.1);
-    }
-    header .save-btn:disabled .sb-icon {
-      color: #94a3b8;
+    .save-wrap.disabled .save-btn .sb-icon,
+    .save-wrap.disabled .save-btn .save-arrow {
+      color: inherit !important;
     }
     header .save-arrow {
       width: 10px;
@@ -4464,7 +4573,7 @@
   </div>
 
   <!-- Save Dropdown Button -->
-  <div class="save-wrap" id="save-wrap">
+  <div class="save-wrap disabled" id="save-wrap">
     <button class="save-btn" id="save-main" disabled>
       <span class="sb-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px;">
@@ -5484,7 +5593,7 @@
         <input type="file" id="logo-input" accept="image/*">
         <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 4px; font-size: 13px;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent); flex-shrink: 0;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <span><b>Chọn logo</b> hoặc kéo thả ảnh vào đây <span style="font-size: 11px; color: var(--muted); font-weight: normal; margin-left: 4px;">(PNG · JPG · SVG · WebP)</span></span>
+          <span><b>Chọn logo</b> hoặc kéo thả ảnh vào đây <span class="upload-formats-hint" style="font-size: 11px; color: var(--muted); font-weight: normal; margin-left: 4px;">(PNG · JPG · SVG · WebP)</span></span>
         </div>
         <button type="button" class="btn-paste-shortcut" id="btn-paste-logo" style="margin-top: 4px; display: inline-flex; align-items: center; gap: 5px; justify-content: center;">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
@@ -5989,7 +6098,7 @@
           <input type="file" id="frame-file-input" accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml">
           <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 4px; font-size: 13px;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent); flex-shrink: 0;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <span><b>Chọn khung viền</b> hoặc kéo thả ảnh vào đây <span style="font-size: 11px; color: var(--muted); font-weight: normal; margin-left: 4px;">(PNG · JPG · WEBP · SVG)</span></span>
+            <span><b>Chọn khung viền</b> hoặc kéo thả ảnh vào đây <span class="upload-formats-hint" style="font-size: 11px; color: var(--muted); font-weight: normal; margin-left: 4px;">(PNG · JPG · WEBP · SVG)</span></span>
           </div>
           <button type="button" class="btn-paste-shortcut" id="btn-paste-frame" style="margin-top: 4px; display: inline-flex; align-items: center; gap: 5px; justify-content: center;">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
@@ -6076,7 +6185,7 @@
               <div class="style-group-title" style="margin-bottom: 0; display: flex; align-items: center; justify-content: space-between; width: 100%;">
                 <div style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent); flex-shrink: 0;"><line x1="18" y1="21" x2="6" y2="21"/><line x1="18" y1="3" x2="6" y2="3"/><rect x="8" y="6" width="8" height="12" rx="1"/></svg>
-                  CĂN CHỈNH KHUNG TỰ CHỌN
+                  CĂN CHỈNH KHUNG <span class="hide-mobile">TỰ CHỌN</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 6px; margin-left: auto;">
                   <button class="btn btn-secondary" id="btn-remove-white-bg" type="button" style="background: linear-gradient(135deg, #ec4899, #f43f5e); color:#fff; border:none; box-shadow: 0 2px 6px rgba(236, 72, 153, 0.2); padding: 4px 10px; font-size: 11px; border-radius: 6px; display: flex; align-items: center; gap: 4px; cursor: pointer; white-space: nowrap;">
@@ -9296,6 +9405,7 @@ function generate(text) {
   showQR();
   render();
   saveMain.disabled = false;
+  saveWrap.classList.remove('disabled');
 }
 
 const PRESET_LABELS = {
@@ -9338,6 +9448,7 @@ function showEmpty() {
     qrSection.style.display  = 'none';
     saveMain.disabled = true;
     saveWrap.classList.remove('open');
+    saveWrap.classList.add('disabled');
     
     // Dynamic logo preview in empty state!
     const emptyIcon = emptyState.querySelector('.e-icon');
@@ -9403,6 +9514,7 @@ function showError(msg) {
   $('err-state').style.display = 'flex';
   saveMain.disabled = true;
   saveWrap.classList.remove('open');
+  saveWrap.classList.add('disabled');
 }
 // ══════════════════════════════════
 //  Preset Logos Click Listeners
@@ -11440,7 +11552,7 @@ function getGridCols(gridEl) {
     }
   }
   const w = window.innerWidth;
-  if (w <= 768) return 4;
+  if (w <= 768) return 3;
   if (w <= 1024) return 3;
   if (w <= 1250) return 4;
   return 5;
@@ -11536,7 +11648,13 @@ function updateResponsiveTabsVisibility() {
     // Nút Thu gọn ^ tự động điền vào ô trống ở hàng cuối cùng
     const N = allButtons.length;
     const remainder = N % computedCols;
-    const span = remainder === 0 ? computedCols : (computedCols - remainder);
+    let span = remainder === 0 ? computedCols : (computedCols - remainder);
+    
+    // Bản mobile 3 cột: Nút thu gọn chỉ chiếm 1 cột thay vì điền đầy hàng
+    if (computedCols === 3) {
+      span = 1;
+    }
+    
     btnToggleTabs.style.setProperty('grid-column', `span ${span}`, 'important');
   } else {
     // Trạng thái thu gọn: Giới hạn số lượng nút hiển thị dựa trên số cột thực tế để lấp đầy dòng khít kháp
@@ -11706,12 +11824,18 @@ function initBottomSheet() {
   }
   
   // Open modal function
-  function openQRModal(e) {
+  function openQRModal(e, mode = 'preview') {
     if (window.innerWidth > 768) return; // Only on mobile
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
+    
+    // Đặt chế độ (mode-preview)
+    modal.classList.add('mode-preview');
+    modal.classList.remove('mode-download');
+    const titleEl = modal.querySelector('.qr-modal-header h3');
+    if (titleEl) titleEl.textContent = 'Mã QR của bạn';
     
     // Toggle functionality
     if (modal.classList.contains('show')) {
@@ -11759,7 +11883,6 @@ function initBottomSheet() {
     // Show modal
     modal.classList.add('show');
     backdrop.classList.add('show');
-    // document.body.style.overflow = 'hidden'; // REMOVED! Do not block scrolling so user can scroll form at bottom half!
   }
   
   // Close modal function
@@ -11767,16 +11890,6 @@ function initBottomSheet() {
     modal.classList.remove('show');
     backdrop.classList.remove('show');
     document.body.style.overflow = '';
-  }
-  
-  // Bind click trigger to "save-main" button on mobile
-  if (saveMain) {
-    saveMain.addEventListener('click', (e) => {
-      if (window.innerWidth <= 768) {
-        e.stopImmediatePropagation();
-        openQRModal(e);
-      }
-    }, true); // capturing phase so it runs before desktop dropdown listener
   }
 
   // Đăng ký chạm nhẹ / nhấn giữ vào ô preview mã QR trên di động để phóng to
@@ -11786,7 +11899,7 @@ function initBottomSheet() {
       if (window.innerWidth <= 768) {
         e.preventDefault();
         e.stopPropagation();
-        openQRModal(e);
+        openQRModal(e, 'preview');
       }
     });
 
@@ -11794,7 +11907,7 @@ function initBottomSheet() {
     qrCardEl.addEventListener('touchstart', (e) => {
       if (window.innerWidth <= 768) {
         touchTimeout = setTimeout(() => {
-          openQRModal(e);
+          openQRModal(e, 'preview');
           if (navigator.vibrate) navigator.vibrate(50); // Rung nhẹ phản hồi xúc giác
         }, 500);
       }
@@ -12040,7 +12153,7 @@ function initFrameSystem() {
       
       html += `
         <div class="svg-group-content-wrapper" id="svg-group-content-${gIdx}" style="display: ${displayContent};">
-          <div class="frame-grid">
+          <div class="frame-grid grouped-frame-grid">
       `;
       
       g.templates.forEach(tpl => {

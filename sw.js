@@ -1,4 +1,4 @@
-const CACHE_NAME = 'myqr-pro-cache-v63';
+const CACHE_NAME = 'myqr-pro-cache-v88';
 const ASSETS = [
   '/',
   '/index.html',
