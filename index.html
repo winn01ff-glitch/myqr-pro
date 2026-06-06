@@ -451,7 +451,7 @@
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.08) 51%, rgba(255, 255, 255, 0.25) 100%);
       border: 1px solid rgba(255, 255, 255, 0.7);
       border-radius: 12px;
-      padding: 0 14px;
+      padding: 0;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       box-shadow: 0 8px 32px rgba(31, 38, 135, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.95);
@@ -471,13 +471,14 @@
     .svg-group-dropdown-container:hover #group-dropdown-arrow {
       color: var(--accent) !important;
     }
-
+ 
     .svg-group-dropdown-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
       height: 38px;
+      padding: 0 14px;
     }
     
     .svg-groups-tab-grid {
@@ -491,7 +492,7 @@
       transition: opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1), transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
       margin-top: 0;
       margin-bottom: 0;
-      padding: 0 2px;
+      padding: 0 14px;
       pointer-events: none;
     }
     .svg-groups-tab-grid.open {
@@ -500,7 +501,7 @@
       transform: translateY(0);
       margin-top: 6px;
       margin-bottom: 10px;
-      padding: 4px 4px 8px 4px;
+      padding: 4px 14px 10px 14px;
       pointer-events: auto;
     }
     .opt-panel-title {
