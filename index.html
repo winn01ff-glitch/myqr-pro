@@ -1993,7 +1993,7 @@
       box-shadow: none !important;
       backdrop-filter: none !important;
       border-radius: 0 !important;
-      font-size: 12px;
+      font-size: 15px;
       text-align: center;
       font-weight: 700;
       letter-spacing: -0.2px;
@@ -2001,7 +2001,6 @@
       outline: none;
       padding: 0;
       box-sizing: border-box;
-      transform: scale(0.78);
       transform-origin: center;
     }
     
@@ -2274,6 +2273,9 @@
       input, textarea, select {
         font-size: 16px !important;
       }
+      .sync-input-wrap input, .custom-sync-input {
+        transform: scale(0.78) !important;
+      }
     }
 
     @media (max-width: 1024px) {
@@ -2330,7 +2332,8 @@
       .sidebar {
         order: 1 !important;
         overflow: hidden !important;
-        height: 100% !important;
+        height: calc(100dvh - 50px) !important;
+        max-height: calc(100dvh - 50px) !important;
         border-right: none;
         padding: 0 !important;
         display: flex !important;
@@ -2369,7 +2372,8 @@
       /* Đẩy phần body của form xuống dưới phần tab cố định */
       .sidebar-body {
         flex: 1 !important;
-        overflow-y: auto !important;
+        min-height: 0 !important;
+        overflow-y: scroll !important;
         overflow-x: hidden !important;
         padding: 8px 20px 260px 20px !important; /* Tăng padding-bottom để cuộn thoải mái không bị che */
         margin-top: 0 !important;
@@ -2377,7 +2381,6 @@
         flex-direction: column !important;
         gap: 8px !important;
         -webkit-overflow-scrolling: touch;
-        overscroll-behavior-y: contain !important; /* Ngăn hiệu ứng rubber-band của Safari kéo ngược trang */
       }
 
       /* Cho phép vuốt cuộn dọc mượt mà trên các khu vực chứa sliders trên Mobile */
@@ -4766,7 +4769,7 @@
         <div class="form-group">
           <label class="form-lbl">Đường dẫn trang web hoặc liên kết bất kỳ</label>
           <div class="input-wrap">
-            <input type="text" id="url-input" placeholder="ví dụ: https://google.com..." autocomplete="off" spellcheck="false">
+            <input type="text" id="url-input" placeholder="Ví dụ: https://google.com..." autocomplete="off" spellcheck="false">
             <button type="button" class="clear-input-btn" id="url-clear-btn" title="Xóa nhanh">✕</button>
             <button type="button" class="paste-input-btn" id="url-paste-btn" title="Dán từ thiết bị">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -8835,21 +8838,10 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     if (formEl) {
       formEl.classList.add('active-form');
       
-      // Tự động setfocus vào ô nhập liệu đầu tiên của tab mới chọn mà không bị nháy viền
+      // Không tự động focus vào ô nhập liệu để tránh kích hoạt bàn phím ảo ngoài ý muốn trên thiết bị di động
       const firstInput = formEl.querySelector('input:not([type="hidden"]), textarea, select');
       if (firstInput) {
-        // Tắt tạm thời transition của ô nhập liệu để nó nhận trạng thái focus lập tức (không có chuyển cảnh viền xám -> viền xanh gây nháy)
-        const origTransition = firstInput.style.transition;
-        firstInput.style.transition = 'none';
-        firstInput.focus();
-        
-        // Buộc trình duyệt vẽ lại ngay lập tức
-        firstInput.offsetHeight;
-        
-        // Khôi phục lại transition sau khi hoàn tất hiển thị
-        setTimeout(() => {
-          firstInput.style.transition = origTransition;
-        }, 50);
+        // Chỉ giữ lại logic khôi phục hoặc chuẩn bị, không gọi firstInput.focus()
       }
     }
     
@@ -13933,18 +13925,8 @@ if (clearHistoryBtn) {
 }
 
 
-// Tự động focus mượt mà không nháy vào ô nhập liên kết URL ngay khi tải trang xong
+// Không tự động focus vào ô nhập liên kết URL khi tải trang xong để tránh kích hoạt bàn phím di động
 (() => {
-  const urlInput = $('url-input');
-  if (urlInput) {
-    const origTransition = urlInput.style.transition;
-    urlInput.style.transition = 'none';
-    urlInput.focus();
-    urlInput.offsetHeight;
-    setTimeout(() => {
-      urlInput.style.transition = origTransition;
-    }, 50);
-  }
   
   // Tự động kích hoạt nạp logo preset và khởi tạo tab mặc định (sửa lỗi không hiện logo website trên tab LINK ban đầu)
   const defaultTabBtn = document.querySelector('.tab-btn[data-tab="url"]');
@@ -13959,6 +13941,12 @@ if (clearHistoryBtn) {
     // Facebook
     if (lower.includes('facebook.com') || lower.includes('fb.com')) {
       return `fb://facewebmodal/f?href=${encodeURIComponent(url)}`;
+    }
+    
+    // Messenger
+    if (lower.includes('m.me') || lower.includes('messenger.com')) {
+      const clean = url.replace(/^https?:\/\/(www\.)?(m\.me|messenger\.com)\/t\//i, '').replace(/^https?:\/\/(www\.)?(m\.me|messenger\.com)\//i, '');
+      return `fb-messenger://user/${clean}`;
     }
     
     // Instagram
@@ -13978,6 +13966,17 @@ if (clearHistoryBtn) {
     // TikTok
     if (lower.includes('tiktok.com')) {
       return url.replace(/^https?:\/\//i, 'tiktok://');
+    }
+    
+    // Telegram
+    if (lower.includes('t.me') || lower.includes('telegram.me')) {
+      const clean = url.replace(/^https?:\/\/(www\.)?(t\.me|telegram\.me)\//i, '');
+      return `tg://resolve?domain=${clean}`;
+    }
+    
+    // Zalo
+    if (lower.includes('zalo.me')) {
+      return 'zalo://';
     }
     
     return null;
@@ -14001,6 +14000,7 @@ if (clearHistoryBtn) {
       // Tự tính toán trước đường dẫn và trạng thái thiết bị để chuyển tiếp mượt mà sau khi quét
       const appUrl = getAppSchemeUrl(targetUrl);
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const delay = isMobile ? 500 : 1200; // Trên di động chờ 500ms để không bị trình duyệt chặn deeplink
       
       // Kích hoạt chạy hiệu ứng quét laser trước
       qrLaser.classList.add('scanning');
@@ -14040,7 +14040,7 @@ if (clearHistoryBtn) {
         setTimeout(() => {
           qrLaser.classList.remove('scanning');
         }, 300);
-      }, 1200);
+      }, delay);
     });
   }
 
@@ -14063,6 +14063,7 @@ if (clearHistoryBtn) {
       // Tự tính toán trước đường dẫn và trạng thái thiết bị để chuyển tiếp mượt mà
       const appUrl = getAppSchemeUrl(targetUrl);
       const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const delay = isMobile ? 500 : 1200; // Trên di động chờ 500ms để không bị trình duyệt chặn deeplink
       
       if (laser) laser.classList.add('scanning');
       showToast('⚡ Đang quét mô phỏng mã QR của bạn...', 'info');
@@ -14097,7 +14098,7 @@ if (clearHistoryBtn) {
         setTimeout(() => {
           if (laser) laser.classList.remove('scanning');
         }, 300);
-      }, 1200);
+      }, delay);
     }
   });
 })();
