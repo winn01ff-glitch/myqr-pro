@@ -2278,13 +2278,19 @@
 
     @media (max-width: 1024px) {
       html, body {
-        height: auto;
-        overflow: auto;
+        height: 100dvh !important;
+        overflow: hidden !important;
+        overscroll-behavior: none;
       }
       body {
         overflow: hidden !important;
-        height: 100vh !important;
+        height: 100dvh !important;
         width: 100vw !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
       }
       header {
         padding: 0 16px;
@@ -2317,7 +2323,7 @@
       }
       main {
         grid-template-columns: 1fr;
-        height: calc(100vh - 50px) !important;
+        height: calc(100dvh - 50px) !important;
         overflow: hidden !important;
         margin-top: 50px; /* Thêm khoảng trống bằng đúng chiều cao header cố định */
       }
@@ -2371,6 +2377,7 @@
         flex-direction: column !important;
         gap: 8px !important;
         -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain !important; /* Ngăn hiệu ứng rubber-band của Safari kéo ngược trang */
       }
 
       /* Cho phép vuốt cuộn dọc mượt mà trên các khu vực chứa sliders trên Mobile */
@@ -2378,7 +2385,7 @@
         touch-action: pan-y !important;
       }
       .slider-input-sync input[type="range"] {
-        touch-action: pan-y !important;
+        touch-action: none !important;
       }
 
       /* Tối ưu hóa kích thước sliders và độ giãn để hiển thị tốt trên Mobile */
@@ -4782,15 +4789,15 @@
             <div class="opt-tabs-indicator" id="opt-tabs-indicator"></div>
             <button type="button" class="opt-tab-btn active" data-opt="1">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              <span>1. Tối ưu Link</span>
+              <span>Tối ưu Link</span>
             </button>
             <button type="button" class="opt-tab-btn" data-opt="2">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-              <span>2. Giảm mật độ QR</span>
+              <span>Giảm mật độ</span>
             </button>
             <button type="button" class="opt-tab-btn" data-opt="3">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="9.8" y1="8.2" x2="21" y2="19.4"/><line x1="9.8" y1="15.8" x2="21" y2="4.6"/></svg>
-              <span>3. Rút gọn Link</span>
+              <span>Rút gọn Link</span>
             </button>
           </div>
           
@@ -13970,7 +13977,7 @@ if (clearHistoryBtn) {
     
     // TikTok
     if (lower.includes('tiktok.com')) {
-      return url.replace(/^https?:\/\//i, 'snssdk1128://');
+      return url.replace(/^https?:\/\//i, 'tiktok://');
     }
     
     return null;
@@ -14006,9 +14013,22 @@ if (clearHistoryBtn) {
           if (appUrl) {
             window.location.href = appUrl;
             // Fallback sang web nếu máy chưa cài app
-            setTimeout(() => {
-              window.location.href = targetUrl;
-            }, 1500);
+            let hasLeft = false;
+            const fallbackTimeout = setTimeout(() => {
+              if (!hasLeft) {
+                window.location.href = targetUrl;
+              }
+            }, 1600);
+            
+            const clearFallback = () => {
+              hasLeft = true;
+              clearTimeout(fallbackTimeout);
+              window.removeEventListener('visibilitychange', clearFallback);
+              window.removeEventListener('pagehide', clearFallback);
+            };
+            
+            window.addEventListener('visibilitychange', clearFallback);
+            window.addEventListener('pagehide', clearFallback);
           } else {
             window.location.href = targetUrl;
           }
@@ -14051,9 +14071,22 @@ if (clearHistoryBtn) {
         if (isMobile) {
           if (appUrl) {
             window.location.href = appUrl;
-            setTimeout(() => {
-              window.location.href = targetUrl;
-            }, 1500);
+            let hasLeft = false;
+            const fallbackTimeout = setTimeout(() => {
+              if (!hasLeft) {
+                window.location.href = targetUrl;
+              }
+            }, 1600);
+            
+            const clearFallback = () => {
+              hasLeft = true;
+              clearTimeout(fallbackTimeout);
+              window.removeEventListener('visibilitychange', clearFallback);
+              window.removeEventListener('pagehide', clearFallback);
+            };
+            
+            window.addEventListener('visibilitychange', clearFallback);
+            window.addEventListener('pagehide', clearFallback);
           } else {
             window.location.href = targetUrl;
           }
@@ -14263,56 +14296,56 @@ if (clearHistoryBtn) {
     vcb: {
       name: 'Vietcombank',
       scheme: 'vietcombank://',
-      iosStore: 'https://apps.apple.com/vn/app/vietcombank/id561546073',
-      androidStore: 'https://play.google.com/store/apps/details?id=com.vietcombank.vietcombanksmartotp'
+      iosStore: 'https://apps.apple.com/vn/app/vcb-digibank/id1496350711',
+      androidStore: 'https://play.google.com/store/apps/details?id=com.VCB'
     },
     bidv: {
       name: 'BIDV',
       scheme: 'bidvsmartbanking://',
-      iosStore: 'https://apps.apple.com/vn/app/bidv-smartbanking/id1041926618',
+      iosStore: 'https://apps.apple.com/vn/app/bidv-smartbanking/id1061546944',
       androidStore: 'https://play.google.com/store/apps/details?id=com.vnpay.bidv'
     },
     tcb: {
       name: 'Techcombank',
       scheme: 'techcombank://',
-      iosStore: 'https://apps.apple.com/vn/app/techcombank-mobile/id1548623362',
-      androidStore: 'https://play.google.com/store/apps/details?id=com.techcombank.publicmobile5'
+      iosStore: 'https://apps.apple.com/vn/app/techcombank-mobile/id1555627252',
+      androidStore: 'https://play.google.com/store/apps/details?id=vn.com.techcombank.bb.app'
     },
     mb: {
       name: 'MB Bank',
       scheme: 'mbbank://',
-      iosStore: 'https://apps.apple.com/vn/app/mb-bank/id1205807363',
+      iosStore: 'https://apps.apple.com/vn/app/mb-bank/id1485664157',
       androidStore: 'https://play.google.com/store/apps/details?id=com.mbmobile'
     },
     icb: {
       name: 'VietinBank',
       scheme: 'vietinbankipay://',
-      iosStore: 'https://apps.apple.com/vn/app/vietinbank-ipay/id689966482',
+      iosStore: 'https://apps.apple.com/vn/app/vietinbank-ipay/id683246927',
       androidStore: 'https://play.google.com/store/apps/details?id=com.vietinbank.ipay'
     },
     vba: {
       name: 'Agribank',
       scheme: 'agribankemobile://',
-      iosStore: 'https://apps.apple.com/vn/app/agribank-e-mobile-banking/id931527411',
-      androidStore: 'https://play.google.com/store/apps/details?id=com.vnpay.agribank'
+      iosStore: 'https://apps.apple.com/vn/app/agribank-plus/id6470438136',
+      androidStore: 'https://play.google.com/store/apps/details?id=com.vnpay.Agribank3g'
     },
     vpb: {
       name: 'VPBank',
       scheme: 'vpbankneo://',
-      iosStore: 'https://apps.apple.com/vn/app/vpbank-neo/id1209848119',
-      androidStore: 'https://play.google.com/store/apps/details?id=com.vpb.neo'
+      iosStore: 'https://apps.apple.com/vn/app/vpbank-neo/id1453982848',
+      androidStore: 'https://play.google.com/store/apps/details?id=com.vnpay.vpbankonline'
     },
     tpb: {
       name: 'TPBank',
       scheme: 'tpbank://',
-      iosStore: 'https://apps.apple.com/vn/app/tpbank-mobile/id1290370425',
-      androidStore: 'https://play.google.com/store/apps/details?id=com.tpb.mb.android'
+      iosStore: 'https://apps.apple.com/vn/app/tpbank-mobile/id1522037968',
+      androidStore: 'https://play.google.com/store/apps/details?id=com.tpb.mb.gprsandroid'
     },
     acb: {
       name: 'ACB',
       scheme: 'acbapp://',
-      iosStore: 'https://apps.apple.com/vn/app/acb-one/id950186981',
-      androidStore: 'https://play.google.com/store/apps/details?id=com.acb.mbank'
+      iosStore: 'https://apps.apple.com/vn/app/acb-one/id1524335441',
+      androidStore: 'https://play.google.com/store/apps/details?id=mobile.acb.com.vn'
     }
   };
 
@@ -14350,11 +14383,26 @@ if (clearHistoryBtn) {
           if (bankInfo) {
             // Trên Mobile, gọi trực tiếp custom scheme của ngân hàng
             window.location.href = bankInfo.scheme;
+            
             // Fallback sang store tải ứng dụng nếu chưa cài app ngân hàng đó sau 1.5 giây
             const storeUrl = isIOS ? bankInfo.iosStore : bankInfo.androidStore;
-            setTimeout(() => {
-              window.location.href = storeUrl;
-            }, 1500);
+            let hasLeft = false;
+            
+            const storeTimeout = setTimeout(() => {
+              if (!hasLeft) {
+                window.location.href = storeUrl;
+              }
+            }, 1600);
+            
+            const clearRedirect = () => {
+              hasLeft = true;
+              clearTimeout(storeTimeout);
+              window.removeEventListener('visibilitychange', clearRedirect);
+              window.removeEventListener('pagehide', clearRedirect);
+            };
+            
+            window.addEventListener('visibilitychange', clearRedirect);
+            window.addEventListener('pagehide', clearRedirect);
           } else {
             // Nút Quét QR chung
             window.location.href = payUrl;
