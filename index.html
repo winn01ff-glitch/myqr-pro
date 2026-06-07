@@ -984,6 +984,7 @@
     /* ─── SLIDERS ─── */
     .sliders { display: flex; flex-direction: column; gap: 12px; }
     .sl-row { display: flex; flex-direction: column; gap: 5px; }
+    .sl-row.hide-row { display: none !important; }
     .sl-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--dim); font-weight: 500; }
     .sl-label .val { color: var(--accent); font-weight: 700; }
 
@@ -8892,7 +8893,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
             // Mặc định hình dạng logo là hình tròn khi chuyển tab theo yêu cầu người dùng
             $('sh-ci').checked = true;
             $('sh-sq').checked = false;
-            $('row-corner').style.display = 'none';
+            $('row-corner').classList.add('hide-row');
           }
         }
       }
@@ -9645,7 +9646,7 @@ document.querySelectorAll('.preset-logos-wrap .preset-btn').forEach(btn => {
         // Mặc định hình dạng logo là hình tròn theo yêu cầu người dùng
         $('sh-ci').checked = true;
         $('sh-sq').checked = false;
-        $('row-corner').style.display = 'none';
+        $('row-corner').classList.add('hide-row');
         
         applyLogoBackgroundRemoval();
       };
@@ -10208,7 +10209,23 @@ removeLogo.addEventListener('click', (e) => {
 
 // Logo Shape listener
 document.querySelectorAll('input[name="shape"]').forEach(r => r.addEventListener('change', () => {
-  rowCorner.style.display = shCi.checked ? 'none' : '';
+  if (shCi.checked) {
+    rowCorner.classList.add('hide-row');
+  } else {
+    rowCorner.classList.remove('hide-row');
+  }
+  
+  // Cưỡng bức WebKit cập nhật lại chiều cao cuộn trên Mobile
+  const body = document.querySelector('.sidebar-body');
+  if (body) {
+    const temp = body.style.paddingBottom;
+    body.style.paddingBottom = '261px';
+    body.offsetHeight; // force layout/reflow
+    setTimeout(() => {
+      body.style.paddingBottom = temp || '260px';
+    }, 30);
+  }
+  
   render();
 }));
 
@@ -11622,7 +11639,7 @@ function resetDesign() {
   if (shCi) shCi.checked = true;
   if (shSq) shSq.checked = false;
   const rowCorner = $('row-corner');
-  if (rowCorner) rowCorner.style.display = 'none';
+  if (rowCorner) rowCorner.classList.add('hide-row');
 
   // 6. Render the QR code
   render();
