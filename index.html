@@ -2376,7 +2376,7 @@
         min-height: 0 !important;
         overflow-y: scroll !important;
         overflow-x: hidden !important;
-        padding: 8px 20px 210px 20px !important; /* Giảm padding-bottom cho cân đối với preview mới */
+        padding: 8px 20px 280px 20px !important; /* Đảm bảo đủ chiều cao cuộn lên khi ẩn bớt slider trên Mobile */
         margin-top: 0 !important;
         display: flex !important;
         flex-direction: column !important;
@@ -10214,14 +10214,13 @@ document.querySelectorAll('input[name="shape"]').forEach(r => r.addEventListener
     rowCorner.classList.remove('hide-row');
   }
   
-  // Cưỡng bức WebKit cập nhật lại chiều cao cuộn trên Mobile
+  // Cưỡng bức WebKit cập nhật lại chiều cao cuộn trên Mobile bằng cách ghi đè padding-bottom có !important
   const body = document.querySelector('.sidebar-body');
   if (body) {
-    const temp = body.style.paddingBottom;
-    body.style.paddingBottom = '261px';
-    body.offsetHeight; // force layout/reflow
+    body.style.setProperty('padding-bottom', '285px', 'important');
+    body.offsetHeight; // Force layout/reflow
     setTimeout(() => {
-      body.style.paddingBottom = temp || '260px';
+      body.style.setProperty('padding-bottom', '280px', 'important');
     }, 30);
   }
   
