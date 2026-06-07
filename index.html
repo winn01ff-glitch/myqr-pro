@@ -2376,7 +2376,7 @@
         min-height: 0 !important;
         overflow-y: scroll !important;
         overflow-x: hidden !important;
-        padding: 8px 20px 280px 20px !important; /* Đảm bảo đủ chiều cao cuộn lên khi ẩn bớt slider trên Mobile */
+        padding: 8px 20px 320px 20px !important; /* Đảm bảo đủ chiều cao cuộn lên khi ẩn bớt slider trên Mobile */
         margin-top: 0 !important;
         display: flex !important;
         flex-direction: column !important;
@@ -2431,7 +2431,7 @@
         border-bottom: none !important;
         border-radius: 20px 20px 0 0 !important; /* Bo góc trên */
         box-shadow: 0 -4px 24px rgba(15, 23, 42, 0.08) !important;
-        padding: 10px 16px calc(6px + env(safe-area-inset-bottom)) !important; /* Tối ưu khoảng cách Safe Area đáy */
+        padding: 10px 16px 12px 16px !important; /* Cố định 12px bottom để bám sát đáy và gọn gàng trên iOS */
         box-sizing: border-box !important;
         margin: 0 !important;
         display: block !important;
@@ -10214,14 +10214,19 @@ document.querySelectorAll('input[name="shape"]').forEach(r => r.addEventListener
     rowCorner.classList.remove('hide-row');
   }
   
-  // Cưỡng bức WebKit cập nhật lại chiều cao cuộn trên Mobile bằng cách ghi đè padding-bottom có !important
+  // Cưỡng bức WebKit cập nhật lại chiều cao cuộn trên Mobile bằng cách ghi đè padding-bottom và overflow
   const body = document.querySelector('.sidebar-body');
   if (body) {
-    body.style.setProperty('padding-bottom', '285px', 'important');
+    body.style.setProperty('overflow-y', 'hidden', 'important');
+    body.style.setProperty('padding-bottom', '325px', 'important');
     body.offsetHeight; // Force layout/reflow
     setTimeout(() => {
-      body.style.setProperty('padding-bottom', '280px', 'important');
-    }, 30);
+      body.style.setProperty('overflow-y', 'scroll', 'important');
+      body.style.setProperty('padding-bottom', '320px', 'important');
+      // Nudge scroll để kích hoạt lại bộ cuộn iOS
+      body.scrollTop = body.scrollTop + 1;
+      body.scrollTop = body.scrollTop - 1;
+    }, 50);
   }
   
   render();
@@ -14264,6 +14269,12 @@ if (clearHistoryBtn) {
   document.addEventListener('focusout', () => {
     setTimeout(resetScrollDisplacement, 50);
   });
+  // Khóa cứng scroll của cửa sổ chính (window) để tránh bị trượt viewport ảo trên iOS
+  window.addEventListener('scroll', () => {
+    if (window.scrollY !== 0) {
+      window.scrollTo(0, 0);
+    }
+  }, { passive: true });
 })();
 </script>
 
