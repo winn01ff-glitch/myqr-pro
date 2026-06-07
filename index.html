@@ -2376,7 +2376,7 @@
         min-height: 0 !important;
         overflow-y: scroll !important;
         overflow-x: hidden !important;
-        padding: 8px 20px 260px 20px !important; /* Tăng padding-bottom để cuộn thoải mái không bị che */
+        padding: 8px 20px 210px 20px !important; /* Giảm padding-bottom cho cân đối với preview mới */
         margin-top: 0 !important;
         display: flex !important;
         flex-direction: column !important;
@@ -2419,7 +2419,7 @@
         width: auto !important;
         max-width: none !important;
         height: auto !important; /* Tự động co giãn theo nội dung */
-        min-height: 124px !important; /* Chiều cao tối thiểu của Panel di động */
+        min-height: 110px !important; /* Giảm chiều cao tối thiểu của Panel di động */
         z-index: 999 !important;
         background: radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.14) 0, transparent 50%),
                     radial-gradient(at 50% 0%, rgba(79, 70, 229, 0.16) 0, transparent 60%),
@@ -2431,7 +2431,7 @@
         border-bottom: none !important;
         border-radius: 20px 20px 0 0 !important; /* Bo góc trên */
         box-shadow: 0 -4px 24px rgba(15, 23, 42, 0.08) !important;
-        padding: 12px 16px !important;
+        padding: 10px 16px calc(6px + env(safe-area-inset-bottom)) !important; /* Tối ưu khoảng cách Safe Area đáy */
         box-sizing: border-box !important;
         margin: 0 !important;
         display: block !important;
@@ -2459,9 +2459,9 @@
 
       /* Thẻ chứa QR bên trái (Canvas thật, hiệu ứng laser quét) */
       .qr-card {
-        width: 112px !important; /* Ô vuông preview cố định */
-        height: 112px !important;
-        border-radius: 12px !important;
+        width: 96px !important; /* Giảm ô vuông preview xuống 96px để tiết kiệm diện tích */
+        height: 96px !important;
+        border-radius: 10px !important;
         padding: 0 !important;
         box-sizing: border-box !important;
         background: transparent !important;
@@ -14244,6 +14244,26 @@ if (clearHistoryBtn) {
         }, 300);
       }, delay);
     }
+  });
+
+  // Đưa scroll và viewport ảo về vị trí cũ trên di động (iOS) sau khi ẩn bàn phím hoặc quay lại PWA từ app ngoài
+  function resetScrollDisplacement() {
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    if (document.documentElement) {
+      document.documentElement.scrollTop = 0;
+    }
+  }
+  window.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      setTimeout(resetScrollDisplacement, 200);
+    }
+  });
+  window.addEventListener('pageshow', () => {
+    setTimeout(resetScrollDisplacement, 200);
+  });
+  document.addEventListener('focusout', () => {
+    setTimeout(resetScrollDisplacement, 50);
   });
 })();
 </script>
