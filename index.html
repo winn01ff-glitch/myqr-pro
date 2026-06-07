@@ -13938,44 +13938,104 @@ if (clearHistoryBtn) {
   function getAppSchemeUrl(url) {
     const lower = url.toLowerCase();
     
-    // Facebook
+    // 1. FACEBOOK
     if (lower.includes('facebook.com') || lower.includes('fb.com')) {
+      // profile.php?id=xxx
+      if (lower.includes('profile.php')) {
+        const idMatch = url.match(/id=([0-9]+)/i);
+        if (idMatch && idMatch[1]) {
+          return `fb://profile/${idMatch[1]}`;
+        }
+      }
+      
+      // groups/{id}
+      const groupMatch = url.match(/facebook\.com\/groups\/([0-9a-zA-Z\.\-_]+)/i);
+      if (groupMatch && groupMatch[1]) {
+        return `fb://group/${groupMatch[1]}`;
+      }
+      
+      // permalink.php
+      if (lower.includes('permalink.php')) {
+        return `fb://facewebmodal/f?href=${encodeURIComponent(url)}`;
+      }
+      
+      // profile thông thường qua username
+      const sysPaths = ['groups', 'watch', 'marketplace', 'stories', 'posts', 'permalink.php', 'photo.php', 'photos', 'videos', 'events', 'pages', 'share.php'];
+      const profileMatch = url.match(/facebook\.com\/([a-zA-Z0-9\.\-_]+)/i);
+      if (profileMatch && profileMatch[1] && !sysPaths.includes(profileMatch[1].toLowerCase())) {
+        return `fb://profile?username=${profileMatch[1]}`;
+      }
+      
       return `fb://facewebmodal/f?href=${encodeURIComponent(url)}`;
     }
     
-    // Messenger
+    // 2. MESSENGER
     if (lower.includes('m.me') || lower.includes('messenger.com')) {
       const clean = url.replace(/^https?:\/\/(www\.)?(m\.me|messenger\.com)\/t\//i, '').replace(/^https?:\/\/(www\.)?(m\.me|messenger\.com)\//i, '');
-      return `fb-messenger://user/${clean}`;
+      const username = clean.split('?')[0].split('/')[0];
+      return `fb-messenger://user/${username}`;
     }
     
-    // Instagram
+    // 3. INSTAGRAM
     if (lower.includes('instagram.com')) {
-      const match = url.match(/instagram\.com\/([a-zA-Z0-9_\.]+)/i);
-      if (match && match[1]) {
-        return `instagram://user?username=${match[1]}`;
+      // Reels & Posts: dùng chung instagram://p/{shortcode}/ để app Instagram tự động mở bài viết/video phát trực tiếp
+      const postMatch = url.match(/instagram\.com\/(p|reel|reels)\/([a-zA-Z0-9_\-]+)/i);
+      if (postMatch && postMatch[2]) {
+        return `instagram://p/${postMatch[2]}/`;
+      }
+      
+      // Profiles
+      const sysPaths = ['p', 'reel', 'reels', 'stories', 'explore', 'direct'];
+      const profileMatch = url.match(/instagram\.com\/([a-zA-Z0-9_\.]+)/i);
+      if (profileMatch && profileMatch[1] && !sysPaths.includes(profileMatch[1].toLowerCase())) {
+        return `instagram://user?username=${profileMatch[1]}`;
       }
       return `instagram://`;
     }
     
-    // Youtube
+    // 4. YOUTUBE
     if (lower.includes('youtube.com') || lower.includes('youtu.be')) {
       return url.replace(/^https?:\/\//i, 'youtube://');
     }
     
-    // TikTok
+    // 5. TIKTOK
     if (lower.includes('tiktok.com')) {
-      return url.replace(/^https?:\/\//i, 'tiktok://');
+      // Video: tiktok.com/@username/video/{video_id}
+      const videoMatch = url.match(/tiktok\.com\/@[a-zA-Z0-9_\.]+\/video\/([0-9]+)/i);
+      if (videoMatch && videoMatch[1]) {
+        return `tiktok://video/${videoMatch[1]}`;
+      }
+      
+      // Profile: tiktok.com/@username
+      const profileMatch = url.match(/tiktok\.com\/@([a-zA-Z0-9_\.]+)/i);
+      if (profileMatch && profileMatch[1]) {
+        return `tiktok://user/profile/${profileMatch[1]}`;
+      }
+      return `tiktok://`;
     }
     
-    // Telegram
+    // 6. TELEGRAM
     if (lower.includes('t.me') || lower.includes('telegram.me')) {
-      const clean = url.replace(/^https?:\/\/(www\.)?(t\.me|telegram\.me)\//i, '');
-      return `tg://resolve?domain=${clean}`;
+      // Post: t.me/{username}/{post_id}
+      const postMatch = url.match(/(t\.me|telegram\.me)\/([a-zA-Z0-9_\.\+]+)\/([0-9]+)/i);
+      if (postMatch && postMatch[2] && postMatch[3]) {
+        return `tg://resolve?domain=${postMatch[2]}&post=${postMatch[3]}`;
+      }
+      
+      const profileMatch = url.match(/(t\.me|telegram\.me)\/([a-zA-Z0-9_\.\+]+)/i);
+      if (profileMatch && profileMatch[2]) {
+        return `tg://resolve?domain=${profileMatch[2]}`;
+      }
+      return `tg://`;
     }
     
-    // Zalo
+    // 7. ZALO
     if (lower.includes('zalo.me')) {
+      // Nếu là số điện thoại (chỉ chứa các ký số sau zalo.me/)
+      const phoneMatch = url.match(/zalo\.me\/([0-9]+)/i);
+      if (phoneMatch && phoneMatch[1]) {
+        return `zalo://qr/p/${phoneMatch[1]}`;
+      }
       return 'zalo://';
     }
     
@@ -14351,7 +14411,7 @@ if (clearHistoryBtn) {
   };
 
   function executeGratitudeScan(selectedApp = '') {
-    // 1. Tự tính toán trước số tiền và các URL chuyển tiếp (app scheme, store link) trong lúc chạy hiệu ứng
+    // 1. Tự tính toán trước số tiền và URL chuyển tiếp VietQR Link
     let currentAmount = GRATITUDE_CONFIG.vnDefaultAmount;
     const activeChip = document.querySelector('.gratitude-chip.active');
     if (activeChip) {
@@ -14366,10 +14426,8 @@ if (clearHistoryBtn) {
       payUrl += `&app=${selectedApp}`;
     }
 
-    // Các tham số cấu hình mở app banking trực tiếp trên di động
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    const bankInfo = BANK_DEEPLINKS[selectedApp];
+    const delay = isMobile ? 500 : 1200; // Trên di động chờ 500ms để không bị trình duyệt chặn chuyển hướng
 
     // 2. Chạy hiệu ứng quét laser neon độc lập trên chính mã QR tri ân trước
     if (gratitudeQrLaser) {
@@ -14377,58 +14435,25 @@ if (clearHistoryBtn) {
       
       gratitudeQrLaser.classList.add('scanning');
       const bankNameText = selectedApp ? selectedApp.toUpperCase() : 'tự động';
-      showToast(`⚡ Đang quét mô phỏng và kết nối ứng dụng ngân hàng (${bankNameText})...`, 'info');
+      showToast(`⚡ Đang kết nối ứng dụng ngân hàng (${bankNameText})...`, 'info');
 
       setTimeout(() => {
         if (isMobile) {
-          if (bankInfo) {
-            // Trên Mobile, gọi trực tiếp custom scheme của ngân hàng
-            window.location.href = bankInfo.scheme;
-            
-            // Fallback sang store tải ứng dụng nếu chưa cài app ngân hàng đó sau 1.5 giây
-            const storeUrl = isIOS ? bankInfo.iosStore : bankInfo.androidStore;
-            let hasLeft = false;
-            
-            const storeTimeout = setTimeout(() => {
-              if (!hasLeft) {
-                window.location.href = storeUrl;
-              }
-            }, 1600);
-            
-            const clearRedirect = () => {
-              hasLeft = true;
-              clearTimeout(storeTimeout);
-              window.removeEventListener('visibilitychange', clearRedirect);
-              window.removeEventListener('pagehide', clearRedirect);
-            };
-            
-            window.addEventListener('visibilitychange', clearRedirect);
-            window.addEventListener('pagehide', clearRedirect);
-          } else {
-            // Nút Quét QR chung
-            window.location.href = payUrl;
-          }
+          // Trên Mobile, chuyển hướng thẳng tới link VietQR vạn năng (đã tối ưu hóa mở app và điền sẵn thông tin)
+          window.location.href = payUrl;
         } else {
-          // Trên PC, mở tab mới sau khi quét xong 1.2s
+          // Trên PC, mở tab mới
           window.open(payUrl, '_blank');
         }
         
         setTimeout(() => {
           gratitudeQrLaser.classList.remove('scanning');
         }, 300);
-      }, 1200);
+      }, delay);
     } else {
       // Fallback trực tiếp nếu không tìm thấy laser element
       if (isMobile) {
-        if (bankInfo) {
-          window.location.href = bankInfo.scheme;
-          const storeUrl = isIOS ? bankInfo.iosStore : bankInfo.androidStore;
-          setTimeout(() => {
-            window.location.href = storeUrl;
-          }, 1500);
-        } else {
-          window.location.href = payUrl;
-        }
+        window.location.href = payUrl;
       } else {
         window.open(payUrl, '_blank');
       }
