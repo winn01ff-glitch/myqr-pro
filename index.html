@@ -8898,8 +8898,9 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
       }
     }
     
-    // Khi đổi tab, cập nhật lại mã QR tương ứng
+    // Khi đổi tab, cập nhật lại mã QR tương ứng và lưu trạng thái form
     updateQRContent();
+    saveFormState();
   });
 });
 
@@ -8926,6 +8927,65 @@ const formInputs = [
   'zalo-phone', 'fb-username', 'msg-username', 'ig-username', 'yt-channel', 'tt-username', 'line-id'
 ];
 
+const extraTriggers = [
+  'pp-currency',
+  'wifi-sec', 'pp-type',
+  'vietqr-bank'
+];
+
+// Cơ chế tự động lưu và khôi phục dữ liệu form để tránh mất dữ liệu khi chuyển tiếp/quay lại trang
+function saveFormState() {
+  const state = {};
+  formInputs.forEach(id => {
+    const el = $(id);
+    if (el) {
+      state[id] = el.value;
+    }
+  });
+  extraTriggers.forEach(id => {
+    const el = $(id);
+    if (el) {
+      if (el.type === 'checkbox' || el.type === 'radio') {
+        state[id] = el.checked;
+      } else {
+        state[id] = el.value;
+      }
+    }
+  });
+  sessionStorage.setItem('myqr_active_tab', activeTab);
+  sessionStorage.setItem('myqr_form_state', JSON.stringify(state));
+}
+
+function restoreFormState() {
+  try {
+    const raw = sessionStorage.getItem('myqr_form_state');
+    if (raw) {
+      const state = JSON.parse(raw);
+      formInputs.forEach(id => {
+        const el = $(id);
+        if (el && state[id] !== undefined) {
+          el.value = state[id];
+          if (id === 'url-input') {
+            originalURL = state[id];
+          }
+        }
+      });
+      extraTriggers.forEach(id => {
+        const el = $(id);
+        if (el && state[id] !== undefined) {
+          if (el.type === 'checkbox' || el.type === 'radio') {
+            el.checked = state[id];
+          } else {
+            el.value = state[id];
+          }
+        }
+      });
+    }
+  } catch (e) {
+    console.error('Lỗi khôi phục trạng thái form:', e);
+  }
+}
+
 formInputs.forEach(id => {
   const el = $(id);
   if (el) {
@@ -8934,28 +8994,27 @@ formInputs.forEach(id => {
         originalURL = el.value; // Lưu lại URL gốc do người dùng nhập thủ công
       }
       clearTimeout(debounce);
-      debounce = setTimeout(updateQRContent, 400);
+      debounce = setTimeout(() => {
+        updateQRContent();
+        saveFormState();
+      }, 400);
     });
   }
 });
 
 // Tính năng tải file local đã được lược bỏ để tối ưu hóa mã QR offline
 
-
-// Lắng nghe select & radio trong form
-const extraTriggers = [
-  'pp-currency',
-  'wifi-sec', 'pp-type',
-  'vietqr-bank'
-];
 extraTriggers.forEach(id => {
   const el = $(id);
   if (el) {
-    el.addEventListener('change', updateQRContent);
+    el.addEventListener('change', () => {
+      updateQRContent();
+      saveFormState();
+    });
   }
 });
-document.querySelectorAll('input[name="wifisec"]').forEach(r => r.addEventListener('change', updateQRContent));
-document.querySelectorAll('input[name="pptype"]').forEach(r => r.addEventListener('change', updateQRContent));
+document.querySelectorAll('input[name="wifisec"]').forEach(r => r.addEventListener('change', () => { updateQRContent(); saveFormState(); }));
+document.querySelectorAll('input[name="pptype"]').forEach(r => r.addEventListener('change', () => { updateQRContent(); saveFormState(); }));
 
 
 
@@ -13927,12 +13986,21 @@ if (clearHistoryBtn) {
 
 // Không tự động focus vào ô nhập liên kết URL khi tải trang xong để tránh kích hoạt bàn phím di động
 (() => {
+  // Khôi phục giá trị các trường nhập liệu đã lưu
+  restoreFormState();
   
-  // Tự động kích hoạt nạp logo preset và khởi tạo tab mặc định (sửa lỗi không hiện logo website trên tab LINK ban đầu)
-  const defaultTabBtn = document.querySelector('.tab-btn[data-tab="url"]');
+  // Tự động kích hoạt nạp logo preset và khởi tạo tab đã lưu hoặc tab mặc định (sửa lỗi không hiện logo website trên tab LINK ban đầu)
+  const savedTab = sessionStorage.getItem('myqr_active_tab') || 'url';
+  const defaultTabBtn = document.querySelector(`.tab-btn[data-tab="${savedTab}"]`);
   if (defaultTabBtn) {
     defaultTabBtn.click();
+  } else {
+    const fallbackTabBtn = document.querySelector('.tab-btn[data-tab="url"]');
+    if (fallbackTabBtn) fallbackTabBtn.click();
   }
+  
+  // Đồng bộ nội dung QR ban đầu
+  updateQRContent();
   
   // Helper chuyển đổi link mạng xã hội sang App Scheme (ưu tiên mở ứng dụng trực tiếp trên di động)
   function getAppSchemeUrl(url) {
